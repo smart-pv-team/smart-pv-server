@@ -1,4 +1,0 @@
-spring:
-  data:
-    mongodb:
-      uri: mongodb+srv://kuba:kuba@cluster0.qd1lc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
