@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class ManagementService {
     private final ConsumerDeviceRepository consumerDeviceRepository;
-    private int availableEnergy = 20;
+    private int availableEnergy = -8;
 
     @Autowired
     public ManagementService(ConsumerDeviceRepository consumerDeviceRepository) {
@@ -58,7 +58,7 @@ public class ManagementService {
         int neededEnergy;
         int counter = 0;
 
-        if (availableEnergy > 0) {
+        if (availableEnergy >= 0) {
             builder.append("Turned on devices: ");
             while (true) {
                 deviceId = findHighestPriorityOffDevice();
