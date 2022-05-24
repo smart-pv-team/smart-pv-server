@@ -10,35 +10,48 @@ import java.util.stream.Collectors;
 @Service
 public class ManagementService {
     private final ConsumerDeviceRepository consumerDeviceRepository;
-    private final ManagingRequester managingRequester;
     private int availableEnergy = -8;
 
     @Autowired
-    public ManagementService(ConsumerDeviceRepository consumerDeviceRepository, ManagingRequester managingRequester) {
+    public ManagementService(ConsumerDeviceRepository consumerDeviceRepository) {
         this.consumerDeviceRepository = consumerDeviceRepository;
-        this.managingRequester = managingRequester;
     }
 
-    private void setDeviceOnStatus(String id, boolean newStatus) {
+    public void setDeviceOn(String id, boolean newStatus) {
+        //Exeception
         ConsumerDeviceEntity device = consumerDeviceRepository
                 .findById(id)
-                .get();
-        device.setOnStatus(newStatus);
+                .orElseThrow();
+        device.setOn(newStatus);
         consumerDeviceRepository.save(device);
     }
 
-    private boolean isDeviceOn(String id) {
+    public boolean isDeviceOn(String id) {
+        //Exception
         return consumerDeviceRepository
                 .findById(id)
-                .get()
-                .getOnStatus();
+                .orElseThrow()
+                .isOn();
     }
+
+    public void setDeviceParameters(String id, ConsumerDeviceParametersMapper consumerDeviceParametersMapper) {
+        //Exception
+        ConsumerDeviceEntity consumerDeviceEntity = consumerDeviceRepository.findById(id).orElseThrow();
+        consumerDeviceRepository.save(consumerDeviceEntity.withParameters(consumerDeviceParametersMapper));
+    }
+
+    public ConsumerDeviceParametersMapper getDeviceParameters(String id) {
+        //Exception
+        ConsumerDeviceEntity consumerDeviceEntity = consumerDeviceRepository.findById(id).orElseThrow();
+        return ConsumerDeviceParametersMapper.ofConsumerDevice(consumerDeviceEntity);
+    }
+
 
     private String findHighestPriorityOffDevice() {
         return consumerDeviceRepository
                 .findAll()
                 .stream()
-                .filter(d -> !d.getOnStatus() && d.getPowerConsumption() <= availableEnergy)
+                .filter(d -> !d.isOn() && d.getPowerConsumption() <= availableEnergy)
                 .min(Comparator.comparing(ConsumerDeviceEntity::getPriority))
                 .map(ConsumerDeviceEntity::getId)
                 .orElse(null);
@@ -48,7 +61,7 @@ public class ManagementService {
         return consumerDeviceRepository
                 .findAll()
                 .stream()
-                .filter(d -> d.getOnStatus())
+                .filter(ConsumerDeviceEntity::isOn)
                 .max(Comparator.comparing(ConsumerDeviceEntity::getPriority))
                 .map(ConsumerDeviceEntity::getId)
                 .orElse(null);
@@ -81,7 +94,7 @@ public class ManagementService {
                         .get()
                         .getPowerConsumption();
                 availableEnergy -= neededEnergy;
-                setDeviceOnStatus(deviceId, true);
+                setDeviceOn(deviceId, true);
                 builder.append(deviceId + " ");
                 counter++;
             }
@@ -94,34 +107,28 @@ public class ManagementService {
                         .get()
                         .getPowerConsumption();
                 availableEnergy += neededEnergy;
-                setDeviceOnStatus(deviceId, false);
+                setDeviceOn(deviceId, false);
                 builder.append(deviceId + " ");
             }
             return builder.toString();
         }
     }
 
-    private List<ConsumerDeviceParametersResponse> getAllDevicesParameters() {
+    private List<ConsumerDeviceParametersMapper> getAllDevicesParameters() {
         return consumerDeviceRepository
                 .findAll()
                 .stream()
-                .map(this::getDeviceParameters)
+                .map(ConsumerDeviceParametersMapper::ofConsumerDevice)
                 .collect(Collectors.toList());
     }
 
-    private ConsumerDeviceParametersResponse getDeviceParameters(ConsumerDeviceEntity consumerDeviceEntity) {
-        return managingRequester.getDeviceParameters(consumerDeviceEntity.getIpAddress().concat(consumerDeviceEntity.getDataEndpoint()));
-    }
 
-    private List<ConsumerDeviceStatusResponse> getAllDevicesStatuses() {
+    private List<ConsumerDeviceStatusMapper> getAllDevicesStatuses() {
         return consumerDeviceRepository
                 .findAll()
                 .stream()
-                .map(this::getDeviceStatus)
+                .map(ConsumerDeviceStatusMapper::ofConsumerDeviceEntity)
                 .collect(Collectors.toList());
     }
 
-    private ConsumerDeviceStatusResponse getDeviceStatus(ConsumerDeviceEntity consumerDeviceEntity) {
-        return managingRequester.getDeviceStatus(consumerDeviceEntity.getIpAddress().concat(consumerDeviceEntity.getDataEndpoint()));
-    }
 }
