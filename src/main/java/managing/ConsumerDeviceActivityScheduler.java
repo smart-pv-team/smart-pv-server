@@ -19,7 +19,7 @@ public class ConsumerDeviceActivityScheduler {
         this.activityManagementCron = activityManagementCron;
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "*/1 * * * * *")
     public void updateConsumerDevices() {
         System.out.println("[CONSUMER-DEVICES-SCHEDULER] " + managementService.updateDevicesStatus());
     }

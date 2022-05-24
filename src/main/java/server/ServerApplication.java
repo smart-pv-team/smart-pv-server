@@ -59,9 +59,9 @@ public class ServerApplication implements CommandLineRunner {
         );
         consumerDeviceRepository.saveAll(
                 List.of(
-                        new ConsumerDeviceEntity("http://127.0.0.1:3010", "/consumer/device/1", 0, true, 6, 2, 3),
-                        new ConsumerDeviceEntity("http://127.0.0.1:3010", "/consumer/device/2", 0, false, 5, 1, 3),
-                        new ConsumerDeviceEntity("http://127.0.0.1:3010", "/consumer/device/3", 1, true, 7, 2, 3)
+                        new ConsumerDeviceEntity("http://127.0.0.1:3010", "/consumer/device/1", 0, true, 6, 2, 3, false)
+//                        new ConsumerDeviceEntity("http://127.0.0.1:3010", "/consumer/device/2", 0, false, 5, 1, 3, false),
+//                        new ConsumerDeviceEntity("http://127.0.0.1:3010", "/consumer/device/3", 1, true, 7, 2, 3, false)
                 )
         );
 

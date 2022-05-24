@@ -13,6 +13,7 @@ public class ConsumerDeviceEntity {
     private int powerConsumption;
     private int minHysteresis;
     private int maxHysteresis;
+    private boolean isLocked;
 
     public ConsumerDeviceEntity(String ipAddress, String dataEndpoint) {
         this.ipAddress = ipAddress;
@@ -20,7 +21,7 @@ public class ConsumerDeviceEntity {
     }
 
     @PersistenceConstructor
-    public ConsumerDeviceEntity(String ipAddress, String dataEndpoint, int priority, boolean onStatus, int powerConsumption, int minHysteresis, int maxHysteresis) {
+    public ConsumerDeviceEntity(String ipAddress, String dataEndpoint, int priority, boolean onStatus, int powerConsumption, int minHysteresis, int maxHysteresis, boolean isLocked) {
         this.ipAddress = ipAddress;
         this.dataEndpoint = dataEndpoint;
         this.priority = priority;
@@ -28,6 +29,7 @@ public class ConsumerDeviceEntity {
         this.powerConsumption = powerConsumption;
         this.minHysteresis = minHysteresis;
         this.maxHysteresis = maxHysteresis;
+        this.isLocked = isLocked;
     }
 
     public String getId() {
