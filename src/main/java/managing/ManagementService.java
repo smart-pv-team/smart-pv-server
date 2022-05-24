@@ -55,50 +55,49 @@ public class ManagementService {
     }
 
     public String updateDevicesStatus() {
-        if (true) { //jeśli zmiana w apce
-//            List<ConsumerDeviceParametersResponse> devicesParameters = getAllDevicesParameters();
-//            devicesParameters.forEach(dp -> System.out.println(dp.toString()));
-            List<ConsumerDeviceStatusResponse> devicesStatuses = getAllDevicesStatuses();
-            devicesStatuses.forEach(s -> System.out.println(s.onStatus));
-            managingRequester.sendDeviceStatus("http://127.0.0.1:3010//test//post", true);
-            return "";
-        } else {
-            List<ConsumerDeviceEntity> consumerDevices = consumerDeviceRepository.findAll();
-            StringBuilder builder = new StringBuilder();
-            String deviceId;
-            int neededEnergy;
-            int counter = 0;
+//        if (true) {
+////            List<ConsumerDeviceParametersResponse> devicesParameters = getAllDevicesParameters();
+////            devicesParameters.forEach(dp -> System.out.println(dp.toString()));
+////            List<ConsumerDeviceStatusResponse> devicesStatuses = getAllDevicesStatuses();
+////            devicesStatuses.forEach(s -> System.out.println(s.onStatus));
+////            managingRequester.sendDeviceStatus("http://127.0.0.1:3010//test//post", true);
+//            return "";
+//        } else {
+        List<ConsumerDeviceEntity> consumerDevices = consumerDeviceRepository.findAll();
+        StringBuilder builder = new StringBuilder();
+        String deviceId;
+        int neededEnergy;
+        int counter = 0;
 
-            if (availableEnergy >= 0) {
-                builder.append("Turned on devices: ");
-                while (true) {
-                    deviceId = findHighestPriorityOffDevice();
-                    if (deviceId == null) {
-                        return counter == 0 ? "No changes" : builder.toString();
-                    }
-                    neededEnergy = consumerDeviceRepository
-                            .findById(deviceId)
-                            .get()
-                            .getPowerConsumption();
-                    availableEnergy -= neededEnergy;
-                    setDeviceOnStatus(deviceId, true);
-                    builder.append(deviceId + " ");
-                    counter++;
+        if (availableEnergy >= 0) {
+            builder.append("Turned on devices: ");
+            while (true) {
+                deviceId = findHighestPriorityOffDevice();
+                if (deviceId == null) {
+                    return counter == 0 ? "No changes" : builder.toString();
                 }
-            } else {
-                builder.append("Turned off devices: ");
-                while (availableEnergy < 0) {
-                    deviceId = findLowestPriorityOnDevice();
-                    neededEnergy = consumerDeviceRepository
-                            .findById(deviceId)
-                            .get()
-                            .getPowerConsumption();
-                    availableEnergy += neededEnergy;
-                    setDeviceOnStatus(deviceId, false);
-                    builder.append(deviceId + " ");
-                }
-                return builder.toString();
+                neededEnergy = consumerDeviceRepository
+                        .findById(deviceId)
+                        .get()
+                        .getPowerConsumption();
+                availableEnergy -= neededEnergy;
+                setDeviceOnStatus(deviceId, true);
+                builder.append(deviceId + " ");
+                counter++;
             }
+        } else {
+            builder.append("Turned off devices: ");
+            while (availableEnergy < 0) {
+                deviceId = findLowestPriorityOnDevice();
+                neededEnergy = consumerDeviceRepository
+                        .findById(deviceId)
+                        .get()
+                        .getPowerConsumption();
+                availableEnergy += neededEnergy;
+                setDeviceOnStatus(deviceId, false);
+                builder.append(deviceId + " ");
+            }
+            return builder.toString();
         }
     }
 
