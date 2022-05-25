@@ -1,5 +1,8 @@
 package managing;
 
+import measuring.MeasurementEntity;
+import measuring.MeasurementRepository;
+import measuring.MeasurementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,15 +13,20 @@ import java.util.stream.Collectors;
 @Service
 public class ManagementService {
     private final ConsumerDeviceRepository consumerDeviceRepository;
-    private int availableEnergy = -8;
+    private final MeasurementRepository measurementRepository;
+    private final MeasurementService measurementService;
+    private float availableEnergy;
 
     @Autowired
-    public ManagementService(ConsumerDeviceRepository consumerDeviceRepository) {
+    public ManagementService(ConsumerDeviceRepository consumerDeviceRepository, MeasurementRepository measurementRepository, MeasurementService measurementService) {
         this.consumerDeviceRepository = consumerDeviceRepository;
+        this.measurementRepository = measurementRepository;
+        this.measurementService = measurementService;
     }
 
     public void setDeviceOn(String id, boolean newStatus) {
         //Exeception
+        System.out.println(id + " " + newStatus);
         ConsumerDeviceEntity device = consumerDeviceRepository
                 .findById(id)
                 .orElseThrow();
@@ -68,18 +76,13 @@ public class ManagementService {
     }
 
     public String updateDevicesStatus() {
-//        if (true) {
-////            List<ConsumerDeviceParametersResponse> devicesParameters = getAllDevicesParameters();
-////            devicesParameters.forEach(dp -> System.out.println(dp.toString()));
-////            List<ConsumerDeviceStatusResponse> devicesStatuses = getAllDevicesStatuses();
-////            devicesStatuses.forEach(s -> System.out.println(s.onStatus));
-////            managingRequester.sendDeviceStatus("http://127.0.0.1:3010//test//post", true);
-//            return "";
-//        } else {
+        updateAvailableEnergy();
+        System.out.println("[AVAILABLE ENERGY] " + this.availableEnergy);
+
         List<ConsumerDeviceEntity> consumerDevices = consumerDeviceRepository.findAll();
         StringBuilder builder = new StringBuilder();
         String deviceId;
-        int neededEnergy;
+        float neededEnergy;
         int counter = 0;
 
         if (availableEnergy >= 0) {
@@ -137,5 +140,16 @@ public class ManagementService {
                 .stream()
                 .map(ConsumerDeviceEntity::getId)
                 .collect(Collectors.toList());
+    }
+
+    public void updateAvailableEnergy() {
+        float producedEnergy = measurementService.getLatestTotalMeasurements();
+        float usedEnergy = consumerDeviceRepository
+                .findAll()
+                .stream()
+                .filter(ConsumerDeviceEntity::isOn)
+                .map(ConsumerDeviceEntity::getPowerConsumption)
+                .reduce((float) 0, Float::sum);
+        availableEnergy = producedEnergy - usedEnergy;
     }
 }

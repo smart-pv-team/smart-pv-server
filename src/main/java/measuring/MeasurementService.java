@@ -11,6 +11,7 @@ public class MeasurementService {
     private final MeasurementRepository measurementRepository;
     private final MeasuringDeviceRepository measuringDeviceRepository;
     private final MeasuringRequester measuringRequester;
+    private float latestTotalMeasurements;
 
     @Autowired
     public MeasurementService(MeasurementRepository measurementRepository, MeasuringDeviceRepository measuringDeviceRepository, MeasuringRequester measuringRequester) {
@@ -22,6 +23,10 @@ public class MeasurementService {
     public List<MeasurementEntity> makeMeasurements() {
         List<MeasurementEntity> measurements = getMeasurements();
         saveMeasurements(measurements);
+        latestTotalMeasurements = measurements
+                .stream()
+                .map(MeasurementEntity::getMeasurement)
+                .reduce((float) 0, Float::sum);
         return measurements;
     }
 
@@ -39,5 +44,9 @@ public class MeasurementService {
 
     private MeasurementEntity getMeasurement(MeasuringDeviceEntity measuringDeviceEntity) {
         return measuringRequester.getMeasurement(measuringDeviceEntity.getIpAddress().concat(measuringDeviceEntity.getDataEndpoint())).toMeasurementEntity();
+    }
+
+    public float getLatestTotalMeasurements() {
+        return latestTotalMeasurements;
     }
 }

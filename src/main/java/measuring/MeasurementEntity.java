@@ -20,4 +20,8 @@ public class MeasurementEntity {
         this.measurement = measurement;
         this.date = date;
     }
+
+    public Float getMeasurement() {
+        return measurement;
+    }
 }
