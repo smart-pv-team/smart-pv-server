@@ -21,7 +21,7 @@ public class MeasurementScheduler {
 
     @Scheduled(cron = "0 * * * * *")
     public void scheduleMeasurements(){
-        System.out.println("[SCHEDULER] " +measurementService.makeMeasurements());
+        System.out.println("[MEASURING-DEVICES-SCHEDULER] " +measurementService.makeMeasurements());
     }
 
 }

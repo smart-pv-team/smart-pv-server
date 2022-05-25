@@ -39,12 +39,17 @@ public class ConsumerDeviceEntity {
                 this.ipAddress,
                 this.dataEndpoint,
                 consumerDeviceParametersMapper.priority,
-                consumerDeviceParametersMapper.onStatus,
+                consumerDeviceParametersMapper.isOn,
                 consumerDeviceParametersMapper.powerConsumption,
                 consumerDeviceParametersMapper.minHysteresis,
                 consumerDeviceParametersMapper.maxHysteresis,
                 this.isLocked
         );
+    }
+
+    public ConsumerDeviceEntity withId(String id){
+        this.id = id;
+        return this;
     }
 
 }

@@ -4,18 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ConsumerDeviceParametersMapper {
     public int priority;
-    public boolean onStatus;
+    public boolean isOn;
     public int powerConsumption;
     public int minHysteresis;
     public int maxHysteresis;
 
     public ConsumerDeviceParametersMapper(@JsonProperty("priority") Integer priority,
-                                          @JsonProperty("onStatus") Boolean onStatus,
+                                          @JsonProperty("isOn") Boolean isOn,
                                           @JsonProperty("powerConsumption") Integer powerConsumption,
                                           @JsonProperty("minHysteresis") Integer minHysteresis,
                                           @JsonProperty("maxHysteresis") Integer maxHysteresis) {
         this.priority = priority;
-        this.onStatus = onStatus;
+        this.isOn = isOn;
         this.powerConsumption = powerConsumption;
         this.minHysteresis = minHysteresis;
         this.maxHysteresis = maxHysteresis;

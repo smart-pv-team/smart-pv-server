@@ -37,7 +37,7 @@ public class ManagementService {
     public void setDeviceParameters(String id, ConsumerDeviceParametersMapper consumerDeviceParametersMapper) {
         //Exception
         ConsumerDeviceEntity consumerDeviceEntity = consumerDeviceRepository.findById(id).orElseThrow();
-        consumerDeviceRepository.save(consumerDeviceEntity.withParameters(consumerDeviceParametersMapper));
+        consumerDeviceRepository.save(consumerDeviceEntity.withParameters(consumerDeviceParametersMapper).withId(id));
     }
 
     public ConsumerDeviceParametersMapper getDeviceParameters(String id) {
@@ -131,4 +131,11 @@ public class ManagementService {
                 .collect(Collectors.toList());
     }
 
+    public List<String> getAllDevicesIds() {
+        return consumerDeviceRepository
+                .findAll()
+                .stream()
+                .map(ConsumerDeviceEntity::getId)
+                .collect(Collectors.toList());
+    }
 }
