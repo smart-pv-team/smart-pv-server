@@ -9,19 +9,59 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-  - task: JavaToolInstaller@0
-    inputs:
-      versionSpec: '17'
-      jdkArchitectureOption: 'x64'
-      jdkSourceOption: 'PreInstalled'
-  - task: Maven@3
-    inputs:
-      mavenPomFile: 'pom.xml'
-      mavenOptions: '-Xmx3072m'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '17'
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: true
-      testResultsFiles: '**/surefire-reports/TEST-*.xml'
-      goals: 'package'
+variables:
+  buildConfiguration: 'Release'
+  webRepository: 'web'
+  tag: '$(Build.BuildId)'
+
+stages:
+  - stage: 'Build'
+    displayName: 'Build and push'
+    jobs:
+      - job: 'Build'
+        displayName: 'Build job'
+        pool:
+          vmImage: 'ubuntu-20.04'
+        steps:
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: '17'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              mavenOptions: '-Xmx3072m'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '17'
+              jdkArchitectureOption: 'x64'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              goals: 'package'
+          - task: Docker@2
+            displayName: 'Build and push the image to container registry'
+            inputs:
+              command: buildAndPush
+              buildContext: $(Build.Repository.LocalPath)
+              repository: $(webRepository)
+              dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
+              containerRegistry: 'Container Registry Connection'
+              tags: |
+                $(tag)
+
+  - stage: 'Deploy'
+    displayName: 'Deploy the container'
+    dependsOn: Build
+    jobs:
+      - job: 'Deploy'
+        displayName: 'Deploy job'
+        pool:
+          vmImage: 'ubuntu-20.04'
+        variables:
+          - group: Release
+        steps:
+          - task: AzureWebAppContainer@1
+            inputs:
+              appName: $(WebAppName)
+              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              imageName: $(RegistryName)/$(webRepository):$(build.buildId)

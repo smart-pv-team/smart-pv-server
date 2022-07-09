@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  mongodb1:
+    image: mongo:4.2.3
+    ports:
+      - "27117:27017"
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+
+  mongoclient:
+    image: mongo:4.2.3
+    depends_on:
+      - mongodb1
+    volumes:
+      - ./scripts/deployment_scripts:/init
+    entrypoint: ["/init/start_replica.sh", "mongodb1"]
