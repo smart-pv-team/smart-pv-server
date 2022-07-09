@@ -11,10 +11,10 @@ pool:
 
 steps:
   - task: JavaToolInstaller@0
-      inputs:
-        versionSpec: '18'
-        jdkArchitectureOption: 'x64'
-        jdkSourceOption: 'PreInstalled'
+    inputs:
+      versionSpec: '18'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
   - task: Maven@3
     inputs:
       mavenPomFile: 'pom.xml'
