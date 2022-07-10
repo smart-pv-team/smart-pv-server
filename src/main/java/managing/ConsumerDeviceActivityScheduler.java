@@ -8,19 +8,21 @@ import server.conf.EnvNames;
 
 @Component
 public class ConsumerDeviceActivityScheduler {
-    private final ManagementService managementService;
-    private final String activityManagementCron;
-    @Autowired
-    public ConsumerDeviceActivityScheduler(
-            ManagementService managementService,
-            @Value("${" + EnvNames.MANAGEMENT_CRON + "}") String activityManagementCron
-    ) {
-        this.managementService = managementService;
-        this.activityManagementCron = activityManagementCron;
-    }
 
-    @Scheduled(cron = "0 * * * * *")
-    public void updateConsumerDevices() {
-        System.out.println("[CONSUMER-DEVICES-SCHEDULER] " + managementService.updateDevicesStatus());
-    }
+  private final ManagementService managementService;
+  private final String activityManagementCron;
+
+  @Autowired
+  public ConsumerDeviceActivityScheduler(
+      ManagementService managementService,
+      @Value("${" + EnvNames.MANAGEMENT_CRON + "}") String activityManagementCron
+  ) {
+    this.managementService = managementService;
+    this.activityManagementCron = activityManagementCron;
+  }
+
+  @Scheduled(cron = "0 * * * * *")
+  public void updateConsumerDevices() {
+    System.out.println("[CONSUMER-DEVICES-SCHEDULER] " + managementService.updateDevicesStatus());
+  }
 }

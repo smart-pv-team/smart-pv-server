@@ -1,9 +1,9 @@
 package measuring;
 
+import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
-
 public interface MeasurementRepository extends MongoRepository<MeasurementEntity, String> {
-    List<MeasurementEntity> getAllByDeviceId(String id);
+
+  List<MeasurementEntity> getAllByDeviceId(String id);
 }
