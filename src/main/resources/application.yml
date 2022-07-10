@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://kuba:kuba@cluster0.qd1lc.mongodb.net/smartPV?retryWrites=true&w=majority
+      uri: mongodb://localhost:27017/
       database: smartPV
 
 measurement-cron: 0 */1 * * * *
