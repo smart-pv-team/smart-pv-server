@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/
+      uri: mongodb://localhost:27017/smartPV
       database: smartPV
 
 measurement-cron: 0 */1 * * * *
