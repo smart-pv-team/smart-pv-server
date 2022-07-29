@@ -44,11 +44,13 @@ public class MeasurementService {
   }
 
   private MeasurementEntity getMeasurement(MeasuringDeviceEntity measuringDeviceEntity) {
-    return measuringRequester.getMeasurement(
-            measuringDeviceEntity.getIpAddress().concat(measuringDeviceEntity.getDataEndpoint()))
-        .toMeasurementEntity();
+    try {
+      return measuringRequester.getMeasurement(measuringDeviceEntity)
+          .toMeasurementEntity(measuringDeviceEntity.getId());
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
-
   public float getLatestTotalMeasurements() {
     return latestTotalMeasurements;
   }

@@ -1,9 +1,10 @@
 package measuring;
 
 import java.util.Date;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 
-
+@Data
 public class MeasurementEntity {
 
   @Id

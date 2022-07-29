@@ -1,24 +1,17 @@
 package measuring;
 
+import java.util.List;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
+import server.utils.HttpEndpointData;
 
+
+@Data
 public class MeasuringDeviceEntity {
 
   @Id
   private String id;
+  private String name;
   private final String ipAddress;
-  private final String dataEndpoint;
-
-  public MeasuringDeviceEntity(String ipAddress, String dataEndpoint) {
-    this.ipAddress = ipAddress;
-    this.dataEndpoint = dataEndpoint;
-  }
-
-  public String getIpAddress() {
-    return ipAddress;
-  }
-
-  public String getDataEndpoint() {
-    return dataEndpoint;
-  }
+  private final List<HttpEndpointData> endpoints;
 }
