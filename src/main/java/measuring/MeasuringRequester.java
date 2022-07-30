@@ -18,8 +18,10 @@ import server.utils.HttpEndpointData;
 @Slf4j
 @Component
 public class MeasuringRequester {
+
   private final StringToResponseClassParser stringToResponseClassParser;
   private final RestTemplate restTemplate;
+
   @Autowired
   public MeasuringRequester(
       RestTemplateBuilder restTemplateBuilder,

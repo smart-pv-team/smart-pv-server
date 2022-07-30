@@ -14,11 +14,11 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@ComponentScan({"measuring", "managing", "server", "deviceController"})
-@EntityScan({"measuring", "managing","server", "deviceController"})
-@EnableMongoRepositories({"measuring", "managing","server", "deviceController"})
+@ComponentScan({"measuring", "managing", "server", "controller"})
+@EntityScan({"measuring", "managing", "server", "controller"})
+@EnableMongoRepositories({"measuring", "managing", "server", "controller"})
 @EnableScheduling
-@ConfigurationPropertiesScan({"measuring", "managing","server", "deviceController"})
+@ConfigurationPropertiesScan({"measuring", "managing", "server", "controller"})
 public class ServerApplication implements CommandLineRunner {
 
   @Autowired

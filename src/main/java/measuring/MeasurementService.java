@@ -1,6 +1,6 @@
 package measuring;
 
-import deviceController.FarmRepository;
+import controller.FarmRepository;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +39,8 @@ public class MeasurementService {
                 allMeasurements.stream()
                     .filter(measurementEntity -> measuringDeviceRepository.getFirstById(
                         measurementEntity.getDeviceId()).farm().equals(farmEntity.getName()))
-                    .map(MeasurementEntity::getMeasurement).reduce((float) 0, Float::sum)
-                , new Date()
+                    .map(MeasurementEntity::getMeasurement).reduce((float) 0, Float::sum),
+                new Date()
             )).toList();
 
     saveMeasurements(allMeasurements);
@@ -55,6 +55,7 @@ public class MeasurementService {
   private void saveMeasurements(List<MeasurementEntity> measurementEntities) {
     measurementRepository.saveAll(measurementEntities);
   }
+
   private void saveSumMeasurements(List<MeasurementSumEntity> measurementSumEntity) {
     measurementSumRepository.saveAll(measurementSumEntity);
   }
@@ -71,11 +72,13 @@ public class MeasurementService {
   public float getLatestTotalMeasurements() {
     return latestTotalMeasurements;
   }
-  public List<MeasurementSumEntity> getMeasurementSumEntityFromTimePeriod(String farmId, Date from, Date to){
-    return measurementSumRepository.findAllByIdAndDateBetween(farmId,from,to);
+
+  public List<MeasurementSumEntity> getMeasurementSumEntityFromTimePeriod(String farmId, Date from,
+      Date to) {
+    return measurementSumRepository.findAllByIdAndDateBetween(farmId, from, to);
   }
 
-  public List<MeasurementSumEntity> getAllSumMeasurements(){
+  public List<MeasurementSumEntity> getAllSumMeasurements() {
     return measurementSumRepository.findAll();
   }
 }

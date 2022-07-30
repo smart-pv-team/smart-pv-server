@@ -1,4 +1,4 @@
-package deviceController;
+package controller;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
