@@ -35,10 +35,10 @@ public class MeasurementService {
     List<MeasurementSumEntity> allSumMeasurements =
         farmRepository.findAll().stream()
             .map(farmEntity -> new MeasurementSumEntity(
-                farmEntity.getName(),
+                farmEntity.name(),
                 allMeasurements.stream()
                     .filter(measurementEntity -> measuringDeviceRepository.getFirstById(
-                        measurementEntity.getDeviceId()).farm().equals(farmEntity.getName()))
+                        measurementEntity.getDeviceId()).farm().equals(farmEntity.name()))
                     .map(MeasurementEntity::getMeasurement).reduce((float) 0, Float::sum),
                 new Date()
             )).toList();
