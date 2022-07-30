@@ -33,10 +33,10 @@ public class MeasuringRequester {
 
   public Response getMeasurement(MeasuringDeviceEntity measuringDeviceEntity)
       throws ClassNotFoundException {
-    HttpEndpointData httpEndpointData = measuringDeviceEntity.getEndpoints().stream()
+    HttpEndpointData httpEndpointData = measuringDeviceEntity.endpoints().stream()
         .filter((e) -> e.action().equals(Action.READ)).findFirst()
         .orElseThrow(NullPointerException::new);
-    String url = measuringDeviceEntity.getIpAddress().concat(httpEndpointData.endpoint());
+    String url = measuringDeviceEntity.ipAddress().concat(httpEndpointData.endpoint());
 
     return sendRequest(
         url,

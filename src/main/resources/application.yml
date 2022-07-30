@@ -4,7 +4,7 @@ spring:
       uri: mongodb://localhost:27017/smartPV
       database: smartPV
 
-measurement-cron: 0 */1 * * * *
-management-cron: 0 */1 * * * *
+measurement-cron: 0 */5 * * * *
+management-cron: 0 */5 * * * *
 
 control-devices: false

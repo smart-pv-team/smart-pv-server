@@ -4,10 +4,21 @@ const db = conn.getDB("smartPV");
 db.getCollection('measuringDeviceEntity').remove({})
 db.getCollection('measurementEntity').remove({})
 db.getCollection('consumerDeviceEntity').remove({})
+db.getCollection('farmEntity').remove({})
+
+db.getCollection('farmEntity').insertMany(
+    [
+      {
+        "name": "hala",
+        "description": "goralmet"
+      }
+    ]
+)
 
 db.getCollection('measuringDeviceEntity').insertMany(
     [
       {
+        "farm": "hala",
         "name": "FIRMA przyłącz B1 od 16.04.21",
         "ipAddress": "https://svr48.supla.org",
         "endpoints": [
@@ -26,6 +37,7 @@ db.getCollection('measuringDeviceEntity').insertMany(
         "_class": "measuring.MeasuringDeviceEntity"
       },
       {
+        "farm": "hala",
         "name": "FIRMA przyłącz A2 od 19.10.21",
         "ipAddress": "https://svr48.supla.org",
         "endpoints": [
