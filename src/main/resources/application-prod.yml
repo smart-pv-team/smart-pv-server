@@ -4,3 +4,4 @@ spring:
   data:
     mongodb:
       uri: mongodb+srv://janicki:janicki@smartpv.dr74ruo.mongodb.net/smartpv?retryWrites=true&w=majority
+      database: smartpv
