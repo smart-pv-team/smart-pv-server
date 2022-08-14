@@ -23,14 +23,6 @@ public abstract class CustomMongoRepository implements ConsumerDeviceRepository 
   }
 
   @Override
-  public List<String> getAllDevicesIds() {
-    return findAll()
-        .stream()
-        .map(ConsumerDeviceEntity::getId)
-        .collect(Collectors.toList());
-  }
-
-  @Override
   public void setDeviceParameters(String id,
       ConsumerDeviceParametersMapper consumerDeviceParametersMapper) {
     ConsumerDeviceEntity oldConsumerDeviceEntity = findById(

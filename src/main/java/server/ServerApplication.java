@@ -1,8 +1,8 @@
 package server;
 
 import consumption.ConsumerDeviceRepository;
-import measurement.MeasurementRepository;
 import measurement.MeasurementDeviceRepository;
+import measurement.MeasurementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -27,7 +27,7 @@ public class ServerApplication implements CommandLineRunner {
   private MeasurementDeviceRepository measurementDeviceRepository;
 
   @Autowired
-  private ConsumerDeviceRepository ConsumerDeviceRepository;
+  private ConsumerDeviceRepository consumerDeviceRepository;
 
   public static void main(String[] args) {
     SpringApplication.run(ServerApplication.class, args);
@@ -37,7 +37,7 @@ public class ServerApplication implements CommandLineRunner {
   public void run(String[] args) {
     System.out.println(measurementRepository.findAll());
     System.out.println(measurementDeviceRepository.findAll());
-    System.out.println(ConsumerDeviceRepository.findAll());
+    System.out.println(consumerDeviceRepository.findAll());
   }
 
 }

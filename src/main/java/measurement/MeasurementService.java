@@ -1,8 +1,8 @@
 package measurement;
 
-import managment.FarmRepository;
 import java.util.Date;
 import java.util.List;
+import managment.FarmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,8 @@ public class MeasurementService {
 
   @Autowired
   public MeasurementService(MeasurementRepository measurementRepository,
-      MeasurementDeviceRepository measurementDeviceRepository, MeasurementRequester measurementRequester,
+      MeasurementDeviceRepository measurementDeviceRepository,
+      MeasurementRequester measurementRequester,
       FarmRepository farmRepository, MeasurementSumRepository measurementSumRepository) {
     this.measurementRepository = measurementRepository;
     this.measurementDeviceRepository = measurementDeviceRepository;
