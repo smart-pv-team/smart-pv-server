@@ -1,4 +1,4 @@
-package measuring.parsers.supla;
+package measurement.parsers.supla;
 
 public record PhaseResponse(Integer number, Integer frequency, Float voltage, Float current,
                             Float powerActive, Float powerReactive, Float powerApparent,

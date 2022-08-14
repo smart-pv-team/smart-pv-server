@@ -1,4 +1,4 @@
-package controller;
+package managment;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

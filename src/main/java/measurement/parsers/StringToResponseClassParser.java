@@ -1,6 +1,6 @@
-package measuring.parsers;
+package measurement.parsers;
 
-import measuring.parsers.supla.SuplaElectricMeterResponse;
+import measurement.parsers.supla.SuplaElectricMeterResponse;
 import org.springframework.stereotype.Component;
 
 @Component

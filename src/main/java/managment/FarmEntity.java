@@ -1,4 +1,4 @@
-package controller;
+package managment;
 
 import nonapi.io.github.classgraph.json.Id;
 

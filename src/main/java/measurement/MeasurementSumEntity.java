@@ -1,4 +1,4 @@
-package measuring;
+package measurement;
 
 import java.util.Date;
 import lombok.Data;
@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 public class MeasurementSumEntity {
   @Id
   private String id;
-  private final String farm;
+  private final String farmId;
   private final Float measurement;
   private final Date date;
 }

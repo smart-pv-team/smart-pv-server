@@ -1,4 +1,4 @@
-package managing;
+package consumption;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

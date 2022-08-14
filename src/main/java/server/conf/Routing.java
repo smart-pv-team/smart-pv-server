@@ -7,15 +7,15 @@ public interface Routing {
   String DEVICE_ID_PLACEHOLDER = "{" + DEVICE_ID_VARIABLE + "}";
   String FARM_ID_PLACEHOLDER = "{" + FARM_ID_VARIABLE + "}";
 
-  interface Measuring {
+  interface Measurement {
 
-    String VALUE = "/measuring";
+    String VALUE = "/measurement";
     String PATH = VALUE;
 
     interface Farm {
 
       String VALUE = "/farm";
-      String PATH = Measuring.VALUE + VALUE;
+      String PATH = Measurement.VALUE + VALUE;
 
       interface FarmId {
 
@@ -28,7 +28,7 @@ public interface Routing {
     interface Device {
 
       String VALUE = "/device";
-      String PATH = Measuring.VALUE + VALUE;
+      String PATH = Measurement.VALUE + VALUE;
 
       interface DeviceId {
 
@@ -38,20 +38,20 @@ public interface Routing {
     }
   }
 
-  interface Parameters {
+  interface Consumption {
 
-    String VALUE = "/parameters";
+    String VALUE = "/consumption";
     String PATH = VALUE;
 
-    interface Device {
+    interface Parameters {
 
-      String VALUE = "/device";
-      String PATH = Parameters.PATH + VALUE;
+      String VALUE = "/parameters";
+      String PATH = VALUE;
 
       interface DeviceId {
 
         String VALUE = "/" + DEVICE_ID_PLACEHOLDER;
-        String PATH = Device.PATH + VALUE;
+        String PATH = Parameters.PATH + VALUE;
 
         interface IsOn {
 
@@ -59,8 +59,8 @@ public interface Routing {
           String PATH = DeviceId.PATH + VALUE;
         }
       }
-
     }
   }
+
 
 }

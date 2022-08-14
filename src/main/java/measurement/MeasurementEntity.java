@@ -1,4 +1,4 @@
-package measuring;
+package measurement;
 
 import java.util.Date;
 import lombok.Data;

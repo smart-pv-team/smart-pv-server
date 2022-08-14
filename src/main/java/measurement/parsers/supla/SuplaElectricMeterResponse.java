@@ -1,10 +1,10 @@
-package measuring.parsers.supla;
+package measurement.parsers.supla;
 
 import java.util.Currency;
 import java.util.Date;
 import java.util.List;
-import measuring.MeasurementEntity;
-import measuring.parsers.Response;
+import measurement.MeasurementEntity;
+import measurement.parsers.Response;
 
 public record SuplaElectricMeterResponse(boolean connected, Float support, Currency currency,
                                          Float pricePerUnit, Float totalCost,
@@ -13,6 +13,7 @@ public record SuplaElectricMeterResponse(boolean connected, Float support, Curre
   @Override
   public MeasurementEntity toMeasurementEntity(String id) {
     float measurement = (float) phases.stream().mapToDouble(PhaseResponse::powerActive).sum();
-    return new MeasurementEntity(id, measurement, new Date());
+    float reversedMeasurement = - measurement;
+    return new MeasurementEntity(id, reversedMeasurement, new Date());
   }
 }

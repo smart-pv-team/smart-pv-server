@@ -1,8 +1,8 @@
 package server;
 
-import managing.ConsumerDeviceRepository;
-import measuring.MeasurementRepository;
-import measuring.MeasuringDeviceRepository;
+import consumption.ConsumerDeviceRepository;
+import measurement.MeasurementRepository;
+import measurement.MeasurementDeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,20 +14,20 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@ComponentScan({"measuring", "managing", "server", "controller"})
-@EntityScan({"measuring", "managing", "server", "controller"})
-@EnableMongoRepositories({"measuring", "managing", "server", "controller"})
+@ComponentScan({"measurement", "managment", "server", "consumption"})
+@EntityScan({"measurement", "managment", "server", "consumption"})
+@EnableMongoRepositories({"measurement", "managment", "server", "consumption"})
 @EnableScheduling
-@ConfigurationPropertiesScan({"measuring", "managing", "server", "controller"})
+@ConfigurationPropertiesScan({"measurement", "managment", "server", "consumption"})
 public class ServerApplication implements CommandLineRunner {
 
   @Autowired
   private MeasurementRepository measurementRepository;
   @Autowired
-  private MeasuringDeviceRepository measuringDeviceRepository;
+  private MeasurementDeviceRepository measurementDeviceRepository;
 
   @Autowired
-  private ConsumerDeviceRepository consumerDeviceRepository;
+  private ConsumerDeviceRepository ConsumerDeviceRepository;
 
   public static void main(String[] args) {
     SpringApplication.run(ServerApplication.class, args);
@@ -36,8 +36,8 @@ public class ServerApplication implements CommandLineRunner {
   @Override
   public void run(String[] args) {
     System.out.println(measurementRepository.findAll());
-    System.out.println(measuringDeviceRepository.findAll());
-    System.out.println(consumerDeviceRepository.findAll());
+    System.out.println(measurementDeviceRepository.findAll());
+    System.out.println(ConsumerDeviceRepository.findAll());
   }
 
 }

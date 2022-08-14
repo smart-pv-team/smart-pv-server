@@ -1,6 +1,6 @@
-package measuring;
+package measurement;
 
-import controller.FarmRepository;
+import managment.FarmRepository;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,24 +11,24 @@ public class MeasurementService {
 
   private final MeasurementRepository measurementRepository;
   private final MeasurementSumRepository measurementSumRepository;
-  private final MeasuringDeviceRepository measuringDeviceRepository;
-  private final MeasuringRequester measuringRequester;
+  private final MeasurementDeviceRepository measurementDeviceRepository;
+  private final MeasurementRequester measurementRequester;
   private final FarmRepository farmRepository;
   private float latestTotalMeasurements;
 
   @Autowired
   public MeasurementService(MeasurementRepository measurementRepository,
-      MeasuringDeviceRepository measuringDeviceRepository, MeasuringRequester measuringRequester,
+      MeasurementDeviceRepository measurementDeviceRepository, MeasurementRequester measurementRequester,
       FarmRepository farmRepository, MeasurementSumRepository measurementSumRepository) {
     this.measurementRepository = measurementRepository;
-    this.measuringDeviceRepository = measuringDeviceRepository;
-    this.measuringRequester = measuringRequester;
+    this.measurementDeviceRepository = measurementDeviceRepository;
+    this.measurementRequester = measurementRequester;
     this.farmRepository = farmRepository;
     this.measurementSumRepository = measurementSumRepository;
   }
 
   public List<MeasurementEntity> makeMeasurements() {
-    List<MeasurementEntity> allMeasurements = measuringDeviceRepository
+    List<MeasurementEntity> allMeasurements = measurementDeviceRepository
         .findAll()
         .stream()
         .map(this::requestMeasurement).toList();
@@ -37,7 +37,7 @@ public class MeasurementService {
             .map(farmEntity -> new MeasurementSumEntity(
                 farmEntity.name(),
                 allMeasurements.stream()
-                    .filter(measurementEntity -> measuringDeviceRepository.getFirstById(
+                    .filter(measurementEntity -> measurementDeviceRepository.getFirstById(
                         measurementEntity.getDeviceId()).farm().equals(farmEntity.name()))
                     .map(MeasurementEntity::getMeasurement).reduce((float) 0, Float::sum),
                 new Date()
@@ -60,10 +60,10 @@ public class MeasurementService {
     measurementSumRepository.saveAll(measurementSumEntity);
   }
 
-  private MeasurementEntity requestMeasurement(MeasuringDeviceEntity measuringDeviceEntity) {
+  private MeasurementEntity requestMeasurement(MeasurementDeviceEntity measurementDeviceEntity) {
     try {
-      return measuringRequester.getMeasurement(measuringDeviceEntity)
-          .toMeasurementEntity(measuringDeviceEntity.id());
+      return measurementRequester.getMeasurement(measurementDeviceEntity)
+          .toMeasurementEntity(measurementDeviceEntity.id());
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }

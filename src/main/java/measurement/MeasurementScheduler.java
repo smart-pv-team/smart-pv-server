@@ -1,4 +1,4 @@
-package measuring;
+package measurement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

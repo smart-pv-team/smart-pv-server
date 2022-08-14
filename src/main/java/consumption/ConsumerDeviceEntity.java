@@ -1,4 +1,4 @@
-package managing;
+package consumption;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -9,6 +9,7 @@ public class ConsumerDeviceEntity {
 
   @Id
   private String id;
+  private String farmId;
   private String ipAddress;
   private String dataEndpoint;
   private int priority;
@@ -18,15 +19,17 @@ public class ConsumerDeviceEntity {
   private int maxHysteresis;
   private boolean isLocked;
 
-  public ConsumerDeviceEntity(String ipAddress, String dataEndpoint) {
+  public ConsumerDeviceEntity(String ipAddress, String dataEndpoint, String farmId) {
     this.ipAddress = ipAddress;
     this.dataEndpoint = dataEndpoint;
+    this.farmId = farmId;
   }
 
   @PersistenceConstructor
   public ConsumerDeviceEntity(String ipAddress, String dataEndpoint, int priority, boolean isOn,
-      float powerConsumption, int minHysteresis, int maxHysteresis, boolean isLocked) {
+      float powerConsumption, int minHysteresis, int maxHysteresis, boolean isLocked, String farmId) {
     this.ipAddress = ipAddress;
+    this.farmId = farmId;
     this.dataEndpoint = dataEndpoint;
     this.priority = priority;
     this.isOn = isOn;
@@ -46,7 +49,8 @@ public class ConsumerDeviceEntity {
         consumerDeviceParametersMapper.powerConsumption,
         consumerDeviceParametersMapper.minHysteresis,
         consumerDeviceParametersMapper.maxHysteresis,
-        this.isLocked
+        this.isLocked,
+        this.farmId
     );
   }
 
