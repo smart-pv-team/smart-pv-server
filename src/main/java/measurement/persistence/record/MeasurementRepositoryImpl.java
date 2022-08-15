@@ -4,7 +4,8 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MeasurementRepositoryImpl implements MeasurementRepository{
+public class MeasurementRepositoryImpl implements MeasurementRepository {
+
   private final MeasurementMongoRepository measurementMongoRepository;
 
   public MeasurementRepositoryImpl(MeasurementMongoRepository measurementMongoRepository) {
