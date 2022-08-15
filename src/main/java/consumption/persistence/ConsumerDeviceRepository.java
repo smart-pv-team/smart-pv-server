@@ -1,7 +1,8 @@
-package consumption;
+package consumption.persistence;
 
+import consumption.ConsumerDeviceParametersMapper;
 import java.util.Optional;
-import management.FarmEntity;
+import management.persistence.FarmEntity;
 
 public interface ConsumerDeviceRepository {
 

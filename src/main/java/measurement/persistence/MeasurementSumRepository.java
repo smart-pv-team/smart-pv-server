@@ -1,4 +1,4 @@
-package measurement;
+package measurement.persistence;
 
 import java.util.Date;
 import java.util.List;

@@ -1,4 +1,4 @@
-package management;
+package management.persistence;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

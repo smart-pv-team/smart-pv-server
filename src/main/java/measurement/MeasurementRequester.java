@@ -3,6 +3,7 @@ package measurement;
 import lombok.extern.slf4j.Slf4j;
 import measurement.parsers.Response;
 import measurement.parsers.StringToResponseClassParser;
+import measurement.persistence.MeasurementDeviceEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;

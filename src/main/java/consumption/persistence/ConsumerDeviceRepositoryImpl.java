@@ -1,8 +1,9 @@
-package consumption;
+package consumption.persistence;
 
+import consumption.ConsumerDeviceParametersMapper;
 import java.util.Comparator;
 import java.util.Optional;
-import management.FarmEntity;
+import management.persistence.FarmEntity;
 import org.springframework.stereotype.Component;
 
 @Component

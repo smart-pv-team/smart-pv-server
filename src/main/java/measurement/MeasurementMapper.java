@@ -3,6 +3,8 @@ package measurement;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
+import measurement.persistence.MeasurementEntity;
+import measurement.persistence.MeasurementSumEntity;
 import server.utils.Dates;
 
 public class MeasurementMapper {

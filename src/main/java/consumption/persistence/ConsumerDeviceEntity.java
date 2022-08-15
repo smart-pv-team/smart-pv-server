@@ -1,5 +1,6 @@
-package consumption;
+package consumption.persistence;
 
+import consumption.ConsumerDeviceParametersMapper;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;

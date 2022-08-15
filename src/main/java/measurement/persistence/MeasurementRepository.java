@@ -1,4 +1,4 @@
-package measurement;
+package measurement.persistence;
 
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;

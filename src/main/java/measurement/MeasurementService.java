@@ -2,7 +2,13 @@ package measurement;
 
 import java.util.Date;
 import java.util.List;
-import management.FarmRepository;
+import management.persistence.FarmRepository;
+import measurement.persistence.MeasurementDeviceEntity;
+import measurement.persistence.MeasurementDeviceRepository;
+import measurement.persistence.MeasurementEntity;
+import measurement.persistence.MeasurementRepository;
+import measurement.persistence.MeasurementSumEntity;
+import measurement.persistence.MeasurementSumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -3,7 +3,7 @@ package measurement.parsers.supla;
 import java.util.Currency;
 import java.util.Date;
 import java.util.List;
-import measurement.MeasurementEntity;
+import measurement.persistence.MeasurementEntity;
 import measurement.parsers.Response;
 
 public record SuplaElectricMeterResponse(boolean connected, Float support, Currency currency,

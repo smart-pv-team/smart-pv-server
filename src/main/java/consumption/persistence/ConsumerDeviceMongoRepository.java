@@ -1,4 +1,4 @@
-package consumption;
+package consumption.persistence;
 
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;

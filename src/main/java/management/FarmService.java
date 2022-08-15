@@ -1,5 +1,6 @@
 package management;
 
+import management.persistence.FarmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
