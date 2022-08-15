@@ -1,5 +1,6 @@
 package measurement;
 
+import management.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,21 +10,23 @@ import server.conf.EnvNames;
 @Component
 public class MeasurementScheduler {
 
-  private final MeasurementService measurementService;
+  private final FarmService farmService;
   private final String measurementCron;
 
   @Autowired
   public MeasurementScheduler(
-      MeasurementService measurementService,
+      FarmService farmService,
       @Value("${" + EnvNames.MEASUREMENT_CRON + "}") String measurementCron
   ) {
-    this.measurementService = measurementService;
+    this.farmService = farmService;
     this.measurementCron = measurementCron;
   }
 
   @Scheduled(cron = "0 * * * * *")
   public void scheduleMeasurements() {
-    System.out.println("[MEASURING-DEVICES-SCHEDULER] " + measurementService.makeMeasurements());
+    System.out.println(
+        "[MEASURING-DEVICES-SCHEDULER] " + farmService.makeAllFarmsDevicesMeasurement()
+            + " measurements");
   }
 
 }

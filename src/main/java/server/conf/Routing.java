@@ -14,7 +14,7 @@ public interface Routing {
 
     interface Farm {
 
-      String VALUE = "/farm";
+      String VALUE = "/farmId";
       String PATH = Measurement.VALUE + VALUE;
 
       interface FarmId {

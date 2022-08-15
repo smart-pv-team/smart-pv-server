@@ -24,6 +24,6 @@ public class ConsumerDeviceActivityScheduler {
 
   @Scheduled(cron = "0 * * * * *")
   public void updateConsumerDevices() {
-    System.out.println("[CONSUMER-DEVICES-SCHEDULER] " + farmService.updateAllFarmDeviceStatus());
+    System.out.println("[CONSUMER-DEVICES-SCHEDULER] " + farmService.makeAllFarmsDevicesUpdate());
   }
 }

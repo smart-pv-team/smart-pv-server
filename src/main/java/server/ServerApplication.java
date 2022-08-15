@@ -1,8 +1,7 @@
 package server;
 
 import consumption.persistence.ConsumerDeviceMongoRepository;
-import measurement.persistence.MeasurementDeviceRepository;
-import measurement.persistence.MeasurementRepository;
+import measurement.persistence.device.MeasurementDeviceMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,9 +21,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class ServerApplication implements CommandLineRunner {
 
   @Autowired
-  private MeasurementRepository measurementRepository;
-  @Autowired
-  private MeasurementDeviceRepository measurementDeviceRepository;
+  private MeasurementDeviceMongoRepository measurementDeviceMongoRepository;
 
   @Autowired
   private ConsumerDeviceMongoRepository consumerDeviceMongoRepository;
@@ -35,8 +32,7 @@ public class ServerApplication implements CommandLineRunner {
 
   @Override
   public void run(String[] args) {
-    System.out.println(measurementRepository.findAll());
-    System.out.println(measurementDeviceRepository.findAll());
+    System.out.println(measurementDeviceMongoRepository.findAll());
     System.out.println(consumerDeviceMongoRepository.findAll());
   }
 

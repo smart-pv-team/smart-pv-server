@@ -1,4 +1,4 @@
-db.getCollection('measuringDeviceEntity').remove({})
+db.getCollection('measurementDeviceEntity').remove({})
 db.getCollection('measurementEntity').remove({})
 db.getCollection('consumerDeviceEntity').remove({})
 db.getCollection('farmEntity').remove({})
@@ -12,10 +12,13 @@ db.getCollection('farmEntity').insertMany(
     ]
 )
 
-db.getCollection('measuringDeviceEntity').insertMany(
+const farmId = db.getCollection('farmEntity').findOne(
+    {name: "hala"})._id.toString()
+
+db.getCollection('measurementDeviceEntity').insertMany(
     [
       {
-        "farm": "hala",
+        "farmId": `${farmId}`,
         "name": "FIRMA przyłącz B1 od 16.04.21",
         "ipAddress": "https://svr48.supla.org",
         "endpoints": [
@@ -34,7 +37,7 @@ db.getCollection('measuringDeviceEntity').insertMany(
         "_class": "measuring.MeasuringDeviceEntity"
       },
       {
-        "farm": "hala",
+        "farmId": `${farmId}`,
         "name": "FIRMA przyłącz A2 od 19.10.21",
         "ipAddress": "https://svr48.supla.org",
         "endpoints": [

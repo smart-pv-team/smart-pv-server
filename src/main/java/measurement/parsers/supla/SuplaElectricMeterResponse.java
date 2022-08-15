@@ -4,7 +4,7 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 import measurement.parsers.Response;
-import measurement.persistence.MeasurementEntity;
+import measurement.persistence.record.MeasurementEntity;
 
 public record SuplaElectricMeterResponse(boolean connected, Float support, Currency currency,
                                          Float pricePerUnit, Float totalCost,

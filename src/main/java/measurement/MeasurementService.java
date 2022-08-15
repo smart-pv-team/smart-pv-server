@@ -2,13 +2,13 @@ package measurement;
 
 import java.util.Date;
 import java.util.List;
-import management.persistence.FarmRepository;
-import measurement.persistence.MeasurementDeviceEntity;
-import measurement.persistence.MeasurementDeviceRepository;
-import measurement.persistence.MeasurementEntity;
-import measurement.persistence.MeasurementRepository;
-import measurement.persistence.MeasurementSumEntity;
-import measurement.persistence.MeasurementSumRepository;
+import management.persistence.FarmEntity;
+import measurement.persistence.device.MeasurementDeviceEntity;
+import measurement.persistence.device.MeasurementDeviceRepository;
+import measurement.persistence.record.MeasurementEntity;
+import measurement.persistence.record.MeasurementRepository;
+import measurement.persistence.sum.MeasurementSumEntity;
+import measurement.persistence.sum.MeasurementSumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,52 +16,36 @@ import org.springframework.stereotype.Service;
 public class MeasurementService {
 
   private final MeasurementRepository measurementRepository;
-  private final MeasurementSumRepository measurementSumRepository;
   private final MeasurementDeviceRepository measurementDeviceRepository;
+  private final MeasurementSumRepository measurementSumRepository;
   private final MeasurementRequester measurementRequester;
-  private final FarmRepository farmRepository;
 
   @Autowired
   public MeasurementService(MeasurementRepository measurementRepository,
       MeasurementDeviceRepository measurementDeviceRepository,
       MeasurementRequester measurementRequester,
-      FarmRepository farmRepository, MeasurementSumRepository measurementSumRepository) {
+      MeasurementSumRepository measurementSumRepository) {
     this.measurementRepository = measurementRepository;
-    this.measurementDeviceRepository = measurementDeviceRepository;
     this.measurementRequester = measurementRequester;
-    this.farmRepository = farmRepository;
+    this.measurementDeviceRepository = measurementDeviceRepository;
     this.measurementSumRepository = measurementSumRepository;
   }
 
-  //TODO: replace with repository
-  public List<MeasurementEntity> makeMeasurements() {
-    List<MeasurementEntity> allMeasurements = measurementDeviceRepository
-        .findAll()
+  public List<MeasurementEntity> makeMeasurements(FarmEntity farm) {
+    List<MeasurementEntity> measurements = measurementDeviceRepository.findAllByFarmId(farm.id())
         .stream()
         .map(this::requestMeasurement).toList();
-    List<MeasurementSumEntity> allSumMeasurements =
-        farmRepository.findAll().stream()
-            .map(farmEntity -> new MeasurementSumEntity(
-                farmEntity.name(),
-                allMeasurements.stream()
-                    .filter(measurementEntity -> measurementDeviceRepository.getFirstById(
-                        measurementEntity.getDeviceId()).farm().equals(farmEntity.name()))
-                    .map(MeasurementEntity::getMeasurement).reduce((float) 0, Float::sum),
-                new Date()
-            )).toList();
+    MeasurementSumEntity sumMeasurement = new MeasurementSumEntity(
+        farm.id(),
+        measurements.stream().map(MeasurementEntity::getMeasurement).reduce((float) 0, Float::sum),
+        new Date()
+    );
 
-    saveMeasurements(allMeasurements);
-    saveSumMeasurements(allSumMeasurements);
-    return allMeasurements;
+    measurementRepository.save(measurements);
+    measurementSumRepository.save(List.of(sumMeasurement));
+    return measurements;
   }
 
-  private void saveMeasurements(List<MeasurementEntity> measurementEntities) {
-    measurementRepository.saveAll(measurementEntities);
-  }
-
-  private void saveSumMeasurements(List<MeasurementSumEntity> measurementSumEntity) {
-    measurementSumRepository.saveAll(measurementSumEntity);
-  }
 
   private MeasurementEntity requestMeasurement(MeasurementDeviceEntity measurementDeviceEntity) {
     try {
@@ -72,12 +56,4 @@ public class MeasurementService {
     }
   }
 
-  public List<MeasurementSumEntity> getMeasurementSumEntityFromTimePeriod(String farmId, Date from,
-      Date to) {
-    return measurementSumRepository.findAllByIdAndDateBetween(farmId, from, to);
-  }
-
-  public List<MeasurementSumEntity> getAllSumMeasurements() {
-    return measurementSumRepository.findAll();
-  }
 }
