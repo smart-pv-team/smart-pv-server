@@ -1,4 +1,4 @@
-package managment;
+package management;
 
 import consumption.ConsumerDeviceRepository;
 import measurement.MeasurementSumRepository;

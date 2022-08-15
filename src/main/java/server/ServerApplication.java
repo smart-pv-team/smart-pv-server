@@ -1,6 +1,6 @@
 package server;
 
-import consumption.ConsumerDeviceRepository;
+import consumption.ConsumerDeviceMongoRepository;
 import measurement.MeasurementDeviceRepository;
 import measurement.MeasurementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,11 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@ComponentScan({"measurement", "managment", "server", "consumption"})
-@EntityScan({"measurement", "managment", "server", "consumption"})
-@EnableMongoRepositories({"measurement", "managment", "server", "consumption"})
+@ComponentScan({"measurement", "management", "server", "consumption"})
+@EntityScan({"measurement", "management", "server", "consumption"})
+@EnableMongoRepositories({"measurement", "management", "server", "consumption"})
 @EnableScheduling
-@ConfigurationPropertiesScan({"measurement", "managment", "server", "consumption"})
+@ConfigurationPropertiesScan({"measurement", "management", "server", "consumption"})
 public class ServerApplication implements CommandLineRunner {
 
   @Autowired
@@ -27,7 +27,7 @@ public class ServerApplication implements CommandLineRunner {
   private MeasurementDeviceRepository measurementDeviceRepository;
 
   @Autowired
-  private ConsumerDeviceRepository consumerDeviceRepository;
+  private ConsumerDeviceMongoRepository consumerDeviceMongoRepository;
 
   public static void main(String[] args) {
     SpringApplication.run(ServerApplication.class, args);
@@ -37,7 +37,7 @@ public class ServerApplication implements CommandLineRunner {
   public void run(String[] args) {
     System.out.println(measurementRepository.findAll());
     System.out.println(measurementDeviceRepository.findAll());
-    System.out.println(consumerDeviceRepository.findAll());
+    System.out.println(consumerDeviceMongoRepository.findAll());
   }
 
 }

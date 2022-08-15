@@ -23,7 +23,8 @@ public class ConsumerController {
   @GetMapping(Routing.Consumption.Parameters.DeviceId.PATH)
   public ConsumerDeviceParametersMapper getDeviceParameters(
       @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
-    return consumerDeviceRepository.getDeviceParameters(deviceId);
+    //TODO: optional handling
+    return consumerDeviceRepository.getDeviceParameters(deviceId).get();
   }
 
   @PostMapping(Routing.Consumption.Parameters.DeviceId.PATH)
@@ -35,7 +36,7 @@ public class ConsumerController {
   @GetMapping(Routing.Consumption.Parameters.DeviceId.IsOn.PATH)
   public boolean getDeviceParametersIsOn(
       @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
-    return consumerDeviceRepository.isDeviceOn(deviceId);
+    return consumerDeviceRepository.isDeviceOn(deviceId).get();
   }
 
   @PostMapping(IsOn.PATH)

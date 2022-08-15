@@ -1,4 +1,4 @@
-package managment;
+package management;
 
 import nonapi.io.github.classgraph.json.Id;
 

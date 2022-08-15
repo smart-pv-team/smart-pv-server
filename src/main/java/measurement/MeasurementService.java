@@ -2,7 +2,7 @@ package measurement;
 
 import java.util.Date;
 import java.util.List;
-import managment.FarmRepository;
+import management.FarmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,6 @@ public class MeasurementService {
   private final MeasurementDeviceRepository measurementDeviceRepository;
   private final MeasurementRequester measurementRequester;
   private final FarmRepository farmRepository;
-  private float latestTotalMeasurements;
 
   @Autowired
   public MeasurementService(MeasurementRepository measurementRepository,
@@ -28,6 +27,7 @@ public class MeasurementService {
     this.measurementSumRepository = measurementSumRepository;
   }
 
+  //TODO: replace with repository
   public List<MeasurementEntity> makeMeasurements() {
     List<MeasurementEntity> allMeasurements = measurementDeviceRepository
         .findAll()
@@ -46,10 +46,6 @@ public class MeasurementService {
 
     saveMeasurements(allMeasurements);
     saveSumMeasurements(allSumMeasurements);
-    latestTotalMeasurements = allMeasurements
-        .stream()
-        .map(MeasurementEntity::getMeasurement)
-        .reduce((float) 0, Float::sum);
     return allMeasurements;
   }
 
@@ -68,10 +64,6 @@ public class MeasurementService {
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  public float getLatestTotalMeasurements() {
-    return latestTotalMeasurements;
   }
 
   public List<MeasurementSumEntity> getMeasurementSumEntityFromTimePeriod(String farmId, Date from,
