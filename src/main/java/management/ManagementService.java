@@ -29,7 +29,7 @@ public class ManagementService {
 
               if (availableEnergy >= 0) {
                 consumerDeviceRepository.findHighestPriorityOffDevice(farm).ifPresent((device) -> {
-                  if (availableEnergy - device.getPowerConsumption() >= 0) {
+                  if (availableEnergy - device.getControlParameters().getPowerConsumption() >= 0) {
                     consumerDeviceRepository.setDeviceOn(device.getId(), true);
                     builder.append("Turned on device: ").append(device.getId());
                   }

@@ -1,6 +1,6 @@
 package consumption.persistence;
 
-import consumption.ConsumerDeviceParametersMapper;
+import consumption.ControlParameters;
 import java.util.Comparator;
 import java.util.Optional;
 import management.persistence.FarmEntity;
@@ -19,31 +19,28 @@ public class ConsumerDeviceRepositoryImpl implements ConsumerDeviceRepository {
   public Optional<Boolean> isDeviceOn(String id) {
     return Optional.of(consumerDeviceMongoRepository.findById(id)
         .orElseThrow()
-        .isOn());
+        .getIsOn());
   }
 
   @Override
   public void setDeviceOn(String id, boolean newStatus) {
     ConsumerDeviceEntity device = consumerDeviceMongoRepository.findById(id).orElseThrow();
-    device.setOn(newStatus);
+    device.setIsOn(newStatus);
     consumerDeviceMongoRepository.save(device);
   }
 
   @Override
-  public void setDeviceParameters(String id,
-      ConsumerDeviceParametersMapper consumerDeviceParametersMapper) {
-    ConsumerDeviceEntity oldConsumerDeviceEntity = consumerDeviceMongoRepository.findById(
-        id).orElseThrow();
-    consumerDeviceMongoRepository.save(
-        oldConsumerDeviceEntity.withParameters(consumerDeviceParametersMapper)
-            .withId(id));
+  public void setDeviceParameters(String id, ControlParameters controlParameters) {
+    ConsumerDeviceEntity consumerDeviceEntity = consumerDeviceMongoRepository.findById(
+        id).get();
+    consumerDeviceEntity.setControlParameters(controlParameters);
+    consumerDeviceMongoRepository.save(consumerDeviceEntity);
   }
 
   @Override
-  public Optional<ConsumerDeviceParametersMapper> getDeviceParameters(
-      String id) {
-    return consumerDeviceMongoRepository.findById(id)
-        .map(ConsumerDeviceParametersMapper::ofConsumerDevice);
+  public Optional<ControlParameters> getDeviceParameters(String id) {
+    return Optional.ofNullable(
+        consumerDeviceMongoRepository.findById(id).get().getControlParameters());
   }
 
   //TODO: rewrite to collections
@@ -51,15 +48,15 @@ public class ConsumerDeviceRepositoryImpl implements ConsumerDeviceRepository {
   public Optional<ConsumerDeviceEntity> findHighestPriorityOffDevice(FarmEntity farm) {
     return consumerDeviceMongoRepository.findAllByFarmId(farm.id())
         .stream()
-        .filter(d -> !d.isOn())
-        .min(Comparator.comparing(ConsumerDeviceEntity::getPriority));
+        .filter(d -> !d.getIsOn())
+        .min(Comparator.comparing((e) -> e.getControlParameters().getPriority()));
   }
 
   @Override
   public Optional<ConsumerDeviceEntity> findLowestPriorityOnDevice(FarmEntity farm) {
     return consumerDeviceMongoRepository.findAllByFarmId(farm.id())
         .stream()
-        .filter(ConsumerDeviceEntity::isOn)
-        .max(Comparator.comparing(ConsumerDeviceEntity::getPriority));
+        .filter(ConsumerDeviceEntity::getIsOn)
+        .max(Comparator.comparing((e) -> e.getControlParameters().getPriority()));
   }
 }

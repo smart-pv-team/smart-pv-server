@@ -1,6 +1,6 @@
 package consumption.persistence;
 
-import consumption.ConsumerDeviceParametersMapper;
+import consumption.ControlParameters;
 import java.util.Optional;
 import management.persistence.FarmEntity;
 
@@ -11,9 +11,9 @@ public interface ConsumerDeviceRepository {
   void setDeviceOn(String id, boolean newStatus);
 
   void setDeviceParameters(String id,
-      ConsumerDeviceParametersMapper consumerDeviceParametersMapper);
+      ControlParameters controlParameters);
 
-  Optional<ConsumerDeviceParametersMapper> getDeviceParameters(
+  Optional<ControlParameters> getDeviceParameters(
       String id);
 
   Optional<ConsumerDeviceEntity> findHighestPriorityOffDevice(FarmEntity farm);

@@ -2,7 +2,7 @@ package consumption;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import consumption.persistence.ConsumerDeviceEntity;
-
+// TODO: Just example
 public class ConsumerDeviceStatusMapper {
 
   public boolean isOn;
@@ -13,6 +13,6 @@ public class ConsumerDeviceStatusMapper {
 
   public static ConsumerDeviceStatusMapper ofConsumerDeviceEntity(
       ConsumerDeviceEntity consumerDeviceEntity) {
-    return new ConsumerDeviceStatusMapper(consumerDeviceEntity.isOn());
+    return new ConsumerDeviceStatusMapper(consumerDeviceEntity.getIsOn());
   }
 }

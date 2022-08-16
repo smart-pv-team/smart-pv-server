@@ -1,9 +1,10 @@
 package consumption.persistence;
 
-import consumption.ConsumerDeviceParametersMapper;
+import consumption.ControlParameters;
+import java.util.List;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
+import server.utils.HttpEndpointData;
 
 @Data
 public class ConsumerDeviceEntity {
@@ -11,53 +12,21 @@ public class ConsumerDeviceEntity {
   @Id
   private String id;
   private String farmId;
+  private String name;
   private String ipAddress;
-  private String dataEndpoint;
-  private int priority;
-  private boolean isOn;
-  private float powerConsumption;
-  private int minHysteresis;
-  private int maxHysteresis;
-  private boolean isLocked;
+  private List<HttpEndpointData> endpoints;
+  private Boolean isOn;
+  private ControlParameters controlParameters;
 
-  public ConsumerDeviceEntity(String ipAddress, String dataEndpoint, String farmId) {
-    this.ipAddress = ipAddress;
-    this.dataEndpoint = dataEndpoint;
-    this.farmId = farmId;
-  }
-
-  @PersistenceConstructor
-  public ConsumerDeviceEntity(String ipAddress, String dataEndpoint, int priority, boolean isOn,
-      float powerConsumption, int minHysteresis, int maxHysteresis, boolean isLocked, String farmId) {
-    this.ipAddress = ipAddress;
-    this.farmId = farmId;
-    this.dataEndpoint = dataEndpoint;
-    this.priority = priority;
-    this.isOn = isOn;
-    this.powerConsumption = powerConsumption;
-    this.minHysteresis = minHysteresis;
-    this.maxHysteresis = maxHysteresis;
-    this.isLocked = isLocked;
-  }
-
-  public ConsumerDeviceEntity withParameters(
-      ConsumerDeviceParametersMapper consumerDeviceParametersMapper) {
-    return new ConsumerDeviceEntity(
-        this.ipAddress,
-        this.dataEndpoint,
-        consumerDeviceParametersMapper.priority,
-        consumerDeviceParametersMapper.isOn,
-        consumerDeviceParametersMapper.powerConsumption,
-        consumerDeviceParametersMapper.minHysteresis,
-        consumerDeviceParametersMapper.maxHysteresis,
-        this.isLocked,
-        this.farmId
-    );
-  }
-
-  public ConsumerDeviceEntity withId(String id) {
+  public ConsumerDeviceEntity(String id, String farmId, String name, String ipAddress, Boolean isOn,
+      List<HttpEndpointData> endpoints, ControlParameters controlParameters) {
     this.id = id;
-    return this;
+    this.farmId = farmId;
+    this.name = name;
+    this.ipAddress = ipAddress;
+    this.isOn = isOn;
+    this.endpoints = endpoints;
+    this.controlParameters = controlParameters;
   }
 
 }

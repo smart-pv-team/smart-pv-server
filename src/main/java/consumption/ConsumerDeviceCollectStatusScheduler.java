@@ -1,4 +1,4 @@
-package measurement;
+package consumption;
 
 import management.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import server.conf.SystemProperties;
 
 @Component
-public class MeasurementScheduler {
+public class ConsumerDeviceCollectStatusScheduler {
 
   private final FarmService farmService;
   private final SystemProperties systemProperties;
 
   @Autowired
-  public MeasurementScheduler(
+  public ConsumerDeviceCollectStatusScheduler(
       FarmService farmService,
       SystemProperties systemProperties
   ) {
@@ -21,15 +21,12 @@ public class MeasurementScheduler {
     this.systemProperties = systemProperties;
   }
 
-  @Scheduled(cron = "${system.cron.measurement}")
-  public void scheduleMeasurements() {
-    if (systemProperties.getMeasure()) {
-      System.out.println(
-          "[MEASURING-DEVICES-SCHEDULER] " + farmService.makeAllFarmsDevicesMeasurement()
-              + " measurements");
+  @Scheduled(cron = "${system.cron.collectDevicesStatus}")
+  public void updateConsumerDevices() {
+    if (systemProperties.getCollectDevicesStatus()) {
+      System.out.println("[CONSUMER-DEVICES-COLLECT-STATUS-SCHEDULER] ");
     } else {
-      System.out.println("[MEASURING-DEVICES-SCHEDULER] disabled");
+      System.out.println("[CONSUMER-DEVICES-COLLECT-STATUS-SCHEDULER] disabled");
     }
   }
-
 }

@@ -22,16 +22,18 @@ public class ConsumerController {
   }
 
   @GetMapping(Routing.Consumption.Parameters.DeviceId.PATH)
-  public ConsumerDeviceParametersMapper getDeviceParameters(
+  public ControlParametersMapper getDeviceParameters(
       @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
     //TODO: optional handling
-    return consumerDeviceRepository.getDeviceParameters(deviceId).get();
+    return ControlParametersMapper.ofControlParameters(
+        consumerDeviceRepository.getDeviceParameters(deviceId).get());
   }
 
   @PostMapping(Routing.Consumption.Parameters.DeviceId.PATH)
   public void setDeviceParameters(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
-      @RequestBody ConsumerDeviceParametersMapper consumerDeviceParametersMapper) {
-    consumerDeviceRepository.setDeviceParameters(deviceId, consumerDeviceParametersMapper);
+      @RequestBody ControlParametersMapper controlParameters) {
+    consumerDeviceRepository.setDeviceParameters(deviceId,
+        ControlParametersMapper.toControlParameters(controlParameters));
   }
 
   @GetMapping(Routing.Consumption.Parameters.DeviceId.IsOn.PATH)
