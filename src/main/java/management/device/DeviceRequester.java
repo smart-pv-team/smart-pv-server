@@ -1,9 +1,8 @@
-package measurement;
+package management.device;
 
 import lombok.extern.slf4j.Slf4j;
-import measurement.parsers.Response;
-import measurement.parsers.StringToResponseClassParser;
-import measurement.persistence.device.MeasurementDeviceEntity;
+import management.device.parsers.Response;
+import management.device.parsers.StringToResponseClassParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -18,13 +17,13 @@ import server.utils.HttpEndpointData;
 
 @Slf4j
 @Component
-public class MeasurementRequester {
+public class DeviceRequester {
 
   private final StringToResponseClassParser stringToResponseClassParser;
   private final RestTemplate restTemplate;
 
   @Autowired
-  public MeasurementRequester(
+  public DeviceRequester(
       RestTemplateBuilder restTemplateBuilder,
       StringToResponseClassParser stringToResponseClassParser
   ) {
@@ -34,12 +33,11 @@ public class MeasurementRequester {
     this.restTemplate.setRequestFactory(requestFactory);
   }
 
-  public Response getMeasurement(MeasurementDeviceEntity measurementDeviceEntity)
-      throws ClassNotFoundException {
-    HttpEndpointData httpEndpointData = measurementDeviceEntity.endpoints().stream()
-        .filter((e) -> e.action().equals(Action.READ)).findFirst()
+  public Response getData(Device device, Action action) throws ClassNotFoundException {
+    HttpEndpointData httpEndpointData = device.getEndpoints().stream()
+        .filter((e) -> e.action().equals(action)).findFirst()
         .orElseThrow(NullPointerException::new);
-    String url = measurementDeviceEntity.ipAddress().concat(httpEndpointData.endpoint());
+    String url = device.getIpAddress().concat(httpEndpointData.endpoint());
 
     return sendRequest(
         url,

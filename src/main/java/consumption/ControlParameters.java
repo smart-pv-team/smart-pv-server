@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ControlParameters {
+
   private int priority;
   private float powerConsumption;
   private int minHysteresis;

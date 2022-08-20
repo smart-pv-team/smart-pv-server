@@ -5,3 +5,12 @@ spring:
     mongodb:
       uri: mongodb+srv://janicki:janicki@smartpv.dr74ruo.mongodb.net/smartpv?retryWrites=true&w=majority
       database: smartpv
+
+system:
+  measure: true
+  collectDevicesStatus: true
+  manageDevices: false
+  cron:
+    measurement: 0 */5 * * * *
+    management: 0 */5 * * * *
+    collectDevicesStatus: 0 */5 * * * *

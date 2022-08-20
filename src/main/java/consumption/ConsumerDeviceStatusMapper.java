@@ -1,7 +1,8 @@
 package consumption;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import consumption.persistence.ConsumerDeviceEntity;
+import consumption.persistence.device.ConsumerDeviceEntity;
+
 // TODO: Just example
 public class ConsumerDeviceStatusMapper {
 

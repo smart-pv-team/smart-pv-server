@@ -1,9 +1,10 @@
-package consumption.persistence;
+package consumption.persistence.device;
 
 import consumption.ControlParameters;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
-import management.persistence.FarmEntity;
+import management.farm.FarmEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,6 +14,11 @@ public class ConsumerDeviceRepositoryImpl implements ConsumerDeviceRepository {
 
   public ConsumerDeviceRepositoryImpl(ConsumerDeviceMongoRepository consumerDeviceMongoRepository) {
     this.consumerDeviceMongoRepository = consumerDeviceMongoRepository;
+  }
+
+  @Override
+  public List<ConsumerDeviceEntity> findAllByFarmId(String farmId) {
+    return consumerDeviceMongoRepository.findAllByFarmId(farmId);
   }
 
   @Override

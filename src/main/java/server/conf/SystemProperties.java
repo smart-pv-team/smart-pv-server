@@ -9,9 +9,9 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @Data
 public class SystemProperties {
 
-  private final Boolean measure;
-  private final Boolean collectDevicesStatus;
-  private final Boolean manageDevices;
+  private Boolean measure;
+  private Boolean collectDevicesStatus;
+  private Boolean manageDevices;
 
   public SystemProperties(Boolean measure, Boolean collectDevicesStatus, Boolean manageDevices) {
     this.measure = measure;

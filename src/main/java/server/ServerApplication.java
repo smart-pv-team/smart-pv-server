@@ -1,6 +1,6 @@
 package server;
 
-import consumption.persistence.ConsumerDeviceMongoRepository;
+import consumption.persistence.device.ConsumerDeviceMongoRepository;
 import measurement.persistence.device.MeasurementDeviceMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

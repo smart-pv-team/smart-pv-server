@@ -2,7 +2,8 @@ package measurement;
 
 import java.util.Date;
 import java.util.List;
-import management.persistence.FarmEntity;
+import management.device.DeviceRequester;
+import management.farm.FarmEntity;
 import measurement.persistence.device.MeasurementDeviceEntity;
 import measurement.persistence.device.MeasurementDeviceRepository;
 import measurement.persistence.record.MeasurementEntity;
@@ -11,6 +12,7 @@ import measurement.persistence.sum.MeasurementSumEntity;
 import measurement.persistence.sum.MeasurementSumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import server.utils.Action;
 
 @Service
 public class MeasurementService {
@@ -18,15 +20,15 @@ public class MeasurementService {
   private final MeasurementRepository measurementRepository;
   private final MeasurementDeviceRepository measurementDeviceRepository;
   private final MeasurementSumRepository measurementSumRepository;
-  private final MeasurementRequester measurementRequester;
+  private final DeviceRequester deviceRequester;
 
   @Autowired
   public MeasurementService(MeasurementRepository measurementRepository,
       MeasurementDeviceRepository measurementDeviceRepository,
-      MeasurementRequester measurementRequester,
+      DeviceRequester deviceRequester,
       MeasurementSumRepository measurementSumRepository) {
     this.measurementRepository = measurementRepository;
-    this.measurementRequester = measurementRequester;
+    this.deviceRequester = deviceRequester;
     this.measurementDeviceRepository = measurementDeviceRepository;
     this.measurementSumRepository = measurementSumRepository;
   }
@@ -49,8 +51,9 @@ public class MeasurementService {
 
   private MeasurementEntity requestMeasurement(MeasurementDeviceEntity measurementDeviceEntity) {
     try {
-      return measurementRequester.getMeasurement(measurementDeviceEntity)
-          .toMeasurementEntity(measurementDeviceEntity.id());
+      MeasurementResponseMapper measurementResponseMapper = deviceRequester.getData(
+          measurementDeviceEntity, Action.READ).toMapper(measurementDeviceEntity.getId());
+      return measurementResponseMapper.toEntity();
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }

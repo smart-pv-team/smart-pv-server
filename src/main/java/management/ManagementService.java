@@ -1,7 +1,7 @@
 package management;
 
-import consumption.persistence.ConsumerDeviceRepository;
-import management.persistence.FarmEntity;
+import consumption.persistence.device.ConsumerDeviceRepository;
+import management.farm.FarmEntity;
 import measurement.persistence.sum.MeasurementSumMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

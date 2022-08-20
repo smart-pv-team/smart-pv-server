@@ -1,6 +1,6 @@
 package consumption;
 
-import management.FarmService;
+import management.farm.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,8 @@ public class ConsumerDeviceCollectStatusScheduler {
   @Scheduled(cron = "${system.cron.collectDevicesStatus}")
   public void updateConsumerDevices() {
     if (systemProperties.getCollectDevicesStatus()) {
-      System.out.println("[CONSUMER-DEVICES-COLLECT-STATUS-SCHEDULER] ");
+      System.out.println("[CONSUMER-DEVICES-COLLECT-STATUS-SCHEDULER] "
+          + farmService.collectAllFarmsDevicesStatus() + "active devices");
     } else {
       System.out.println("[CONSUMER-DEVICES-COLLECT-STATUS-SCHEDULER] disabled");
     }

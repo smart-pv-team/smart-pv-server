@@ -1,4 +1,4 @@
-package management.persistence;
+package management.farm;
 
 import nonapi.io.github.classgraph.json.Id;
 

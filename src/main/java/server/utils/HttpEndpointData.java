@@ -1,6 +1,6 @@
 package server.utils;
 
-import measurement.parsers.ResponseType;
+import management.device.parsers.ResponseType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
