@@ -1,4 +1,4 @@
-package consumption.persistence.status;
+package consumption.persistence.record;
 
 import java.util.Date;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document()
-public class ConsumerDeviceStatusEntity {
+public class ConsumptionEntity {
 
   private final List<String> activeDevicesIds;
   private final Integer activeDevicesNum;

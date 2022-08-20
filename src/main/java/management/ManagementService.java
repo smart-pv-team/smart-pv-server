@@ -1,6 +1,6 @@
 package management;
 
-import consumption.persistence.device.ConsumerDeviceRepository;
+import consumption.persistence.device.ConsumptionDeviceRepository;
 import management.farm.FarmEntity;
 import measurement.persistence.record.MeasurementMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ManagementService {
 
-  private final ConsumerDeviceRepository consumerDeviceRepository;
+  private final ConsumptionDeviceRepository consumptionDeviceRepository;
   private final MeasurementMongoRepository measurementMongoRepository;
 
   @Autowired
-  public ManagementService(ConsumerDeviceRepository consumerDeviceRepository,
+  public ManagementService(ConsumptionDeviceRepository consumptionDeviceRepository,
       MeasurementMongoRepository measurementMongoRepository) {
-    this.consumerDeviceRepository = consumerDeviceRepository;
+    this.consumptionDeviceRepository = consumptionDeviceRepository;
     this.measurementMongoRepository = measurementMongoRepository;
   }
 
@@ -28,15 +28,15 @@ public class ManagementService {
               builder.append("[AVAILABLE ENERGY] ").append(availableEnergy);
 
               if (availableEnergy >= 0) {
-                consumerDeviceRepository.findHighestPriorityOffDevice(farm).ifPresent((device) -> {
+                consumptionDeviceRepository.findHighestPriorityOffDevice(farm).ifPresent((device) -> {
                   if (availableEnergy - device.getControlParameters().getPowerConsumption() >= 0) {
-                    consumerDeviceRepository.setDeviceOn(device.getId(), true);
+                    consumptionDeviceRepository.setDeviceOn(device.getId(), true);
                     builder.append("Turned on device: ").append(device.getId());
                   }
                 });
               } else {
-                consumerDeviceRepository.findLowestPriorityOnDevice(farm).ifPresent((device) -> {
-                  consumerDeviceRepository.setDeviceOn(device.getId(), false);
+                consumptionDeviceRepository.findLowestPriorityOnDevice(farm).ifPresent((device) -> {
+                  consumptionDeviceRepository.setDeviceOn(device.getId(), false);
                   builder.append("Turned off device: ").append(device.getId());
                 });
               }

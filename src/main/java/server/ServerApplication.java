@@ -1,6 +1,6 @@
 package server;
 
-import consumption.persistence.device.ConsumerDeviceMongoRepository;
+import consumption.persistence.device.ConsumptionDeviceMongoRepository;
 import measurement.persistence.device.MeasurementDeviceMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,7 +24,7 @@ public class ServerApplication implements CommandLineRunner {
   private MeasurementDeviceMongoRepository measurementDeviceMongoRepository;
 
   @Autowired
-  private ConsumerDeviceMongoRepository consumerDeviceMongoRepository;
+  private ConsumptionDeviceMongoRepository consumptionDeviceMongoRepository;
 
   public static void main(String[] args) {
     SpringApplication.run(ServerApplication.class, args);
@@ -33,7 +33,7 @@ public class ServerApplication implements CommandLineRunner {
   @Override
   public void run(String[] args) {
     System.out.println(measurementDeviceMongoRepository.findAll());
-    System.out.println(consumerDeviceMongoRepository.findAll());
+    System.out.println(consumptionDeviceMongoRepository.findAll());
   }
 
 }

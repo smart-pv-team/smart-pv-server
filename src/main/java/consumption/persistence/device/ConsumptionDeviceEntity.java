@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document()
-public class ConsumerDeviceEntity extends Device {
+public class ConsumptionDeviceEntity extends Device {
 
   private Boolean isOn;
   private ControlParameters controlParameters;

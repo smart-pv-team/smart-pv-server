@@ -1,7 +1,7 @@
 package management.farm;
 
-import consumption.ConsumerDeviceService;
-import consumption.persistence.status.ConsumerDeviceStatusEntity;
+import consumption.ConsumptionService;
+import consumption.persistence.record.ConsumptionEntity;
 import java.util.List;
 import management.ManagementService;
 import measurement.MeasurementService;
@@ -14,16 +14,16 @@ public class FarmService {
 
   private final ManagementService managementService;
   private final MeasurementService measurementService;
-  private final ConsumerDeviceService consumerDeviceService;
+  private final ConsumptionService consumptionService;
   private final FarmRepository farmRepository;
 
   @Autowired
   public FarmService(ManagementService managementService, FarmRepository farmRepository,
-      MeasurementService measurementService, ConsumerDeviceService consumerDeviceService) {
+      MeasurementService measurementService, ConsumptionService consumptionService) {
     this.managementService = managementService;
     this.measurementService = measurementService;
     this.farmRepository = farmRepository;
-    this.consumerDeviceService = consumerDeviceService;
+    this.consumptionService = consumptionService;
   }
 
   public String makeAllFarmsDevicesUpdate() {
@@ -44,8 +44,8 @@ public class FarmService {
   public String collectAllFarmsDevicesStatus() {
     return String.valueOf(
         farmRepository.findAll().stream()
-            .map(consumerDeviceService::collectDevicesStatus)
-            .map(ConsumerDeviceStatusEntity::getActiveDevicesIds)
+            .map(consumptionService::collectDevicesStatus)
+            .map(ConsumptionEntity::getActiveDevicesIds)
             .mapToLong(List::size)
             .sum());
   }

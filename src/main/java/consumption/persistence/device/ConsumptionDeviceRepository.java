@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import management.farm.FarmEntity;
 
-public interface ConsumerDeviceRepository {
+public interface ConsumptionDeviceRepository {
 
-  List<ConsumerDeviceEntity> findAllByFarmId(String farmId);
+  List<ConsumptionDeviceEntity> findAllByFarmId(String farmId);
 
   Optional<Boolean> isDeviceOn(String id);
 
@@ -19,8 +19,8 @@ public interface ConsumerDeviceRepository {
   Optional<ControlParameters> getDeviceParameters(
       String id);
 
-  Optional<ConsumerDeviceEntity> findHighestPriorityOffDevice(FarmEntity farm);
+  Optional<ConsumptionDeviceEntity> findHighestPriorityOffDevice(FarmEntity farm);
 
-  Optional<ConsumerDeviceEntity> findLowestPriorityOnDevice(FarmEntity farm);
+  Optional<ConsumptionDeviceEntity> findLowestPriorityOnDevice(FarmEntity farm);
 
 }

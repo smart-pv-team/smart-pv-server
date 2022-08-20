@@ -12,7 +12,7 @@ public class MeasurementEntity {
 
   private final String farmId;
   private final Float measurement;
-  private final Map<String,Float> measurements;
+  private final Map<String, Float> measurements;
   private final Date date;
   @Id
   private String id;

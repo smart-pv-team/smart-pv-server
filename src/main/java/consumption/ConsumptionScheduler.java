@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import server.conf.SystemProperties;
 
 @Component
-public class ConsumerDeviceCollectStatusScheduler {
+public class ConsumptionScheduler {
 
   private final FarmService farmService;
   private final SystemProperties systemProperties;
 
   @Autowired
-  public ConsumerDeviceCollectStatusScheduler(
+  public ConsumptionScheduler(
       FarmService farmService,
       SystemProperties systemProperties
   ) {
