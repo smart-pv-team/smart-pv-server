@@ -5,6 +5,7 @@ import consumption.persistence.status.ConsumerDeviceStatusEntity;
 import java.util.List;
 import management.ManagementService;
 import measurement.MeasurementService;
+import measurement.persistence.record.MeasurementEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class FarmService {
     return String.valueOf(
         farmRepository.findAll().stream()
             .map(measurementService::makeMeasurements)
-            .mapToLong(List::size)
+            .mapToDouble(MeasurementEntity::getMeasurement)
             .sum());
   }
 

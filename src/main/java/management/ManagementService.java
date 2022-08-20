@@ -2,7 +2,7 @@ package management;
 
 import consumption.persistence.device.ConsumerDeviceRepository;
 import management.farm.FarmEntity;
-import measurement.persistence.sum.MeasurementSumMongoRepository;
+import measurement.persistence.record.MeasurementMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +10,19 @@ import org.springframework.stereotype.Service;
 public class ManagementService {
 
   private final ConsumerDeviceRepository consumerDeviceRepository;
-  private final MeasurementSumMongoRepository measurementSumMongoRepository;
+  private final MeasurementMongoRepository measurementMongoRepository;
 
   @Autowired
   public ManagementService(ConsumerDeviceRepository consumerDeviceRepository,
-      MeasurementSumMongoRepository measurementSumMongoRepository) {
+      MeasurementMongoRepository measurementMongoRepository) {
     this.consumerDeviceRepository = consumerDeviceRepository;
-    this.measurementSumMongoRepository = measurementSumMongoRepository;
+    this.measurementMongoRepository = measurementMongoRepository;
   }
 
 
   public String updateDevicesStatus(FarmEntity farm) {
     StringBuilder builder = new StringBuilder();
-    measurementSumMongoRepository.findTopByFarmIdOrderByDateDesc(farm.id())
+    measurementMongoRepository.findTopByFarmIdOrderByDateDesc(farm.id())
         .ifPresentOrElse((record) -> {
               Float availableEnergy = record.getMeasurement();
               builder.append("[AVAILABLE ENERGY] ").append(availableEnergy);

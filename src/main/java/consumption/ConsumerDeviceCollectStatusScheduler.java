@@ -25,7 +25,7 @@ public class ConsumerDeviceCollectStatusScheduler {
   public void updateConsumerDevices() {
     if (systemProperties.getCollectDevicesStatus()) {
       System.out.println("[CONSUMER-DEVICES-COLLECT-STATUS-SCHEDULER] "
-          + farmService.collectAllFarmsDevicesStatus() + "active devices");
+          + farmService.collectAllFarmsDevicesStatus() + " active devices");
     } else {
       System.out.println("[CONSUMER-DEVICES-COLLECT-STATUS-SCHEDULER] disabled");
     }

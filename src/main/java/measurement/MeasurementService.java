@@ -2,14 +2,14 @@ package measurement;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import management.device.DeviceRequester;
 import management.farm.FarmEntity;
 import measurement.persistence.device.MeasurementDeviceEntity;
 import measurement.persistence.device.MeasurementDeviceRepository;
 import measurement.persistence.record.MeasurementEntity;
 import measurement.persistence.record.MeasurementRepository;
-import measurement.persistence.sum.MeasurementSumEntity;
-import measurement.persistence.sum.MeasurementSumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.utils.Action;
@@ -17,43 +17,45 @@ import server.utils.Action;
 @Service
 public class MeasurementService {
 
-  private final MeasurementRepository measurementRepository;
   private final MeasurementDeviceRepository measurementDeviceRepository;
-  private final MeasurementSumRepository measurementSumRepository;
+  private final MeasurementRepository measurementRepository;
   private final DeviceRequester deviceRequester;
 
   @Autowired
-  public MeasurementService(MeasurementRepository measurementRepository,
+  public MeasurementService(
       MeasurementDeviceRepository measurementDeviceRepository,
       DeviceRequester deviceRequester,
-      MeasurementSumRepository measurementSumRepository) {
-    this.measurementRepository = measurementRepository;
+      MeasurementRepository measurementRepository) {
     this.deviceRequester = deviceRequester;
     this.measurementDeviceRepository = measurementDeviceRepository;
-    this.measurementSumRepository = measurementSumRepository;
+    this.measurementRepository = measurementRepository;
   }
 
-  public List<MeasurementEntity> makeMeasurements(FarmEntity farm) {
-    List<MeasurementEntity> measurements = measurementDeviceRepository.findAllByFarmId(farm.id())
+  public MeasurementEntity makeMeasurements(FarmEntity farm) {
+    List<MeasurementResponseMapper> responses = measurementDeviceRepository
+        .findAllByFarmId(farm.id())
         .stream()
         .map(this::requestMeasurement).toList();
-    MeasurementSumEntity sumMeasurement = new MeasurementSumEntity(
-        farm.id(),
-        measurements.stream().map(MeasurementEntity::getMeasurement).reduce((float) 0, Float::sum),
-        new Date()
-    );
+    Float measurementSum = responses.stream()
+        .map(MeasurementResponseMapper::getMeasurementSum)
+        .reduce((float) 0, Float::sum);
+    Map<String, Float> measurements = responses.stream()
+        .collect(Collectors.toMap(
+            MeasurementResponseMapper::deviceId,
+            MeasurementResponseMapper::getMeasurementSum));
 
-    measurementRepository.save(measurements);
-    measurementSumRepository.save(List.of(sumMeasurement));
-    return measurements;
+    MeasurementEntity measurementEntity = new MeasurementEntity(farm.id(), measurementSum,
+        measurements, new Date());
+    measurementRepository.save(measurementEntity);
+    return measurementEntity;
   }
 
 
-  private MeasurementEntity requestMeasurement(MeasurementDeviceEntity measurementDeviceEntity) {
+  private MeasurementResponseMapper requestMeasurement(
+      MeasurementDeviceEntity measurementDeviceEntity) {
     try {
-      MeasurementResponseMapper measurementResponseMapper = deviceRequester.getData(
-          measurementDeviceEntity, Action.READ).toMapper(measurementDeviceEntity.getId());
-      return measurementResponseMapper.toEntity();
+      return deviceRequester.getData(measurementDeviceEntity, Action.READ)
+          .toMapper(measurementDeviceEntity.getId());
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }

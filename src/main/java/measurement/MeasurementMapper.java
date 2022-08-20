@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import measurement.persistence.record.MeasurementEntity;
-import measurement.persistence.sum.MeasurementSumEntity;
 import server.utils.Dates;
 
 public class MeasurementMapper {
@@ -21,12 +20,7 @@ public class MeasurementMapper {
     this.date = date;
   }
 
-  public static MeasurementMapper ofMeasurementEntity(MeasurementEntity measurementEntity) {
-    return new MeasurementMapper(measurementEntity.getMeasurement(),
-        Dates.dateToLocalDateTime(measurementEntity.getDate()));
-  }
-
-  public static MeasurementMapper ofMeasurementSumEntity(MeasurementSumEntity measurementEntity) {
+  public static MeasurementMapper ofMeasurementSumEntity(MeasurementEntity measurementEntity) {
     return new MeasurementMapper(measurementEntity.getMeasurement(),
         Dates.dateToLocalDateTime(measurementEntity.getDate()));
   }
