@@ -1,19 +1,19 @@
-package measurement.persistence.record;
+package consumption.persistence.record;
 
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document()
-public class MeasurementEntity {
+public class ConsumptionEntity {
 
-  private final String farmId;
-  private final Float measurement;
-  private final Map<String, Float> measurements;
+  private final List<String> activeDevicesIds;
+  private final Integer activeDevicesNum;
   private final Date date;
+
   @Id
   private String id;
 }

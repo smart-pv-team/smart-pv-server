@@ -1,42 +1,42 @@
 package management;
 
-import consumption.persistence.ConsumerDeviceRepository;
-import management.persistence.FarmEntity;
-import measurement.persistence.sum.MeasurementSumMongoRepository;
+import consumption.persistence.device.ConsumptionDeviceRepository;
+import management.farm.FarmEntity;
+import measurement.persistence.record.MeasurementMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ManagementService {
 
-  private final ConsumerDeviceRepository consumerDeviceRepository;
-  private final MeasurementSumMongoRepository measurementSumMongoRepository;
+  private final ConsumptionDeviceRepository consumptionDeviceRepository;
+  private final MeasurementMongoRepository measurementMongoRepository;
 
   @Autowired
-  public ManagementService(ConsumerDeviceRepository consumerDeviceRepository,
-      MeasurementSumMongoRepository measurementSumMongoRepository) {
-    this.consumerDeviceRepository = consumerDeviceRepository;
-    this.measurementSumMongoRepository = measurementSumMongoRepository;
+  public ManagementService(ConsumptionDeviceRepository consumptionDeviceRepository,
+      MeasurementMongoRepository measurementMongoRepository) {
+    this.consumptionDeviceRepository = consumptionDeviceRepository;
+    this.measurementMongoRepository = measurementMongoRepository;
   }
 
 
   public String updateDevicesStatus(FarmEntity farm) {
     StringBuilder builder = new StringBuilder();
-    measurementSumMongoRepository.findTopByFarmIdOrderByDateDesc(farm.id())
+    measurementMongoRepository.findTopByFarmIdOrderByDateDesc(farm.id())
         .ifPresentOrElse((record) -> {
               Float availableEnergy = record.getMeasurement();
               builder.append("[AVAILABLE ENERGY] ").append(availableEnergy);
 
               if (availableEnergy >= 0) {
-                consumerDeviceRepository.findHighestPriorityOffDevice(farm).ifPresent((device) -> {
-                  if (availableEnergy - device.getPowerConsumption() >= 0) {
-                    consumerDeviceRepository.setDeviceOn(device.getId(), true);
+                consumptionDeviceRepository.findHighestPriorityOffDevice(farm).ifPresent((device) -> {
+                  if (availableEnergy - device.getControlParameters().getPowerConsumption() >= 0) {
+                    consumptionDeviceRepository.setDeviceOn(device.getId(), true);
                     builder.append("Turned on device: ").append(device.getId());
                   }
                 });
               } else {
-                consumerDeviceRepository.findLowestPriorityOnDevice(farm).ifPresent((device) -> {
-                  consumerDeviceRepository.setDeviceOn(device.getId(), false);
+                consumptionDeviceRepository.findLowestPriorityOnDevice(farm).ifPresent((device) -> {
+                  consumptionDeviceRepository.setDeviceOn(device.getId(), false);
                   builder.append("Turned off device: ").append(device.getId());
                 });
               }

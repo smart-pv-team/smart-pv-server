@@ -8,7 +8,8 @@ public class MeasurementDeviceRepositoryImpl implements MeasurementDeviceReposit
 
   private final MeasurementDeviceMongoRepository measurementDeviceMongoRepository;
 
-  public MeasurementDeviceRepositoryImpl(MeasurementDeviceMongoRepository measurementDeviceMongoRepository) {
+  public MeasurementDeviceRepositoryImpl(
+      MeasurementDeviceMongoRepository measurementDeviceMongoRepository) {
     this.measurementDeviceMongoRepository = measurementDeviceMongoRepository;
   }
 
