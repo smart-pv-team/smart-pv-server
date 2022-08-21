@@ -8,6 +8,7 @@ import management.farm.FarmEntity;
 public interface ConsumptionDeviceRepository {
 
   List<ConsumptionDeviceEntity> findAllByFarmId(String farmId);
+  List<ConsumptionDeviceEntity> findAll();
 
   Optional<Boolean> isDeviceOn(String id);
 

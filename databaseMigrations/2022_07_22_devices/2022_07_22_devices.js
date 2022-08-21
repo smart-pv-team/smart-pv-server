@@ -1,6 +1,6 @@
 db.getCollection('measurementDeviceEntity').remove({})
 db.getCollection('measurementEntity').remove({})
-db.getCollection('consumerDeviceEntity').remove({})
+db.getCollection('consumptionDeviceEntity').remove({})
 db.getCollection('farmEntity').remove({})
 
 db.getCollection('farmEntity').insertMany(
@@ -43,7 +43,7 @@ db.getCollection('measurementDeviceEntity').insertMany([
     })
 )
 
-db.getCollection('consumerDeviceEntity').insertMany(
+db.getCollection('consumptionDeviceEntity').insertMany(
     [
       ["PRODUKCJA 1+2",
         "https://svr48.supla.org/direct/819/WgEUDpThxY5Q/"],
@@ -91,7 +91,7 @@ db.getCollection('consumerDeviceEntity').insertMany(
           "maxHysteresis": 0,
           "isLocked": false,
         },
-        "_class": "measuring.consumerDeviceEntity"
+        "_class": "measuring.ConsumptionDeviceEntity"
       }
     })
 )

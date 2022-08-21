@@ -23,6 +23,11 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
   }
 
   @Override
+  public List<ConsumptionDeviceEntity> findAll() {
+    return consumptionDeviceMongoRepository.findAll();
+  }
+
+  @Override
   public Optional<Boolean> isDeviceOn(String id) {
     return Optional.of(consumptionDeviceMongoRepository.findById(id)
         .orElseThrow()
