@@ -1,11 +1,13 @@
 package management.device;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import server.utils.HttpEndpointData;
 
 @Data
+@AllArgsConstructor
 public class Device {
 
   @Id

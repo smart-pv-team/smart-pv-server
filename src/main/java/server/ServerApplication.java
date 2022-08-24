@@ -1,10 +1,7 @@
 package server;
 
-import consumption.persistence.device.ConsumptionDeviceMongoRepository;
 import consumption.persistence.device.ConsumptionDeviceRepository;
-import measurement.persistence.device.MeasurementDeviceMongoRepository;
 import measurement.persistence.device.MeasurementDeviceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,11 +19,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ConfigurationPropertiesScan({"measurement", "management", "server", "consumption"})
 public class ServerApplication implements CommandLineRunner {
 
-  @Autowired
-  private MeasurementDeviceRepository measurementDeviceRepository;
+  private final MeasurementDeviceRepository measurementDeviceRepository;
+  private final ConsumptionDeviceRepository consumptionDeviceRepository;
 
-  @Autowired
-  private ConsumptionDeviceRepository consumptionDeviceRepository;
+  public ServerApplication(MeasurementDeviceRepository measurementDeviceRepository,
+      ConsumptionDeviceRepository consumptionDeviceRepository) {
+    this.measurementDeviceRepository = measurementDeviceRepository;
+    this.consumptionDeviceRepository = consumptionDeviceRepository;
+  }
 
   public static void main(String[] args) {
     SpringApplication.run(ServerApplication.class, args);

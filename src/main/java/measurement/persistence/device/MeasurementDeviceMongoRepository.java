@@ -1,6 +1,7 @@
 package measurement.persistence.device;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface MeasurementDeviceMongoRepository extends
@@ -10,5 +11,5 @@ public interface MeasurementDeviceMongoRepository extends
 
   List<MeasurementDeviceEntity> findAllByFarmId(String farmId);
 
-  MeasurementDeviceEntity getFirstById(String id);
+  Optional<MeasurementDeviceEntity> getFirstById(String id);
 }
