@@ -1,6 +1,7 @@
 package measurement.persistence.device;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +26,7 @@ public class MeasurementDeviceRepositoryImpl implements MeasurementDeviceReposit
   }
 
   @Override
-  public MeasurementDeviceEntity getFirstById(String id) {
+  public Optional<MeasurementDeviceEntity> getFirstById(String id) {
     return measurementDeviceMongoRepository.getFirstById(id);
   }
 

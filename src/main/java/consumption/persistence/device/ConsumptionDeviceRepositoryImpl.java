@@ -4,7 +4,7 @@ import consumption.ControlParameters;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import management.farm.FarmEntity;
+import management.farm.persistance.FarmEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,6 +15,11 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
   public ConsumptionDeviceRepositoryImpl(
       ConsumptionDeviceMongoRepository consumptionDeviceMongoRepository) {
     this.consumptionDeviceMongoRepository = consumptionDeviceMongoRepository;
+  }
+
+  @Override
+  public Optional<ConsumptionDeviceEntity> findById(String id) {
+    return consumptionDeviceMongoRepository.findById(id);
   }
 
   @Override
@@ -61,7 +66,7 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
     return consumptionDeviceMongoRepository.findAllByFarmId(farm.id())
         .stream()
         .filter(d -> !d.getIsOn())
-        .min(Comparator.comparing((e) -> e.getControlParameters().getPriority()));
+        .min(Comparator.comparing((e) -> e.getControlParameters().priority()));
   }
 
   @Override
@@ -69,6 +74,6 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
     return consumptionDeviceMongoRepository.findAllByFarmId(farm.id())
         .stream()
         .filter(ConsumptionDeviceEntity::getIsOn)
-        .max(Comparator.comparing((e) -> e.getControlParameters().getPriority()));
+        .max(Comparator.comparing((e) -> e.getControlParameters().priority()));
   }
 }

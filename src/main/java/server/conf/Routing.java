@@ -7,33 +7,62 @@ public interface Routing {
   String DEVICE_ID_PLACEHOLDER = "{" + DEVICE_ID_VARIABLE + "}";
   String FARM_ID_PLACEHOLDER = "{" + FARM_ID_VARIABLE + "}";
 
+  interface Management {
+
+    String VALUE = "/management";
+    String PATH = VALUE;
+
+    interface Farms {
+
+      String VALUE = "/farms";
+      String PATH = Management.PATH + VALUE;
+
+      interface FarmId {
+
+        String VALUE = "/" + FARM_ID_PLACEHOLDER;
+        String PATH = Farms.PATH + VALUE;
+
+        interface Parameters {
+
+          String VALUE = "/parameters";
+          String PATH = FarmId.PATH + VALUE;
+
+          interface Name {
+
+            String VALUE = "/name";
+            String PATH = Parameters.PATH + VALUE;
+          }
+        }
+      }
+    }
+  }
+
   interface Measurement {
 
     String VALUE = "/measurement";
     String PATH = VALUE;
 
-    interface Farm {
+    interface Devices {
 
-      String VALUE = "/farmId";
-      String PATH = Measurement.VALUE + VALUE;
-
-      interface FarmId {
-
-        String VALUE = "/" + FARM_ID_PLACEHOLDER;
-        String PATH = Farm.PATH + VALUE;
-
-      }
-    }
-
-    interface Device {
-
-      String VALUE = "/device";
-      String PATH = Measurement.VALUE + VALUE;
+      String VALUE = "/devices";
+      String PATH = Measurement.PATH + VALUE;
 
       interface DeviceId {
 
         String VALUE = "/" + DEVICE_ID_PLACEHOLDER;
-        String PATH = Device.PATH + VALUE;
+        String PATH = Devices.PATH + VALUE;
+
+        interface Parameters {
+
+          String VALUE = "/parameters";
+          String PATH = DeviceId.PATH + VALUE;
+
+          interface Name {
+
+            String VALUE = "/name";
+            String PATH = Parameters.PATH + VALUE;
+          }
+        }
       }
     }
   }
@@ -43,24 +72,29 @@ public interface Routing {
     String VALUE = "/consumption";
     String PATH = VALUE;
 
-    interface Parameters {
+    interface Devices {
 
-      String VALUE = "/parameters";
-      String PATH = VALUE;
+      String VALUE = "/devices";
+      String PATH = Consumption.PATH + VALUE;
 
       interface DeviceId {
 
         String VALUE = "/" + DEVICE_ID_PLACEHOLDER;
-        String PATH = Parameters.PATH + VALUE;
+        String PATH = Devices.PATH + VALUE;
 
-        interface IsOn {
+        interface Parameters {
 
-          String VALUE = "/isOn";
+          String VALUE = "/parameters";
           String PATH = DeviceId.PATH + VALUE;
+
+          interface IsOn {
+
+            String VALUE = "/isOn";
+            String PATH = Parameters.PATH + VALUE;
+
+          }
         }
       }
     }
   }
-
-
 }

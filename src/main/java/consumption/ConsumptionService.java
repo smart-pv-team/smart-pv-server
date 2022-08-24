@@ -1,5 +1,6 @@
 package consumption;
 
+import consumption.dto.ConsumptionResponseMapper;
 import consumption.persistence.device.ConsumptionDeviceEntity;
 import consumption.persistence.device.ConsumptionDeviceRepository;
 import consumption.persistence.record.ConsumptionEntity;
@@ -7,7 +8,7 @@ import consumption.persistence.record.ConsumptionRepository;
 import java.util.Date;
 import java.util.List;
 import management.device.DeviceRequester;
-import management.farm.FarmEntity;
+import management.farm.persistance.FarmEntity;
 import org.springframework.stereotype.Service;
 import server.utils.Action;
 

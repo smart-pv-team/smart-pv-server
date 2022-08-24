@@ -1,6 +1,7 @@
 package measurement.persistence.device;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MeasurementDeviceRepository {
 
@@ -8,5 +9,5 @@ public interface MeasurementDeviceRepository {
 
   List<MeasurementDeviceEntity> findAllByFarmId(String farmId);
 
-  MeasurementDeviceEntity getFirstById(String id);
+  Optional<MeasurementDeviceEntity> getFirstById(String id);
 }

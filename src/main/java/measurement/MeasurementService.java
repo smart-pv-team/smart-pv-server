@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import management.device.DeviceRequester;
-import management.farm.FarmEntity;
+import management.farm.persistance.FarmEntity;
 import measurement.persistence.device.MeasurementDeviceEntity;
 import measurement.persistence.device.MeasurementDeviceRepository;
 import measurement.persistence.record.MeasurementEntity;

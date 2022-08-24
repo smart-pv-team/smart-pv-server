@@ -1,7 +1,7 @@
 package management;
 
 import consumption.persistence.device.ConsumptionDeviceRepository;
-import management.farm.FarmEntity;
+import management.farm.persistance.FarmEntity;
 import measurement.persistence.record.MeasurementMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class ManagementService {
 
               if (availableEnergy >= 0) {
                 consumptionDeviceRepository.findHighestPriorityOffDevice(farm).ifPresent((device) -> {
-                  if (availableEnergy - device.getControlParameters().getPowerConsumption() >= 0) {
+                  if (availableEnergy - device.getControlParameters().powerConsumption() >= 0) {
                     consumptionDeviceRepository.setDeviceOn(device.getId(), true);
                     builder.append("Turned on device: ").append(device.getId());
                   }

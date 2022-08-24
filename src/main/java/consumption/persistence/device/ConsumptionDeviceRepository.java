@@ -3,9 +3,11 @@ package consumption.persistence.device;
 import consumption.ControlParameters;
 import java.util.List;
 import java.util.Optional;
-import management.farm.FarmEntity;
+import management.farm.persistance.FarmEntity;
 
 public interface ConsumptionDeviceRepository {
+
+  Optional<ConsumptionDeviceEntity> findById(String id);
 
   List<ConsumptionDeviceEntity> findAllByFarmId(String farmId);
 

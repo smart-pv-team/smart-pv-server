@@ -1,6 +1,6 @@
 package management.device.parsers.supla;
 
-import consumption.ConsumptionResponseMapper;
+import consumption.dto.ConsumptionResponseMapper;
 import management.device.parsers.Response;
 
 public record SuplaDeviceStatusResponse(Boolean connected, Boolean on,

@@ -1,50 +1,75 @@
 package consumption;
 
+import consumption.dto.ConsumptionIsOnDto;
+import consumption.persistence.device.ConsumptionDeviceEntity;
 import consumption.persistence.device.ConsumptionDeviceRepository;
+import java.util.List;
+import management.device.Device;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import server.conf.Routing;
-import server.conf.Routing.Consumption.Parameters.DeviceId.IsOn;
+import server.conf.Routing.Consumption.Devices;
 
 
 @RestController
-public class ConsumptionController {
+class ConsumptionController {
 
   private final ConsumptionDeviceRepository consumptionDeviceRepository;
 
   @Autowired
-  public ConsumptionController(ConsumptionDeviceRepository consumptionDeviceRepository) {
+  ConsumptionController(ConsumptionDeviceRepository consumptionDeviceRepository) {
     this.consumptionDeviceRepository = consumptionDeviceRepository;
   }
 
-  @GetMapping(Routing.Consumption.Parameters.DeviceId.PATH)
-  public ControlParametersMapper getDeviceParameters(
+  @GetMapping(Devices.PATH)
+  List<String> getDevices() {
+    return consumptionDeviceRepository
+        .findAll()
+        .stream()
+        .map(Device::getId)
+        .toList();
+  }
+
+  @GetMapping(Routing.Consumption.Devices.DeviceId.PATH)
+  ResponseEntity<ConsumptionDeviceEntity> getDevice(
       @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
-    //TODO: optional handling
-    return ControlParametersMapper.ofControlParameters(
-        consumptionDeviceRepository.getDeviceParameters(deviceId).get());
+    return consumptionDeviceRepository
+        .findById(deviceId)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 
-  @PostMapping(Routing.Consumption.Parameters.DeviceId.PATH)
-  public void setDeviceParameters(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
-      @RequestBody ControlParametersMapper controlParameters) {
-    consumptionDeviceRepository.setDeviceParameters(deviceId,
-        ControlParametersMapper.toControlParameters(controlParameters));
-  }
-
-  @GetMapping(Routing.Consumption.Parameters.DeviceId.IsOn.PATH)
-  public boolean getDeviceParametersIsOn(
+  @GetMapping(Routing.Consumption.Devices.DeviceId.Parameters.PATH)
+  ResponseEntity<ControlParameters> getDeviceParameters(
       @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
-    return consumptionDeviceRepository.isDeviceOn(deviceId).get();
+    return consumptionDeviceRepository
+        .getDeviceParameters(deviceId)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 
-  @PostMapping(IsOn.PATH)
-  public void postDeviceParametersIsOn(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
-      @RequestBody ConsumptionMapper consumptionMapper) {
-    consumptionDeviceRepository.setDeviceOn(deviceId, consumptionMapper.isOn);
+  @PostMapping(Routing.Consumption.Devices.DeviceId.Parameters.PATH)
+  void setDeviceParameters(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
+      @RequestBody ControlParameters controlParameters) {
+    consumptionDeviceRepository.setDeviceParameters(deviceId, controlParameters);
+  }
+
+  @GetMapping(Routing.Consumption.Devices.DeviceId.Parameters.IsOn.PATH)
+  ResponseEntity<Boolean> getDeviceParametersIsOn(
+      @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
+    return consumptionDeviceRepository
+        .isDeviceOn(deviceId).map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PostMapping(Routing.Consumption.Devices.DeviceId.Parameters.IsOn.PATH)
+  void postDeviceParametersIsOn(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
+      @RequestBody ConsumptionIsOnDto consumptionIsOnDto) {
+    consumptionDeviceRepository.setDeviceOn(deviceId, consumptionIsOnDto.isOn());
   }
 }
