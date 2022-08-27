@@ -1,6 +1,7 @@
 package consumption;
 
 import consumption.dto.ConsumptionResponseMapper;
+import consumption.dto.ConsumptionTurnOnOffResponseMapper;
 import consumption.persistence.device.ConsumptionDeviceEntity;
 import consumption.persistence.device.ConsumptionDeviceRepository;
 import consumption.persistence.record.ConsumptionEntity;
@@ -26,6 +27,22 @@ public class ConsumptionService {
     this.deviceRequester = deviceRequester;
   }
 
+  public ConsumptionTurnOnOffResponseMapper turnDevice(
+      ConsumptionDeviceEntity consumptionDeviceEntity, Boolean status) {
+    try {
+      return deviceRequester.request(consumptionDeviceEntity,
+          status ? Action.TURN_ON : Action.TURN_OFF).toMapper(consumptionDeviceEntity.getId());
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public ConsumptionEntity collectAndSaveDevicesStatus(FarmEntity farm) {
+    ConsumptionEntity consumptionEntity = collectDevicesStatus(farm);
+    consumptionRepository.save(consumptionEntity);
+    return consumptionEntity;
+  }
+
   public ConsumptionEntity collectDevicesStatus(FarmEntity farm) {
     List<String> activeDevices = consumptionDeviceRepository
         .findAllByFarmId(farm.id())
@@ -35,18 +52,15 @@ public class ConsumptionService {
         .map(ConsumptionResponseMapper::deviceId)
         .toList();
 
-    ConsumptionEntity consumptionEntity = new ConsumptionEntity(
+    return new ConsumptionEntity(
         activeDevices, activeDevices.size(), new Date());
-
-    consumptionRepository.save(consumptionEntity);
-    return consumptionEntity;
   }
 
 
   private ConsumptionResponseMapper requestDevicesStatus(
       ConsumptionDeviceEntity consumptionDeviceEntity) {
     try {
-      return deviceRequester.getData(
+      return deviceRequester.request(
           consumptionDeviceEntity, Action.READ).toMapper(consumptionDeviceEntity.getId());
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);

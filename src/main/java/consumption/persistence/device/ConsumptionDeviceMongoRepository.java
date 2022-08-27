@@ -10,4 +10,6 @@ public interface ConsumptionDeviceMongoRepository extends
   List<ConsumptionDeviceEntity> findAllByFarmId(String farmId);
 
   Optional<ConsumptionDeviceEntity> findById(String id);
+
+  List<ConsumptionDeviceEntity> findAllByIdIsIn(List<String> ids);
 }

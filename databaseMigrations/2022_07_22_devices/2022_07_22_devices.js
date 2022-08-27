@@ -82,6 +82,28 @@ db.getCollection('consumptionDeviceEntity').insertMany(
               "authorization": "Bearer Mzg5ZWNhY2I5ZjZmNTkzNjAxNDgyN2U2NWI2NzYyMmJjOGFmNTYxYWFmMDBlOWM4YjFmOTMxOTU0MjliNWVmMw.aHR0cHM6Ly9zdnI0OC5zdXBsYS5vcmc="
             },
             "responseClass": "SUPLA_SWITCH"
+          },
+          {
+            "description": "Włącz urządzenie",
+            "action": "TURN_ON",
+            "endpoint": "/turn-on",
+            "httpMethod": "PATCH",
+            "httpHeaders": {
+              "format": "json",
+              "authorization": "Bearer Mzg5ZWNhY2I5ZjZmNTkzNjAxNDgyN2U2NWI2NzYyMmJjOGFmNTYxYWFmMDBlOWM4YjFmOTMxOTU0MjliNWVmMw.aHR0cHM6Ly9zdnI0OC5zdXBsYS5vcmc="
+            },
+            "responseClass": "SUPLA_TURN_ON_OFF"
+          },
+          {
+            "description": "Wyłącz urządzenie",
+            "action": "TURN_OFF",
+            "endpoint": "/turn-off",
+            "httpMethod": "PATCH",
+            "httpHeaders": {
+              "format": "json",
+              "authorization": "Bearer Mzg5ZWNhY2I5ZjZmNTkzNjAxNDgyN2U2NWI2NzYyMmJjOGFmNTYxYWFmMDBlOWM4YjFmOTMxOTU0MjliNWVmMw.aHR0cHM6Ly9zdnI0OC5zdXBsYS5vcmc="
+            },
+            "responseClass": "SUPLA_TURN_ON_OFF"
           }
         ],
         "controlParameters": {

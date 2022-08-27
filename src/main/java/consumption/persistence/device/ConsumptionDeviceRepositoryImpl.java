@@ -76,4 +76,9 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
         .filter(ConsumptionDeviceEntity::getIsOn)
         .max(Comparator.comparing((e) -> e.getControlParameters().priority()));
   }
+
+  @Override
+  public List<ConsumptionDeviceEntity> findAllByIdIsIn(List<String> ids) {
+    return consumptionDeviceMongoRepository.findAllByIdIsIn(ids);
+  }
 }

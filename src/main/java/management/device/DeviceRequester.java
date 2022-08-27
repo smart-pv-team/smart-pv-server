@@ -33,7 +33,7 @@ public class DeviceRequester {
     this.restTemplate.setRequestFactory(requestFactory);
   }
 
-  public Response getData(Device device, Action action) throws ClassNotFoundException {
+  public Response request(Device device, Action action) throws ClassNotFoundException {
     HttpEndpointData httpEndpointData = device.getEndpoints().stream()
         .filter((e) -> e.action().equals(action)).findFirst()
         .orElseThrow(NullPointerException::new);
@@ -45,10 +45,9 @@ public class DeviceRequester {
         httpEndpointData.httpMethod(),
         stringToResponseClassParser.stringToResponseClass(httpEndpointData.responseClass())
     ).getBody();
-
   }
 
-  public ResponseEntity<Response> sendRequest(String url, HttpHeaders headers,
+  private ResponseEntity<Response> sendRequest(String url, HttpHeaders headers,
       HttpMethod httpMethod, Class responseClass) {
     HttpEntity request = new HttpEntity(headers);
     return restTemplate.exchange(

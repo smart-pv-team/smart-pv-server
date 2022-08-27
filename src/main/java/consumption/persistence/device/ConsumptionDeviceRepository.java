@@ -27,4 +27,5 @@ public interface ConsumptionDeviceRepository {
 
   Optional<ConsumptionDeviceEntity> findLowestPriorityOnDevice(FarmEntity farm);
 
+  List<ConsumptionDeviceEntity> findAllByIdIsIn(List<String> ids);
 }

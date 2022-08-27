@@ -36,7 +36,7 @@ public class FarmService {
   public String makeAllFarmsDevicesMeasurement() {
     return String.valueOf(
         farmRepository.findAll().stream()
-            .map(measurementService::makeMeasurements)
+            .map(measurementService::makeAndSaveMeasurement)
             .mapToDouble(MeasurementEntity::getMeasurement)
             .sum());
   }
@@ -44,7 +44,7 @@ public class FarmService {
   public String collectAllFarmsDevicesStatus() {
     return String.valueOf(
         farmRepository.findAll().stream()
-            .map(consumptionService::collectDevicesStatus)
+            .map(consumptionService::collectAndSaveDevicesStatus)
             .map(ConsumptionEntity::getActiveDevicesIds)
             .mapToLong(List::size)
             .sum());

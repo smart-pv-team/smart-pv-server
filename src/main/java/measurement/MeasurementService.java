@@ -31,7 +31,13 @@ public class MeasurementService {
     this.measurementRepository = measurementRepository;
   }
 
-  public MeasurementEntity makeMeasurements(FarmEntity farm) {
+  public MeasurementEntity makeAndSaveMeasurement(FarmEntity farm) {
+    MeasurementEntity measurementEntity = makeMeasurement(farm);
+    measurementRepository.save(measurementEntity);
+    return measurementEntity;
+  }
+
+  public MeasurementEntity makeMeasurement(FarmEntity farm) {
     List<MeasurementResponseMapper> responses = measurementDeviceRepository
         .findAllByFarmId(farm.id())
         .stream()
@@ -44,17 +50,15 @@ public class MeasurementService {
             MeasurementResponseMapper::deviceId,
             MeasurementResponseMapper::getMeasurementSum));
 
-    MeasurementEntity measurementEntity = new MeasurementEntity(farm.id(), measurementSum,
+    return new MeasurementEntity(farm.id(), measurementSum,
         measurements, new Date());
-    measurementRepository.save(measurementEntity);
-    return measurementEntity;
   }
 
 
   private MeasurementResponseMapper requestMeasurement(
       MeasurementDeviceEntity measurementDeviceEntity) {
     try {
-      return deviceRequester.getData(measurementDeviceEntity, Action.READ)
+      return deviceRequester.request(measurementDeviceEntity, Action.READ)
           .toMapper(measurementDeviceEntity.getId());
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);

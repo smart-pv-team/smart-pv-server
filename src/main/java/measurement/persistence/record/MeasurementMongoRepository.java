@@ -12,5 +12,5 @@ public interface MeasurementMongoRepository extends
 
   List<MeasurementEntity> findAllByFarmId(String farmId);
 
-  Optional<MeasurementEntity> findTopByFarmIdOrderByDateDesc(String farmId);
+  Optional<MeasurementEntity> findTopByFarmIdAndDateAfter(String farmId, Date from);
 }

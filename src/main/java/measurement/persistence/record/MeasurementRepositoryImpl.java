@@ -1,7 +1,7 @@
 package measurement.persistence.record;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,24 +13,15 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
     this.measurementMongoRepository = measurementMongoRepository;
   }
 
+
   @Override
   public void save(MeasurementEntity measurementEntity) {
     measurementMongoRepository.save(measurementEntity);
   }
 
   @Override
-  public List<MeasurementEntity> getFromTimePeriod(String farmId, Date from,
-      Date to) {
-    return measurementMongoRepository.findAllByIdAndDateBetween(farmId, from, to);
+  public Optional<MeasurementEntity> findTopByFarmIdAndDateAfter(String farmId, Date after) {
+    return measurementMongoRepository.findTopByFarmIdAndDateAfter(farmId, after);
   }
 
-  @Override
-  public List<MeasurementEntity> getAll() {
-    return measurementMongoRepository.findAll();
-  }
-
-  @Override
-  public List<MeasurementEntity> getAllByFarmId(String farmId) {
-    return measurementMongoRepository.findAllByFarmId(farmId);
-  }
 }
