@@ -30,8 +30,10 @@ public class ConsumptionService {
   public ConsumptionTurnOnOffResponseMapper turnDevice(
       ConsumptionDeviceEntity consumptionDeviceEntity, Boolean status) {
     try {
-      return deviceRequester.request(consumptionDeviceEntity,
+      ConsumptionTurnOnOffResponseMapper result = deviceRequester.request(consumptionDeviceEntity,
           status ? Action.TURN_ON : Action.TURN_OFF).toMapper(consumptionDeviceEntity.getId());
+      consumptionDeviceRepository.setDeviceOn(consumptionDeviceEntity.getId(), status);
+      return result;
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }

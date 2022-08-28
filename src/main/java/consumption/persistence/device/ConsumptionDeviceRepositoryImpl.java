@@ -2,19 +2,25 @@ package consumption.persistence.device;
 
 import consumption.ControlParameters;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import management.farm.persistance.FarmEntity;
 import org.springframework.stereotype.Component;
+import server.conf.SystemProperties;
+import server.utils.Dates;
 
 @Component
 public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceRepository {
 
   private final ConsumptionDeviceMongoRepository consumptionDeviceMongoRepository;
+  private final SystemProperties systemProperties;
 
   public ConsumptionDeviceRepositoryImpl(
-      ConsumptionDeviceMongoRepository consumptionDeviceMongoRepository) {
+      ConsumptionDeviceMongoRepository consumptionDeviceMongoRepository,
+      SystemProperties systemProperties) {
     this.consumptionDeviceMongoRepository = consumptionDeviceMongoRepository;
+    this.systemProperties = systemProperties;
   }
 
   @Override
@@ -55,6 +61,15 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
   }
 
   @Override
+  public void setLock(String id, Boolean status) {
+    ConsumptionDeviceEntity consumptionDeviceEntity = consumptionDeviceMongoRepository.findById(id)
+        .get();
+    consumptionDeviceEntity.setControlParameters(
+        consumptionDeviceEntity.getControlParameters()
+            .withLock(status, Dates.endOfDay(new Date())));
+  }
+
+  @Override
   public Optional<ControlParameters> getDeviceParameters(String id) {
     return Optional.ofNullable(
         consumptionDeviceMongoRepository.findById(id).get().getControlParameters());
@@ -78,7 +93,7 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
   }
 
   @Override
-  public List<ConsumptionDeviceEntity> findAllByIdIsIn(List<String> ids) {
-    return consumptionDeviceMongoRepository.findAllByIdIsIn(ids);
+  public List<ConsumptionDeviceEntity> findAllByFarmIdAndIdIsIn(String farmId, List<String> ids) {
+    return consumptionDeviceMongoRepository.findAllByFarmIdAndIdIsIn(farmId, ids);
   }
 }

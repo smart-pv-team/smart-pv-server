@@ -5,6 +5,8 @@ import consumption.ControlParameters;
 import consumption.persistence.device.ConsumptionDeviceEntity;
 import consumption.persistence.device.ConsumptionDeviceRepository;
 import consumption.persistence.record.ConsumptionEntity;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import management.farm.persistance.FarmEntity;
@@ -39,7 +41,13 @@ public class ManagementService {
     MeasurementEntity measurement = measurementService.makeMeasurement(farm);
     ConsumptionEntity consumption = consumptionService.collectDevicesStatus(farm);
     List<ConsumptionDeviceEntity> activeDevices = consumptionDeviceRepository
-        .findAllByIdIsIn(consumption.getActiveDevicesIds());
+        .findAllByFarmIdAndIdIsIn(farm.id(), consumption.getActiveDevicesIds());
+
+    List<ConsumptionDeviceEntity> allDevices = consumptionDeviceRepository.findAllByFarmId(
+        farm.id());
+    allDevices.sort(Comparator.comparing(o -> -o.getControlParameters().priority()));
+
+    checkLock(activeDevices, allDevices);
 
     Float measuredEnergy = measurement.getMeasurement();
     Float consumedEnergy = activeDevices
@@ -50,8 +58,9 @@ public class ManagementService {
     Float availableEnergy = measuredEnergy + consumedEnergy;
 
     List<ConsumptionDeviceEntity> devicesToTurnOn = new LinkedList<>();
-    for (ConsumptionDeviceEntity device : consumptionDeviceRepository.findAllByFarmId(farm.id())) {
-      if (availableEnergy - device.getControlParameters().powerConsumption() > 0) {
+    for (ConsumptionDeviceEntity device : allDevices) {
+      if (availableEnergy - device.getControlParameters().powerConsumption() > 0 &&
+          !device.getControlParameters().lock().isLocked()) {
         devicesToTurnOn.add(device);
         availableEnergy -= device.getControlParameters().powerConsumption();
       }
@@ -67,4 +76,22 @@ public class ManagementService {
         .append("Devices to turnOn: ").append(devicesToTurnOn).toString();
   }
 
+  private void checkLock(List<ConsumptionDeviceEntity> activeDevices,
+      List<ConsumptionDeviceEntity> allDevices) {
+    allDevices.forEach((device) -> {
+      if (!device.getControlParameters().lock().isLocked()) {
+        boolean isDeviceOnRequestResponse = activeDevices.contains(device);
+        if ((device.getIsOn() && !isDeviceOnRequestResponse) ||
+            (!device.getIsOn() && isDeviceOnRequestResponse)) {
+          consumptionDeviceRepository.setLock(device.getId(), true);
+          consumptionDeviceRepository.setDeviceOn(device.getId(), isDeviceOnRequestResponse);
+        }
+      } else {
+        if (device.getControlParameters().lock().date().after(new Date())) {
+          consumptionDeviceRepository.setLock(device.getId(), false);
+          consumptionDeviceRepository.setDeviceOn(device.getId(), false);
+        }
+      }
+    });
+  }
 }

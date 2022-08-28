@@ -20,6 +20,8 @@ public interface ConsumptionDeviceRepository {
   void setDeviceParameters(String id,
       ControlParameters controlParameters);
 
+  void setLock(String id, Boolean status);
+
   Optional<ControlParameters> getDeviceParameters(
       String id);
 
@@ -27,5 +29,5 @@ public interface ConsumptionDeviceRepository {
 
   Optional<ConsumptionDeviceEntity> findLowestPriorityOnDevice(FarmEntity farm);
 
-  List<ConsumptionDeviceEntity> findAllByIdIsIn(List<String> ids);
+  List<ConsumptionDeviceEntity> findAllByFarmIdAndIdIsIn(String farmId, List<String> ids);
 }
