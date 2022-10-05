@@ -1,7 +1,7 @@
-db.getCollection('measurementDeviceEntity').remove({})
+/*db.getCollection('measurementDeviceEntity').remove({})
 db.getCollection('measurementEntity').remove({})
 db.getCollection('consumptionDeviceEntity').remove({})
-db.getCollection('farmEntity').remove({})
+db.getCollection('farmEntity').remove({})*/
 
 db.getCollection('farmEntity').insertMany(
     [
@@ -82,14 +82,39 @@ db.getCollection('consumptionDeviceEntity').insertMany(
               "authorization": "Bearer Mzg5ZWNhY2I5ZjZmNTkzNjAxNDgyN2U2NWI2NzYyMmJjOGFmNTYxYWFmMDBlOWM4YjFmOTMxOTU0MjliNWVmMw.aHR0cHM6Ly9zdnI0OC5zdXBsYS5vcmc="
             },
             "responseClass": "SUPLA_SWITCH"
+          },
+          {
+            "description": "Włącz urządzenie",
+            "action": "TURN_ON",
+            "endpoint": "/turn-on_mock",
+            "httpMethod": "PATCH",
+            "httpHeaders": {
+              "format": "json",
+              "authorization": "Bearer Mzg5ZWNhY2I5ZjZmNTkzNjAxNDgyN2U2NWI2NzYyMmJjOGFmNTYxYWFmMDBlOWM4YjFmOTMxOTU0MjliNWVmMw.aHR0cHM6Ly9zdnI0OC5zdXBsYS5vcmc="
+            },
+            "responseClass": "SUPLA_SWITCH"
+          },
+          {
+            "description": "Wyłącz urządzenie",
+            "action": "TURN_OFF",
+            "endpoint": "/turn-off_mock",
+            "httpMethod": "PATCH",
+            "httpHeaders": {
+              "format": "json",
+              "authorization": "Bearer Mzg5ZWNhY2I5ZjZmNTkzNjAxNDgyN2U2NWI2NzYyMmJjOGFmNTYxYWFmMDBlOWM4YjFmOTMxOTU0MjliNWVmMw.aHR0cHM6Ly9zdnI0OC5zdXBsYS5vcmc="
+            },
+            "responseClass": "SUPLA_SWITCH"
           }
         ],
         "controlParameters": {
-          "priority": 0,
-          "powerConsumption": 0,
+          "priority": Math.floor(Math.random() * 10 + 1),
+          "powerConsumption": Math.floor(Math.random() * 10 + 1),
           "minHysteresis": 0,
           "maxHysteresis": 0,
-          "isLocked": false,
+          "lock": {
+            "isLocked": "false",
+            "date": Date()
+          }
         },
         "_class": "measuring.ConsumptionDeviceEntity"
       }

@@ -6,4 +6,10 @@ services:
       - "27017:27017"
     volumes:
       - ~/apps/mongo:/data/db
-
+  mongodb_test:
+    image: mongo:4.2.3
+    profiles: [ "test" ]
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./src/simulation/script:/scripts

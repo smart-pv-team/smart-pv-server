@@ -7,8 +7,8 @@ spring:
 system:
   measure: true
   collectDevicesStatus: true
-  manageDevices: false
+  manageDevices: true
   cron:
-    measurement: 0 */1 * * * *
-    management: 0 */1 * * * *
-    collectDevicesStatus: 0 */1 * * * *
+    measurement: "*/5 * * * * *"
+    management: "*/5 * * * * *"
+    collectDevicesStatus: "*/5 * * * * *"

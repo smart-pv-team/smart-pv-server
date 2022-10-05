@@ -1,3 +1,6 @@
 /.idea/
 /target/
 server.iml
+/src/simulation/data/
+/src/simulation/drawing/charts/
+/docs/dbdumps/
