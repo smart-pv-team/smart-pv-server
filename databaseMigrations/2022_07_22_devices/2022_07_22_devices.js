@@ -1,7 +1,7 @@
-db.getCollection('measurementDeviceEntity').remove({})
+/*db.getCollection('measurementDeviceEntity').remove({})
 db.getCollection('measurementEntity').remove({})
 db.getCollection('consumptionDeviceEntity').remove({})
-db.getCollection('farmEntity').remove({})
+db.getCollection('farmEntity').remove({})*/
 
 db.getCollection('farmEntity').insertMany(
     [
@@ -107,8 +107,8 @@ db.getCollection('consumptionDeviceEntity').insertMany(
           }
         ],
         "controlParameters": {
-          "priority": Math.floor(Math.random() * 11),
-          "powerConsumption": Math.floor(Math.random() * 11),
+          "priority": Math.floor(Math.random() * 10 + 1),
+          "powerConsumption": Math.floor(Math.random() * 10 + 1),
           "minHysteresis": 0,
           "maxHysteresis": 0,
           "lock": {
