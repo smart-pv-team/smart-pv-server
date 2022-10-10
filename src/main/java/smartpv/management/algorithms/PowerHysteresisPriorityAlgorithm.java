@@ -4,20 +4,22 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import smartpv.consumption.persistence.device.ConsumptionDeviceEntity;
-import smartpv.consumption.persistence.record.ConsumptionEntity;
 import smartpv.management.farm.persistance.FarmEntity;
+import smartpv.measurement.persistence.record.MeasurementEntity;
 
 public class PowerHysteresisPriorityAlgorithm implements Algorithm {
 
   @Override
-  public List<ConsumptionDeviceEntity> updateDevicesStatus(Float measuredEnergy, List<ConsumptionDeviceEntity> devices,
-      FarmEntity farm, List<ConsumptionEntity> recentConsumptionEntities) {
+  public List<ConsumptionDeviceEntity> updateDevicesStatus(MeasurementEntity measuredEnergy,
+      List<ConsumptionDeviceEntity> devices,
+      FarmEntity farm) {
+    Float measurement = measuredEnergy.getMeasurement();
     Optional<ConsumptionDeviceEntity> deviceToChange = devices.stream()
         .filter((device) -> !device.getControlParameters().lock().isLocked())
         .filter((device) -> !device.getIsOn())
         .sorted(Comparator.comparing((e) -> e.getControlParameters().priority()))
         .max(Comparator.comparing((e) -> e.getControlParameters().minHysteresis()))
-        .filter((device) -> measuredEnergy < device.getControlParameters().minHysteresis())
+        .filter((device) -> measurement < device.getControlParameters().minHysteresis())
         .map((device) -> {
           device.setIsOn(false);
           return device;
@@ -29,7 +31,7 @@ public class PowerHysteresisPriorityAlgorithm implements Algorithm {
           .filter((device) -> !device.getIsOn())
           .sorted(Comparator.comparing((e) -> -e.getControlParameters().priority()))
           .min(Comparator.comparing((e) -> e.getControlParameters().maxHysteresis()))
-          .filter((device) -> measuredEnergy > device.getControlParameters().maxHysteresis())
+          .filter((device) -> measurement > device.getControlParameters().maxHysteresis())
           .map((device) -> {
             device.setIsOn(true);
             return device;

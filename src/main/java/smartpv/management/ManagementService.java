@@ -1,6 +1,5 @@
 package smartpv.management;
 
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import smartpv.consumption.persistence.record.ConsumptionRepository;
 import smartpv.management.algorithms.StringToAlgorithm;
 import smartpv.management.farm.persistance.FarmEntity;
 import smartpv.measurement.MeasurementService;
+import smartpv.measurement.persistence.record.MeasurementEntity;
 import smartpv.server.utils.DateTimeUtils;
 
 @Service
@@ -32,26 +32,19 @@ public class ManagementService {
   }
 
   public List<ConsumptionDeviceEntity> updateDevices(FarmEntity farm) {
-    Float measuredEnergy = measurementService.makeMeasurement(farm).getMeasurement();
+    MeasurementEntity measuredEnergy = measurementService.makeMeasurement(farm);
     List<ConsumptionDeviceEntity> activeDevicesRequestResponse = consumptionDeviceRepository
         .findAllByFarmIdAndIdIsIn(farm.id(), consumptionService.collectDevicesStatus(farm).getActiveDevicesIds());
 
     List<ConsumptionDeviceEntity> allDevices = consumptionDeviceRepository.findAllByFarmId(farm.id());
     List<ConsumptionDeviceEntity> allDevicesWithUpdatedLock = updateDevicesLock(activeDevicesRequestResponse,
         allDevices);
-    Date measurementDate = consumptionService.collectDevicesStatus(farm).getDate();
     List<ConsumptionDeviceEntity> allDevicesWithUpdatedLockAndStatus = StringToAlgorithm.stringToAlgorithm(
             farm.algorithmType())
         .updateDevicesStatus(
             measuredEnergy,
             allDevicesWithUpdatedLock,
-            farm,
-            consumptionRepository.findRecentEntities(
-                farm.id(),
-                DateTimeUtils.subtractMinutes(measurementDate, farm.minutesBetweenDeviceStatusSwitch()),
-                measurementDate
-            )
-        );
+            farm);
 
     List<ConsumptionDeviceEntity> updatedDevices = allDevicesWithUpdatedLockAndStatus.stream()
         .filter((device) -> {
