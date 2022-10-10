@@ -17,7 +17,7 @@ const consumptionDevicesUpdate = {
           "format": "json",
           "authorization": "Bearer Mzg5ZWNhY2I5ZjZmNTkzNjAxNDgyN2U2NWI2NzYyMmJjOGFmNTYxYWFmMDBlOWM4YjFmOTMxOTU0MjliNWVmMw.aHR0cHM6Ly9zdnI0OC5zdXBsYS5vcmc="
         },
-        "responseClass": "SUPLA_SWITCH"
+        "responseClass": "SUPLA_STATUS"
       },
       {
         "description": "Włącz urządzenie",

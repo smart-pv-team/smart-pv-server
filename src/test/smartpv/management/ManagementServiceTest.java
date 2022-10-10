@@ -52,7 +52,7 @@ class ManagementServiceTest {
 
   @BeforeAll
   static void loadData() {
-    List<String> DAYS = List.of("2022-08-28", "2022-08-29", "2022-09-18", "2022-09-29", "2022-09-30");
+    List<String> DAYS = List.of("2022-08-28", "2022-08-29", "2022-09-18", "2022-09-29", "2022-09-30", "2022-10-07");
 
     ProcessBuilder processBuilder = new ProcessBuilder();
     String filePath = System.getProperty("user.dir").concat("/src/simulation/script/");
@@ -92,10 +92,9 @@ class ManagementServiceTest {
     for (MeasurementEntity measurementEntity : measurementEntities) {
       ConsumptionEntity consumptionEntity = consumptionEntities.stream()
           .filter((entity) -> DateTimeUtils.compareByMinutes(entity.getDate(), measurementEntity.getDate()))
-          .findFirst()
-          .get();
+          .findFirst().orElse(currentConsumptionEntity);
 
-      var updatedMeasurement = consumptionEntity.getActiveDevicesNum() * 4
+      var updatedMeasurement = consumptionEntity.getActiveDevicesNum() * 3
           + measurementEntity.getMeasurement() / 1000
           - 3 * activeDevices.size();
       var updatedMeasurementEntity = measurementEntity.withMeasurement(updatedMeasurement);

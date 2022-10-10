@@ -4,26 +4,28 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import smartpv.consumption.persistence.device.ConsumptionDeviceEntity;
-import smartpv.consumption.persistence.record.ConsumptionEntity;
 import smartpv.management.farm.persistance.FarmEntity;
+import smartpv.measurement.persistence.record.MeasurementEntity;
+import smartpv.server.utils.DateTimeUtils;
 
 public class PowerPriorityAlgorithm implements Algorithm {
 
   @Override
-  public List<ConsumptionDeviceEntity> updateDevicesStatus(Float measuredEnergy,
-      List<ConsumptionDeviceEntity> devices, FarmEntity farm, List<ConsumptionEntity> recentConsumptionEntities) {
+  public List<ConsumptionDeviceEntity> updateDevicesStatus(MeasurementEntity measuredEnergy,
+      List<ConsumptionDeviceEntity> devices, FarmEntity farm) {
     Optional<ConsumptionDeviceEntity> deviceToChange;
 
-    if (measuredEnergy > farm.energyLimit()) {
+    Float measurement = measuredEnergy.getMeasurement();
+    if (measurement > farm.energyLimit()) {
       deviceToChange = devices.stream()
           .filter((device) -> !device.getControlParameters().lock().isLocked())
           .filter((device) -> !device.getIsOn())
           .max(Comparator.comparing((e) -> e.getControlParameters().priority()))
-          .filter((device) -> !recentConsumptionEntities.stream()
-              .map((entity) -> entity.getActiveDevicesIds().contains(device.getId()))
-              .reduce(false, (e1, e2) -> e1 || e2))
+          .filter((device) -> device.getLastStatusChange()
+              .before(DateTimeUtils.subtractMinutes(measuredEnergy.getDate(), farm.minutesBetweenDeviceStatusSwitch())))
           .map((device) -> {
-            if (measuredEnergy > farm.energyLimit() + device.getControlParameters().powerConsumption()) {
+            if (measurement > farm.energyLimit() + device.getControlParameters().powerConsumption()) {
+              device.setLastStatusChange(measuredEnergy.getDate());
               device.setIsOn(true);
             }
             return device;
@@ -33,11 +35,11 @@ public class PowerPriorityAlgorithm implements Algorithm {
           .filter((device) -> !device.getControlParameters().lock().isLocked())
           .filter(ConsumptionDeviceEntity::getIsOn)
           .min(Comparator.comparing((e) -> e.getControlParameters().priority()))
-          .filter((device) -> !recentConsumptionEntities.stream()
-              .map((entity) -> !entity.getActiveDevicesIds().contains(device.getId()))
-              .reduce(false, (e1, e2) -> e1 || e2))
+          .filter((device) -> device.getLastStatusChange()
+              .before(DateTimeUtils.subtractMinutes(measuredEnergy.getDate(), farm.minutesBetweenDeviceStatusSwitch())))
           .map((device) -> {
             device.setIsOn(false);
+            device.setLastStatusChange(measuredEnergy.getDate());
             return device;
           });
     }
