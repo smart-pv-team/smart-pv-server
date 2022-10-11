@@ -6,6 +6,7 @@ import java.util.Optional;
 import smartpv.consumption.persistence.device.ConsumptionDeviceEntity;
 import smartpv.management.farm.persistance.FarmEntity;
 import smartpv.measurement.persistence.record.MeasurementEntity;
+import smartpv.server.utils.DateTimeUtils;
 
 public class PowerHysteresisPriorityAlgorithm implements Algorithm {
 
@@ -22,6 +23,7 @@ public class PowerHysteresisPriorityAlgorithm implements Algorithm {
         .filter((device) -> measurement < device.getControlParameters().minHysteresis())
         .map((device) -> {
           device.setIsOn(false);
+          device.setControlParameters(device.getControlParameters().withLastStatusChange(DateTimeUtils.getNow()));
           return device;
         });
 
@@ -34,6 +36,7 @@ public class PowerHysteresisPriorityAlgorithm implements Algorithm {
           .filter((device) -> measurement > device.getControlParameters().maxHysteresis())
           .map((device) -> {
             device.setIsOn(true);
+            device.setControlParameters(device.getControlParameters().withLastStatusChange(DateTimeUtils.getNow()));
             return device;
           });
     }
