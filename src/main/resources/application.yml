@@ -12,3 +12,8 @@ system:
     measurement: "*/5 * * * * *"
     management: "*/5 * * * * *"
     collectDevicesStatus: "*/5 * * * * *"
+
+counter:
+  url: https://smartpv-counter.herokuapp.com/
+  endpoints:
+    simpson: /count
