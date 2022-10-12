@@ -1,6 +1,5 @@
 package smartpv.consumption.persistence.device;
 
-import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +15,6 @@ public class ConsumptionDeviceEntity extends Device {
 
   private Boolean isOn;
   private ControlParameters controlParameters;
-  private Date lastStatusChange;
 
   public ConsumptionDeviceEntity(String id, String farmId, String name, String ipAddress,
       List<HttpEndpointData> endpoints) {

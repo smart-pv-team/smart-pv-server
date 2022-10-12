@@ -21,11 +21,11 @@ public class PowerPriorityAlgorithm implements Algorithm {
           .filter((device) -> !device.getControlParameters().lock().isLocked())
           .filter((device) -> !device.getIsOn())
           .max(Comparator.comparing((e) -> e.getControlParameters().priority()))
-          .filter((device) -> device.getLastStatusChange()
+          .filter((device) -> device.getControlParameters().lastStatusChange()
               .before(DateTimeUtils.subtractMinutes(measuredEnergy.getDate(), farm.minutesBetweenDeviceStatusSwitch())))
           .map((device) -> {
             if (measurement > farm.energyLimit() + device.getControlParameters().powerConsumption()) {
-              device.setLastStatusChange(measuredEnergy.getDate());
+              device.setControlParameters(device.getControlParameters().withLastStatusChange(measuredEnergy.getDate()));
               device.setIsOn(true);
             }
             return device;
@@ -35,11 +35,11 @@ public class PowerPriorityAlgorithm implements Algorithm {
           .filter((device) -> !device.getControlParameters().lock().isLocked())
           .filter(ConsumptionDeviceEntity::getIsOn)
           .min(Comparator.comparing((e) -> e.getControlParameters().priority()))
-          .filter((device) -> device.getLastStatusChange()
+          .filter((device) -> device.getControlParameters().lastStatusChange()
               .before(DateTimeUtils.subtractMinutes(measuredEnergy.getDate(), farm.minutesBetweenDeviceStatusSwitch())))
           .map((device) -> {
             device.setIsOn(false);
-            device.setLastStatusChange(measuredEnergy.getDate());
+            device.setControlParameters(device.getControlParameters().withLastStatusChange(measuredEnergy.getDate()));
             return device;
           });
     }

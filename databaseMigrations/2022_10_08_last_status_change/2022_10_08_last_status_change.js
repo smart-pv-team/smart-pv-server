@@ -1,7 +1,10 @@
 const consumptionDevicesFilter = {};
 const consumptionDevicesUpdate = {
+  $unset: {
+    lastStatusChange: ""
+  },
   $set: {
-    lastStatusChange: new Date()
+    "controlParameters.lastStatusChange": new Date()
   }
 }
 
