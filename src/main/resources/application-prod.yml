@@ -11,6 +11,6 @@ system:
   collectDevicesStatus: true
   manageDevices: false
   cron:
-    measurement: 0 */5 * * * *
-    management: 0 */5 * * * *
-    collectDevicesStatus: 0 */5 * * * *
+    measurement: 0 */2 * * * *
+    management: 0 */2 * * * *
+    collectDevicesStatus: 0 */2 * * * *
