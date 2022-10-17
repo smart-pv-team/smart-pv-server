@@ -11,3 +11,4 @@ do
 done
 
 mongoimport --host=localhost --port=27018 --db=smartpv --collection=consumptionDeviceEntity --type=json --file=src/simulation/data/consumptionDeviceEntity.json
+#mongoimport --host=localhost --port=27018 --db=smartpv --collection=farmEntity --type=json --file=src/simulation/data/farmEntity.json

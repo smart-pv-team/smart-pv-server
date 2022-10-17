@@ -24,6 +24,7 @@ import smartpv.consumption.persistence.device.ConsumptionDeviceEntity;
 import smartpv.consumption.persistence.device.ConsumptionDeviceRepository;
 import smartpv.consumption.persistence.record.ConsumptionEntity;
 import smartpv.consumption.persistence.record.ConsumptionRepository;
+import smartpv.management.algorithms.Counter;
 import smartpv.management.farm.FarmRepository;
 import smartpv.management.farm.persistance.FarmEntity;
 import smartpv.measurement.MeasurementService;
@@ -50,9 +51,14 @@ class ManagementServiceTest {
   @Autowired
   private FarmRepository farmRepository;
 
+  @Autowired
+  private Counter counter;
+
   @BeforeAll
   static void loadData() {
-    List<String> DAYS = List.of("2022-08-28", "2022-08-29", "2022-09-18", "2022-09-29", "2022-09-30", "2022-10-07");
+    List<String> DAYS = List.of("2022-08-28", "2022-08-29", "2022-09-18", "2022-09-29", "2022-09-30", "2022-10-11",
+        "2022-10-14", "2022-10-17");
+    //List<String> DAYS = List.of("2022-10-17");
 
     ProcessBuilder processBuilder = new ProcessBuilder();
     String filePath = System.getProperty("user.dir").concat("/src/simulation/script/");
@@ -88,38 +94,40 @@ class ManagementServiceTest {
     var farmEntity = farmRepository.findAll().get(0);
     var currentConsumptionEntity = new ConsumptionEntity(List.of(), 0, new Date(), farmEntity.id());
     List<String> activeDevices = new LinkedList<>();
-
+    var manage = 0;
     for (MeasurementEntity measurementEntity : measurementEntities) {
       ConsumptionEntity consumptionEntity = consumptionEntities.stream()
           .filter((entity) -> DateTimeUtils.compareByMinutes(entity.getDate(), measurementEntity.getDate()))
           .findFirst().orElse(currentConsumptionEntity);
 
-      var updatedMeasurement = consumptionEntity.getActiveDevicesNum() * 3
+      var updatedMeasurement = consumptionEntity.getActiveDevicesNum() * 2.5f
           + measurementEntity.getMeasurement() / 1000
-          - 3 * activeDevices.size();
+          - 2.5f * activeDevices.size();
       var updatedMeasurementEntity = measurementEntity.withMeasurement(updatedMeasurement);
+      measurementRepository.save(updatedMeasurementEntity);
 
-      when(measurementServiceMock.makeMeasurement(any(FarmEntity.class))).thenReturn(updatedMeasurementEntity);
-      when(consumptionServiceMock.collectDevicesStatus(any(FarmEntity.class))).thenReturn(
-          currentConsumptionEntity);
-
-      var currentlyChangedDevices = new ManagementService(
-          consumptionDeviceRepository,
-          consumptionRepository,
-          measurementServiceMock,
-          consumptionServiceMock).updateDevices(farmEntity);
-
-      for (ConsumptionDeviceEntity device : currentlyChangedDevices) {
-        if (activeDevices.contains(device.getId()) && !device.getIsOn()) {
-          activeDevices.remove(device.getId());
-        } else if (!activeDevices.contains(device.getId()) && device.getIsOn()) {
-          activeDevices.add(device.getId());
+      if (manage % 2 == 0) {
+        when(consumptionServiceMock.collectDevicesStatus(any(FarmEntity.class))).thenReturn(
+            currentConsumptionEntity);
+        var currentlyChangedDevices = new ManagementService(
+            consumptionDeviceRepository,
+            consumptionRepository,
+            measurementServiceMock,
+            consumptionServiceMock,
+            counter,
+            measurementRepository).updateDevices(farmEntity);
+        for (ConsumptionDeviceEntity device : currentlyChangedDevices) {
+          if (activeDevices.contains(device.getId()) && !device.getIsOn()) {
+            activeDevices.remove(device.getId());
+          } else if (!activeDevices.contains(device.getId()) && device.getIsOn()) {
+            activeDevices.add(device.getId());
+          }
         }
       }
+      manage += 1;
       currentConsumptionEntity = consumptionEntity.withActiveDevices(activeDevices);
 
       consumptionRepository.save(currentConsumptionEntity);
-      measurementRepository.save(updatedMeasurementEntity);
     }
     assertEquals(1, 1);
   }

@@ -2,7 +2,6 @@ package smartpv.measurement.persistence.record;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,8 +24,8 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
   }
 
   @Override
-  public Optional<MeasurementEntity> findTopByFarmIdAndDateAfter(String farmId, Date after) {
-    return measurementMongoRepository.findTopByFarmIdAndDateAfter(farmId, after);
+  public List<MeasurementEntity> findAllByFarmIdAndDateIsBetween(String farmId, Date from, Date to) {
+    return measurementMongoRepository.findAllByFarmIdAndDateIsBetween(farmId, from, to);
   }
 
   @Override

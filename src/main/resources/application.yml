@@ -7,13 +7,14 @@ spring:
 system:
   measure: true
   collectDevicesStatus: true
-  manageDevices: true
+  manageDevices: false
   cron:
     measurement: "*/5 * * * * *"
     management: "*/5 * * * * *"
     collectDevicesStatus: "*/5 * * * * *"
 
 counter:
-  url: https://smartpv-counter.herokuapp.com/
+  url: http://127.0.0.1:5000/
   endpoints:
-    simpson: /count
+    simpson: simpson
+    average: average
