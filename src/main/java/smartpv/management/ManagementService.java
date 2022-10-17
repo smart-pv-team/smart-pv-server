@@ -55,7 +55,7 @@ public class ManagementService {
     }
     MeasurementEntity measuredEnergy = new MeasurementEntity(
         farm.id(),
-        getAverageMeasurement(List.of(measurementEntitiesToAverage.get(0))).floatValue(),
+        getAverageMeasurement(measurementEntitiesToAverage).floatValue(),
         Map.of(),
         consumptionEntity.getDate());
     List<ConsumptionDeviceEntity> allDevicesWithUpdatedLockAndStatus = StringToAlgorithm.stringToAlgorithm(
