@@ -2,7 +2,6 @@ package smartpv.measurement.persistence.record;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface MeasurementRepository {
 
@@ -10,5 +9,5 @@ public interface MeasurementRepository {
 
   List<MeasurementEntity> findAll();
 
-  Optional<MeasurementEntity> findTopByFarmIdAndDateAfter(String farmId, Date after);
+  List<MeasurementEntity> findAllByFarmIdAndDateIsBetween(String farmId, Date from, Date to);
 }

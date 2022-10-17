@@ -35,6 +35,10 @@ public class DateTimeUtils {
     return DateUtils.addMinutes(date, -minutes);
   }
 
+  public static Date addMinutes(Date date, Integer minutes) {
+    return DateUtils.addMinutes(date, minutes);
+  }
+
   public static boolean compareByMinutes(Date date1, Date date2) {
     Calendar calendar1 = Calendar.getInstance();
     calendar1.setTime(date1);
