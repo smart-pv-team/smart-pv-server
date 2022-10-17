@@ -29,4 +29,8 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
     return measurementMongoRepository.findTopByFarmIdAndDateAfter(farmId, after);
   }
 
+  @Override
+  public Optional<MeasurementEntity> findTopByDateAndIdIsNot(String id) {
+    return measurementMongoRepository.findTopByDateAndIdIsNot(id);
+  }
 }

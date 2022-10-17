@@ -11,6 +11,6 @@ public interface MeasurementMongoRepository extends
   List<MeasurementEntity> findAllByIdAndDateBetween(String id, Date from, Date to);
 
   List<MeasurementEntity> findAllByFarmId(String farmId);
-
+  Optional<MeasurementEntity> findTopByDateAndIdIsNot(String id);
   Optional<MeasurementEntity> findTopByFarmIdAndDateAfter(String farmId, Date from);
 }
