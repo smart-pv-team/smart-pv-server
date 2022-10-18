@@ -31,8 +31,7 @@ class MeasurementController {
   }
 
   @GetMapping(Routing.Measurement.Devices.DeviceId.PATH)
-  ResponseEntity<MeasurementDeviceEntity> getDevice(
-      @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
+  ResponseEntity<MeasurementDeviceEntity> getDevice(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
     return measurementDeviceRepository
         .getFirstById(deviceId)
         .map(ResponseEntity::ok)
@@ -40,8 +39,7 @@ class MeasurementController {
   }
 
   @GetMapping(Routing.Measurement.Devices.DeviceId.Parameters.Name.PATH)
-  ResponseEntity<String> getDeviceName(
-      @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
+  ResponseEntity<String> getDeviceName(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
     return measurementDeviceRepository
         .getFirstById(deviceId)
         .map(Device::getName)
@@ -49,4 +47,28 @@ class MeasurementController {
         .orElse(ResponseEntity.notFound().build());
   }
 
+  @GetMapping(Routing.Measurement.Devices.DeviceId.Last.PATH)
+  ResponseEntity<MeasurementMapper> getDeviceMeasurement(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
+    return measurementRepository.findDeviceLastMeasurement(deviceId)
+        .map(MeasurementMapper::ofMeasurementEntity)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @GetMapping(Routing.Measurement.Devices.DeviceId.Statistics.Sum.PATH)
+  ResponseEntity<Long> getDeviceStatisticsSum(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
+    return measurementDeviceRepository.getFirstById(deviceId)
+        .map(MeasurementDeviceEntity::getMeasuredEnergy)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @GetMapping(Routing.Measurement.Farms.FarmId.Statistics.Sum.PATH)
+  ResponseEntity<Long> getFarmStatisticsSum(@PathVariable(Routing.FARM_ID_VARIABLE) String farmId) {
+    return ResponseEntity.ok(measurementDeviceRepository
+        .findAllByFarmId(farmId)
+        .stream()
+        .mapToLong(MeasurementDeviceEntity::getMeasuredEnergy)
+        .sum());
+  }
 }

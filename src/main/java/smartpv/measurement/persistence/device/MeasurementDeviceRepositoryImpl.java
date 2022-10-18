@@ -30,4 +30,16 @@ public class MeasurementDeviceRepositoryImpl implements MeasurementDeviceReposit
     return measurementDeviceMongoRepository.getFirstById(id);
   }
 
+  @Override
+  public void save(MeasurementDeviceEntity measurementDeviceEntity) {
+    measurementDeviceMongoRepository.save(measurementDeviceEntity);
+  }
+
+  @Override
+  public void saveMeasurementStatistics(String measurementDeviceEntityId, Long measured) {
+    MeasurementDeviceEntity measurementDeviceEntity = measurementDeviceMongoRepository.findById(
+        measurementDeviceEntityId).get();
+    Long energy = measured + measurementDeviceEntity.getMeasuredEnergy();
+    measurementDeviceMongoRepository.save(measurementDeviceEntity.withMeasuredEnergy(energy));
+  }
 }

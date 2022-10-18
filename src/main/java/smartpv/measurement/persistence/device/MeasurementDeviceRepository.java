@@ -10,4 +10,8 @@ public interface MeasurementDeviceRepository {
   List<MeasurementDeviceEntity> findAllByFarmId(String farmId);
 
   Optional<MeasurementDeviceEntity> getFirstById(String id);
+
+  void save(MeasurementDeviceEntity measurementDeviceEntity);
+
+  void saveMeasurementStatistics(String measurementDeviceEntityId, Long measured);
 }
