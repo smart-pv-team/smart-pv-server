@@ -5,7 +5,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import smartpv.management.algorithms.Counter;
-import smartpv.measurement.persistence.device.MeasurementDeviceEntity;
 import smartpv.measurement.persistence.device.MeasurementDeviceRepository;
 import smartpv.measurement.persistence.record.MeasurementEntity;
 import smartpv.measurement.persistence.record.MeasurementRepository;
@@ -37,10 +36,5 @@ public class MeasurementStatisticsService {
       Double difference = counter.countSimpson(measurements);
       measurementDeviceRepository.saveMeasurementStatistics(deviceId, difference.longValue());
     });
-  }
-
-  public Long getMeasurementFarmStatistics(String farmId) {
-    return measurementDeviceRepository.findAllByFarmId(farmId).stream()
-        .mapToLong(MeasurementDeviceEntity::getMeasuredEnergy).sum();
   }
 }

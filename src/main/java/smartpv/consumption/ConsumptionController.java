@@ -1,5 +1,6 @@
 package smartpv.consumption;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import smartpv.consumption.dto.ConsumptionIsOnDto;
 import smartpv.consumption.persistence.device.ConsumptionDeviceEntity;
 import smartpv.consumption.persistence.device.ConsumptionDeviceRepository;
+import smartpv.consumption.persistence.record.ConsumptionEntity;
+import smartpv.consumption.persistence.record.ConsumptionRepository;
 import smartpv.management.device.Device;
 import smartpv.server.conf.Routing;
 import smartpv.server.conf.Routing.Consumption.Devices;
@@ -20,10 +23,13 @@ import smartpv.server.conf.Routing.Consumption.Devices;
 class ConsumptionController {
 
   private final ConsumptionDeviceRepository consumptionDeviceRepository;
+  private final ConsumptionRepository consumptionRepository;
 
   @Autowired
-  ConsumptionController(ConsumptionDeviceRepository consumptionDeviceRepository) {
+  ConsumptionController(ConsumptionDeviceRepository consumptionDeviceRepository,
+      ConsumptionRepository consumptionRepository) {
     this.consumptionDeviceRepository = consumptionDeviceRepository;
+    this.consumptionRepository = consumptionRepository;
   }
 
   @GetMapping(Devices.PATH)
@@ -71,5 +77,31 @@ class ConsumptionController {
   void postDeviceParametersIsOn(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
       @RequestBody ConsumptionIsOnDto consumptionIsOnDto) {
     consumptionDeviceRepository.setDeviceOn(deviceId, consumptionIsOnDto.isOn());
+  }
+
+  @GetMapping(Routing.Consumption.Devices.DeviceId.Last.PATH)
+  ResponseEntity<Date> getLastDeviceActiveStatus(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
+    return consumptionRepository
+        .findLast(consumptionDeviceRepository.findById(deviceId).map(Device::getFarmId).get())
+        .map(ConsumptionEntity::getDate)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @GetMapping(Routing.Consumption.Devices.DeviceId.Statistics.Sum.PATH)
+  ResponseEntity<Long> getDeviceStatisticsSum(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
+    return consumptionDeviceRepository
+        .findById(deviceId).map(ConsumptionDeviceEntity::getWorkingHours)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @GetMapping(Routing.Consumption.Farms.FarmId.Statistics.Sum.PATH)
+  ResponseEntity<Long> getFarmStatisticsSum(@PathVariable(Routing.FARM_ID_VARIABLE) String farmId) {
+    return ResponseEntity.ok(consumptionDeviceRepository
+        .findAllByFarmId(farmId)
+        .stream()
+        .mapToLong(ConsumptionDeviceEntity::getWorkingHours)
+        .sum());
   }
 }
