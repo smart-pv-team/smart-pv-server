@@ -15,10 +15,19 @@ public class ConsumptionDeviceEntity extends Device {
 
   private Boolean isOn;
   private ControlParameters controlParameters;
+  private Long workingHours;
 
   public ConsumptionDeviceEntity(String id, String farmId, String name, String ipAddress,
-      List<HttpEndpointData> endpoints) {
+      List<HttpEndpointData> endpoints, Boolean isOn, ControlParameters controlParameters, Long workingHours) {
     super(id, farmId, name, ipAddress, endpoints);
+    this.isOn = isOn;
+    this.controlParameters = controlParameters;
+    this.workingHours = workingHours;
+  }
+
+  public ConsumptionDeviceEntity withWorkingHours(Long workingHours) {
+    return new ConsumptionDeviceEntity(getId(), getFarmId(), getName(), getIpAddress(), getEndpoints(), getIsOn(),
+        getControlParameters(), workingHours);
   }
 }
 

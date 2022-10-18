@@ -72,6 +72,30 @@ public interface Routing {
     String VALUE = "/smartpv/consumption";
     String PATH = VALUE;
 
+    interface Farms {
+
+      String VALUE = "/farms";
+      String PATH = Consumption.PATH + VALUE;
+
+      interface FarmId {
+
+        String VALUE = "/" + FARM_ID_PLACEHOLDER;
+        String PATH = Farms.PATH + VALUE;
+
+        interface Statistics {
+
+          String VALUE = "/statistics";
+          String PATH = FarmId.PATH + VALUE;
+
+          interface Sum {
+
+            String VALUE = "/sum";
+            String PATH = Statistics.PATH + VALUE;
+          }
+        }
+      }
+    }
+
     interface Devices {
 
       String VALUE = "/devices";
@@ -81,6 +105,24 @@ public interface Routing {
 
         String VALUE = "/" + DEVICE_ID_PLACEHOLDER;
         String PATH = Devices.PATH + VALUE;
+
+        interface Last {
+
+          String VALUE = "/last";
+          String PATH = DeviceId.PATH + VALUE;
+        }
+
+        interface Statistics {
+
+          String VALUE = "/statistics";
+          String PATH = DeviceId.PATH + VALUE;
+
+          interface Sum {
+
+            String VALUE = "/sum";
+            String PATH = Statistics.PATH + VALUE;
+          }
+        }
 
         interface Parameters {
 

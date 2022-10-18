@@ -9,12 +9,13 @@ system:
   collectDevicesStatus: true
   manageDevices: false
   cron:
-    measurement: "*/5 * * * * *"
-    management: "*/5 * * * * *"
-    collectDevicesStatus: "*/5 * * * * *"
+    measurement: "0 */1 * * * *"
+    management: "0 */1 * * * *"
+    collectDevicesStatus: "0 */1 * * * *"
 
 counter:
   url: http://127.0.0.1:5000/
   endpoints:
     simpson: simpson
     average: average
+    duration: duration

@@ -28,11 +28,14 @@ public class Counter {
   private final String simpsonEndpoint;
   private final String averageEndpoint;
 
+  private final String durationEndpoint;
+
   @Autowired
   public Counter(
       @Value("${" + EnvNames.COUNTER_URL + "}") String counterUrl,
       @Value("${" + EnvNames.COUNTER_SIMPSON_ENDPOINT + "}") String simpsonEndpoint,
       @Value("${" + EnvNames.COUNTER_AVERAGE_ENDPOINT + "}") String averageEndpoint,
+      @Value("${" + EnvNames.COUNTER_DURATION_ENDPOINT + "}") String durationEndpoint,
       RestTemplateBuilder restTemplateBuilder
   ) {
     HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
@@ -41,11 +44,20 @@ public class Counter {
     this.counterUrl = counterUrl;
     this.simpsonEndpoint = simpsonEndpoint;
     this.averageEndpoint = averageEndpoint;
+    this.durationEndpoint = durationEndpoint;
   }
 
   public Double countAverage(List<Double> data) {
     try {
       return request(counterUrl.concat(averageEndpoint), JsonUtils.getObjectMapper().writeValueAsString(data));
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public Double countDuration(Map<Date, Boolean> data) {
+    try {
+      return request(counterUrl.concat(durationEndpoint), JsonUtils.getObjectMapper().writeValueAsString(data));
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }

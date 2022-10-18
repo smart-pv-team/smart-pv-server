@@ -86,4 +86,11 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
   public List<ConsumptionDeviceEntity> findAllByFarmIdAndIdIsIn(String farmId, List<String> ids) {
     return consumptionDeviceMongoRepository.findAllByFarmIdAndIdIsIn(farmId, ids);
   }
+
+  @Override
+  public void saveConsumptionStatistic(String deviceId, Long duration) {
+    ConsumptionDeviceEntity consumptionDeviceEntity = consumptionDeviceMongoRepository.findById(deviceId).get();
+    Long workingHours = duration + consumptionDeviceEntity.getWorkingHours();
+    consumptionDeviceMongoRepository.save(consumptionDeviceEntity.withWorkingHours(workingHours));
+  }
 }

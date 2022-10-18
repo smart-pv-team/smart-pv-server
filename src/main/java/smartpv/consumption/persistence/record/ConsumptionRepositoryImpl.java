@@ -13,6 +13,7 @@ import com.mongodb.client.MongoDatabase;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 import smartpv.server.conf.MongoUtils;
 
@@ -39,6 +40,11 @@ public class ConsumptionRepositoryImpl implements ConsumptionRepository {
         .find(and(eq(FARM_ID_FIELD, null), lt(DATE_FIELD, to), gt(DATE_FIELD, from)))
         .sort(descending(DATE_FIELD))
         .into(new LinkedList<>());
+  }
+
+  @Override
+  public Optional<ConsumptionEntity> findLast(String farmId) {
+    return Optional.ofNullable(collection.find().sort(descending(DATE_FIELD)).first());
   }
 
   @Override

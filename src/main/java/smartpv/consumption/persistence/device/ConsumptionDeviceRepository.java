@@ -30,4 +30,6 @@ public interface ConsumptionDeviceRepository {
   Optional<ConsumptionDeviceEntity> findLowestPriorityOnDevice(FarmEntity farm);
 
   List<ConsumptionDeviceEntity> findAllByFarmIdAndIdIsIn(String farmId, List<String> ids);
+
+  void saveConsumptionStatistic(String deviceId, Long duration);
 }

@@ -20,11 +20,15 @@ public class ConsumptionService {
   private final ConsumptionDeviceRepository consumptionDeviceRepository;
   private final DeviceRequester deviceRequester;
 
+  private final ConsumptionStatisticsService consumptionStatisticsService;
+
   public ConsumptionService(ConsumptionRepository consumptionRepository,
-      ConsumptionDeviceRepository consumptionDeviceRepository, DeviceRequester deviceRequester) {
+      ConsumptionDeviceRepository consumptionDeviceRepository, DeviceRequester deviceRequester,
+      ConsumptionStatisticsService consumptionStatisticsService) {
     this.consumptionRepository = consumptionRepository;
     this.consumptionDeviceRepository = consumptionDeviceRepository;
     this.deviceRequester = deviceRequester;
+    this.consumptionStatisticsService = consumptionStatisticsService;
   }
 
   public ConsumptionTurnOnOffResponseMapper turnDeviceRequest(
@@ -39,6 +43,7 @@ public class ConsumptionService {
 
   public ConsumptionEntity collectAndSaveDevicesStatus(FarmEntity farm) {
     ConsumptionEntity consumptionEntity = collectDevicesStatus(farm);
+    consumptionStatisticsService.updateConsumptionStatistics(consumptionEntity);
     consumptionRepository.save(consumptionEntity);
     return consumptionEntity;
   }
