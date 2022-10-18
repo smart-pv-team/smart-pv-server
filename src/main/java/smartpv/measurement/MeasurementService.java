@@ -20,19 +20,22 @@ public class MeasurementService {
   private final MeasurementDeviceRepository measurementDeviceRepository;
   private final MeasurementRepository measurementRepository;
   private final DeviceRequester deviceRequester;
+  private final MeasurementStatisticsService measurementStatisticsService;
 
   @Autowired
   public MeasurementService(
       MeasurementDeviceRepository measurementDeviceRepository,
       DeviceRequester deviceRequester,
-      MeasurementRepository measurementRepository) {
+      MeasurementRepository measurementRepository, MeasurementStatisticsService measurementStatisticsService) {
     this.deviceRequester = deviceRequester;
     this.measurementDeviceRepository = measurementDeviceRepository;
     this.measurementRepository = measurementRepository;
+    this.measurementStatisticsService = measurementStatisticsService;
   }
 
   public MeasurementEntity makeAndSaveMeasurement(FarmEntity farm) {
     MeasurementEntity measurementEntity = makeMeasurement(farm);
+    measurementStatisticsService.updateMeasurementStatistics(measurementEntity);
     measurementRepository.save(measurementEntity);
     return measurementEntity;
   }

@@ -10,7 +10,9 @@ public interface MeasurementRepository {
 
   List<MeasurementEntity> findAll();
 
-  Optional<MeasurementEntity> findTopByDateAndIdIsNot(String id);
+  Optional<MeasurementEntity> findTopByDate();
 
   List<MeasurementEntity> findAllByFarmIdAndDateIsBetween(String farmId, Date from, Date to);
+
+  Optional<MeasurementEntity> findDeviceLastMeasurement(String deviceId);
 }

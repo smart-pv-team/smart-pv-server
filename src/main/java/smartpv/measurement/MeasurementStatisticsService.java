@@ -1,24 +1,46 @@
 package smartpv.measurement;
 
-import lombok.AllArgsConstructor;
+import java.util.Date;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import smartpv.management.device.DeviceRequester;
+import smartpv.management.algorithms.Counter;
+import smartpv.measurement.persistence.device.MeasurementDeviceEntity;
 import smartpv.measurement.persistence.device.MeasurementDeviceRepository;
 import smartpv.measurement.persistence.record.MeasurementEntity;
 import smartpv.measurement.persistence.record.MeasurementRepository;
 
 @Service
-@AllArgsConstructor
 public class MeasurementStatisticsService {
 
   private final MeasurementDeviceRepository measurementDeviceRepository;
   private final MeasurementRepository measurementRepository;
-  private final DeviceRequester deviceRequester;
+  private final Counter counter;
 
-  public Long updateMeasurement(MeasurementEntity measurementEntity) {
+  @Autowired
+  public MeasurementStatisticsService(MeasurementDeviceRepository measurementDeviceRepository,
+      MeasurementRepository measurementRepository, Counter counter) {
+    this.measurementDeviceRepository = measurementDeviceRepository;
+    this.measurementRepository = measurementRepository;
+    this.counter = counter;
+  }
+
+  public void updateMeasurementStatistics(MeasurementEntity measurementEntity) {
+    MeasurementEntity recentMeasurement = measurementRepository
+        .findTopByDate().get();
+
     measurementEntity.getMeasurements().forEach((deviceId, measurement) -> {
-      MeasurementEntity recentMeasurement = measurementRepository.findTopByDateAndIdIsNot(measurementEntity.getId())
-          .get();
+      Map<Date, Double> measurements = Map.of(
+          recentMeasurement.getDate(), recentMeasurement.getMeasurements().get(deviceId).doubleValue(),
+          measurementEntity.getDate(), measurement.doubleValue()
+      );
+      Double difference = counter.countSimpson(measurements);
+      measurementDeviceRepository.saveMeasurementStatistics(deviceId, difference.longValue());
     });
+  }
+
+  public Long getMeasurementFarmStatistics(String farmId) {
+    return measurementDeviceRepository.findAllByFarmId(farmId).stream()
+        .mapToLong(MeasurementDeviceEntity::getMeasuredEnergy).sum();
   }
 }
