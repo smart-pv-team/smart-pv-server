@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import smartpv.consumption.persistence.record.ConsumptionEntity;
+import smartpv.measurement.persistence.record.MeasurementEntity;
 
 @Configuration
 public class MongoConfig {
@@ -33,7 +34,10 @@ public class MongoConfig {
         .fromRegistries(
             MongoClientSettings.getDefaultCodecRegistry(),
             CodecRegistries.fromProviders(
-                PojoCodecProvider.builder().register(ClassModel.builder(ConsumptionEntity.class).build()).build())
+                PojoCodecProvider.builder()
+                    .register(ClassModel.builder(ConsumptionEntity.class).build())
+                    .register(ClassModel.builder(MeasurementEntity.class).build())
+                    .build())
         );
   }
 

@@ -6,8 +6,8 @@ from dateutil import tz
 
 LOCAL_DB_URL = "mongodb://localhost:27017/smartPV"
 PROD_DB_URL = "mongodb+srv://janicki:janicki@smartpv.dr74ruo.mongodb.net/smartpv?retryWrites=true&w=majority"
-client = pymongo.MongoClient(PROD_DB_URL)
-db = client.smartpv
+client = pymongo.MongoClient(LOCAL_DB_URL)
+db = client.smartPV
 measurement_entity_collection = db.measurementEntity
 measurement_device_entity_collection = db.measurementDeviceEntity
 
