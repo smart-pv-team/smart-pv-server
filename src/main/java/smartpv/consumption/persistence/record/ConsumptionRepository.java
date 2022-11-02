@@ -12,5 +12,7 @@ public interface ConsumptionRepository {
 
   List<ConsumptionEntity> findRecentEntities(String farmId, Date from, Date to);
 
+  List<ConsumptionEntity> findByDeviceIdAndDateBetween(String deviceId, Date from, Date to);
+
   Optional<ConsumptionEntity> findLast(String farmId);
 }

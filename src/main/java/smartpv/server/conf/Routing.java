@@ -82,6 +82,12 @@ public interface Routing {
           String PATH = DeviceId.PATH + VALUE;
         }
 
+        interface Range {
+
+          String VALUE = "/range";
+          String PATH = DeviceId.PATH + VALUE;
+        }
+
         interface Statistics {
 
           String VALUE = "/statistics";
@@ -151,6 +157,12 @@ public interface Routing {
         interface Last {
 
           String VALUE = "/last";
+          String PATH = DeviceId.PATH + VALUE;
+        }
+
+        interface Range {
+
+          String VALUE = "/range";
           String PATH = DeviceId.PATH + VALUE;
         }
 

@@ -2,12 +2,16 @@ package smartpv.consumption;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import smartpv.consumption.dto.ConsumptionIsOnDto;
 import smartpv.consumption.persistence.device.ConsumptionDeviceEntity;
@@ -77,6 +81,21 @@ class ConsumptionController {
   void postDeviceParametersIsOn(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
       @RequestBody ConsumptionIsOnDto consumptionIsOnDto) {
     consumptionDeviceRepository.setDeviceOn(deviceId, consumptionIsOnDto.isOn());
+  }
+
+  @GetMapping(Routing.Consumption.Devices.DeviceId.Range.PATH)
+  Map<Date, Boolean> getRangeDeviceActiveStatus(
+      @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate) {
+    return consumptionRepository
+        .findByDeviceIdAndDateBetween(deviceId, startDate, endDate)
+        .stream()
+        .collect(
+            Collectors.toMap(
+                ConsumptionEntity::getDate,
+                consumptionEntity -> consumptionEntity.getActiveDevicesIds().contains(deviceId))
+        );
   }
 
   @GetMapping(Routing.Consumption.Devices.DeviceId.Last.PATH)
