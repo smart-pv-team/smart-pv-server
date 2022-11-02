@@ -1,10 +1,13 @@
 package smartpv.measurement;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import smartpv.management.device.Device;
 import smartpv.measurement.persistence.device.MeasurementDeviceEntity;
@@ -55,6 +58,21 @@ class MeasurementController {
         .orElse(ResponseEntity.notFound().build());
   }
 
+  @GetMapping(Routing.Measurement.Devices.DeviceId.Range.PATH)
+  List<MeasurementMapper> getDeviceMeasurementRange(
+      @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate) {
+    return measurementRepository.findAllByDeviceIdAndDateIsBetween(
+            deviceId,
+            startDate,
+            endDate)
+        .stream()
+        .map(measurementEntity ->
+            new MeasurementMapper(measurementEntity.getMeasurements().get(deviceId), measurementEntity.getDate()))
+        .toList();
+  }
+
   @GetMapping(Routing.Measurement.Devices.DeviceId.Statistics.Sum.PATH)
   ResponseEntity<Long> getDeviceStatisticsSum(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
     return measurementDeviceRepository.getFirstById(deviceId)
@@ -71,4 +89,5 @@ class MeasurementController {
         .mapToLong(MeasurementDeviceEntity::getMeasuredEnergy)
         .sum());
   }
+
 }

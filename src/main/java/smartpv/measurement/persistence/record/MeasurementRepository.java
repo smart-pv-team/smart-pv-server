@@ -14,5 +14,7 @@ public interface MeasurementRepository {
 
   List<MeasurementEntity> findAllByFarmIdAndDateIsBetween(String farmId, Date from, Date to);
 
+  List<MeasurementEntity> findAllByDeviceIdAndDateIsBetween(String deviceId, Date from, Date to);
+
   Optional<MeasurementEntity> findDeviceLastMeasurement(String deviceId);
 }
