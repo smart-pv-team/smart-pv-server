@@ -5,3 +5,11 @@ server.iml
 /src/simulation/drawing/charts/
 /docs/dbdumps/
 src/simulation/drawing/__pycache__/
+/SpringApplication.iml
+/SpringApplication/src/simulation/data/
+/SpringApplication/src/simulation/drawing/charts/
+/docs/simulation/
+/SpringApplication/target/
+/Domain/target/
+/Application/target/
+/Adapters/target/

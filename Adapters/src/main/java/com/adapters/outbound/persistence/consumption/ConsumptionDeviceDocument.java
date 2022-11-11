@@ -1,0 +1,67 @@
+package com.adapters.outbound.persistence.consumption;
+
+import com.adapters.outbound.persistence.farm.DeviceEntity;
+import com.adapters.outbound.persistence.farm.HttpEndpointDataEntity;
+import com.domain.model.consumption.ConsumptionDevice;
+import java.util.List;
+import java.util.stream.Collectors;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Getter
+@Setter
+@Document(collection = "consumptionDeviceEntity")
+public class ConsumptionDeviceDocument extends DeviceEntity {
+
+  private Boolean isOn;
+  private ControlParametersEntity controlParameters;
+  private Long workingHours;
+
+  @Builder
+  public ConsumptionDeviceDocument(String id, String farmId, String name, String ipAddress,
+      List<HttpEndpointDataEntity> endpoints, Boolean isOn, ControlParametersEntity controlParameters,
+      Long workingHours) {
+    super(id, farmId, name, ipAddress, endpoints);
+    this.isOn = isOn;
+    this.controlParameters = controlParameters;
+    this.workingHours = workingHours;
+  }
+
+  public static ConsumptionDeviceDocument fromDomain(ConsumptionDevice consumptionDevice) {
+    if (consumptionDevice == null) {
+      return null;
+    }
+    return builder()
+        .isOn(consumptionDevice.getIsOn())
+        .farmId(consumptionDevice.getFarmId())
+        .controlParameters(ControlParametersEntity.fromDomain(consumptionDevice.getControlParameters()))
+        .workingHours(consumptionDevice.getWorkingHours())
+        .endpoints(consumptionDevice.getEndpoints().stream().map(HttpEndpointDataEntity::fromDomain)
+            .collect(Collectors.toList()))
+        .ipAddress(consumptionDevice.getIpAddress())
+        .name(consumptionDevice.getName())
+        .id(consumptionDevice.getId())
+        .build();
+  }
+
+  public static ConsumptionDevice toDomain(ConsumptionDeviceDocument consumptionDevice) {
+    if (consumptionDevice == null) {
+      return null;
+    }
+    return ConsumptionDevice
+        .builder()
+        .isOn(consumptionDevice.getIsOn())
+        .farmId(consumptionDevice.getFarmId())
+        .controlParameters(ControlParametersEntity.toDomain(consumptionDevice.getControlParameters()))
+        .workingHours(consumptionDevice.getWorkingHours())
+        .endpoints(consumptionDevice.getEndpoints().stream().map(HttpEndpointDataEntity::toDomain)
+            .collect(Collectors.toList()))
+        .ipAddress(consumptionDevice.getIpAddress())
+        .id(consumptionDevice.getId())
+        .name(consumptionDevice.getName())
+        .build();
+  }
+}
+
