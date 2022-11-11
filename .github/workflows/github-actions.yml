@@ -1,5 +1,5 @@
 name: GitHub Actions Demo
-on: [push]
+on: [ push ]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -11,6 +11,4 @@ jobs:
           java-version: '18'
           cache: 'maven'
       - name: Build
-        run: mvn clean install verify
-      - name: Test
-        run: mvn test
+        run: mvn clean install verify -DskipTests
