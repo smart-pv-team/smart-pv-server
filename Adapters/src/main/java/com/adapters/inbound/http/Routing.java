@@ -3,9 +3,47 @@ package com.adapters.inbound.http;
 public interface Routing {
 
   String DEVICE_ID_VARIABLE = "deviceId";
+  String TOKEN_VARIABLE = "token";
   String FARM_ID_VARIABLE = "farmId";
   String DEVICE_ID_PLACEHOLDER = "{" + DEVICE_ID_VARIABLE + "}";
   String FARM_ID_PLACEHOLDER = "{" + FARM_ID_VARIABLE + "}";
+  String TOKEN_PLACEHOLDER = "{" + TOKEN_VARIABLE + "}";
+
+  interface Api {
+
+    String VALUE = "/api";
+    String PATH = VALUE;
+
+    interface User {
+
+      String VALUE = "/user";
+      String PATH = Api.PATH + VALUE;
+
+      interface Token {
+
+        String VALUE = "/token";
+        String PATH = User.PATH + VALUE;
+
+        interface TokenId {
+
+          String VALUE = "/" + TOKEN_PLACEHOLDER;
+          String PATH = Token.PATH + VALUE;
+        }
+      }
+
+      interface Farm {
+
+        String VALUE = "/farm";
+        String PATH = User.PATH + VALUE;
+
+        interface FarmId {
+
+          String VALUE = "/" + FARM_ID_PLACEHOLDER;
+          String PATH = Farm.PATH + VALUE;
+        }
+      }
+    }
+  }
 
   interface Management {
 
