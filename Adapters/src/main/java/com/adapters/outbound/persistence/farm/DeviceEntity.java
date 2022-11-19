@@ -17,4 +17,5 @@ public class DeviceEntity {
   private String ipAddress;
   private List<HttpEndpointDataEntity> endpoints;
   private Date creationDate;
+  private DeviceModelEntity deviceModel;
 }

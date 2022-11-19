@@ -1,6 +1,7 @@
 package com.domain.model.consumption;
 
 import com.domain.model.farm.Device;
+import com.domain.model.farm.DeviceModel;
 import com.domain.model.farm.HttpEndpointData;
 import java.util.Date;
 import java.util.List;
@@ -20,8 +21,8 @@ public class ConsumptionDevice extends Device {
 
   public ConsumptionDevice(String id, String farmId, String name, String ipAddress,
       List<HttpEndpointData> endpoints, Boolean isOn, ControlParameters controlParameters, Long workingHours,
-      Date creationDate) {
-    super(id, farmId, name, ipAddress, endpoints, creationDate);
+      Date creationDate, DeviceModel deviceModel) {
+    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel);
     this.isOn = isOn;
     this.controlParameters = controlParameters;
     this.workingHours = workingHours;
@@ -29,7 +30,7 @@ public class ConsumptionDevice extends Device {
 
   public ConsumptionDevice withWorkingHours(Long workingHours) {
     return new ConsumptionDevice(getId(), getFarmId(), getName(), getIpAddress(), getEndpoints(), getIsOn(),
-        getControlParameters(), workingHours, getCreationDate());
+        getControlParameters(), workingHours, getCreationDate(), getDeviceModel());
   }
 }
 

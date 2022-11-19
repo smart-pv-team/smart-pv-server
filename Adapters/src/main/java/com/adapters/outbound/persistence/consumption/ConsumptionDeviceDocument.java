@@ -1,6 +1,7 @@
 package com.adapters.outbound.persistence.consumption;
 
 import com.adapters.outbound.persistence.farm.DeviceEntity;
+import com.adapters.outbound.persistence.farm.DeviceModelEntity;
 import com.adapters.outbound.persistence.farm.HttpEndpointDataEntity;
 import com.domain.model.consumption.ConsumptionDevice;
 import java.util.Date;
@@ -23,8 +24,8 @@ public class ConsumptionDeviceDocument extends DeviceEntity {
   @Builder
   public ConsumptionDeviceDocument(String id, String farmId, String name, String ipAddress,
       List<HttpEndpointDataEntity> endpoints, Boolean isOn, ControlParametersEntity controlParameters,
-      Long workingHours, Date creationDate) {
-    super(id, farmId, name, ipAddress, endpoints, creationDate);
+      Long workingHours, Date creationDate, DeviceModelEntity deviceModel) {
+    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel);
     this.isOn = isOn;
     this.controlParameters = controlParameters;
     this.workingHours = workingHours;
@@ -45,6 +46,7 @@ public class ConsumptionDeviceDocument extends DeviceEntity {
         .name(consumptionDevice.getName())
         .id(consumptionDevice.getId())
         .creationDate(consumptionDevice.getCreationDate())
+        .deviceModel(DeviceModelEntity.fromDomain(consumptionDevice.getDeviceModel()))
         .build();
   }
 
@@ -64,6 +66,7 @@ public class ConsumptionDeviceDocument extends DeviceEntity {
         .id(consumptionDevice.getId())
         .name(consumptionDevice.getName())
         .creationDate(consumptionDevice.getCreationDate())
+        .deviceModel(DeviceModelEntity.toDomain(consumptionDevice.getDeviceModel()))
         .build();
   }
 }

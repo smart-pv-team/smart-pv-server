@@ -1,6 +1,7 @@
 package com.adapters.outbound.persistence.measurement;
 
 import com.adapters.outbound.persistence.farm.DeviceEntity;
+import com.adapters.outbound.persistence.farm.DeviceModelEntity;
 import com.adapters.outbound.persistence.farm.HttpEndpointDataEntity;
 import com.domain.model.measurement.MeasurementDevice;
 import java.util.Date;
@@ -18,8 +19,8 @@ public class MeasurementDeviceDocument extends DeviceEntity {
 
   @Builder
   public MeasurementDeviceDocument(String id, String farmId, String name, String ipAddress,
-      List<HttpEndpointDataEntity> endpoints, Long measuredEnergy, Date creationDate) {
-    super(id, farmId, name, ipAddress, endpoints, creationDate);
+      List<HttpEndpointDataEntity> endpoints, Long measuredEnergy, Date creationDate, DeviceModelEntity deviceModel) {
+    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel);
     this.measuredEnergy = measuredEnergy;
   }
 
@@ -33,6 +34,7 @@ public class MeasurementDeviceDocument extends DeviceEntity {
         .name(measurementDevice.getName())
         .ipAddress(measurementDevice.getIpAddress())
         .creationDate(measurementDevice.getCreationDate())
+        .deviceModel(DeviceModelEntity.fromDomain(measurementDevice.getDeviceModel()))
         .build();
   }
 
@@ -46,6 +48,7 @@ public class MeasurementDeviceDocument extends DeviceEntity {
         .name(measurementDevice.getName())
         .ipAddress(measurementDevice.getIpAddress())
         .creationDate(measurementDevice.getCreationDate())
+        .deviceModel(DeviceModelEntity.toDomain(measurementDevice.getDeviceModel()))
         .build();
   }
 

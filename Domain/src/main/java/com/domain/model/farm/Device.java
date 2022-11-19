@@ -15,4 +15,5 @@ public class Device {
   private String ipAddress;
   private List<HttpEndpointData> endpoints;
   private Date creationDate;
+  private DeviceModel deviceModel;
 }
