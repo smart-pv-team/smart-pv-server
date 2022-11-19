@@ -20,6 +20,7 @@ public record FarmDocument(@Id String id, String name, String description, Algor
         .minutesToAverageMeasurement(farm.minutesToAverageMeasurement())
         .minutesBetweenDeviceStatusSwitch(farm.minutesBetweenDeviceStatusSwitch())
         .energyLimit(farm.energyLimit())
+        .name(farm.name())
         .build();
   }
 
@@ -31,6 +32,7 @@ public record FarmDocument(@Id String id, String name, String description, Algor
         .minutesToAverageMeasurement(farm.minutesToAverageMeasurement())
         .minutesBetweenDeviceStatusSwitch(farm.minutesBetweenDeviceStatusSwitch())
         .energyLimit(farm.energyLimit())
+        .name(farm.name())
         .build();
   }
 }

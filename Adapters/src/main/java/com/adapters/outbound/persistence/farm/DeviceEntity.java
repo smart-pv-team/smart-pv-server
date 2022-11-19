@@ -1,5 +1,6 @@
 package com.adapters.outbound.persistence.farm;
 
+import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,4 +16,5 @@ public class DeviceEntity {
   private String name;
   private String ipAddress;
   private List<HttpEndpointDataEntity> endpoints;
+  private Date creationDate;
 }
