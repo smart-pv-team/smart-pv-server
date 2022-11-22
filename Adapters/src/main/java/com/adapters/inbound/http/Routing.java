@@ -12,6 +12,12 @@ public interface Routing {
     String VALUE = "/management";
     String PATH = VALUE;
 
+    interface DevicesModel {
+
+      String VALUE = "/devicesModel";
+      String PATH = Management.PATH + VALUE;
+    }
+
     interface Farms {
 
       String VALUE = "/farms";

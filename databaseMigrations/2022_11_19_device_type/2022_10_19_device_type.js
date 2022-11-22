@@ -1,7 +1,7 @@
 const consumptionDevicesFilter = {};
 const consumptionDevicesUpdate = {
   $set: {
-    "deviceModel": "SUPLA_MEW01"
+    "deviceModel": "SUPLA_ROW01"
   }
 }
 
@@ -10,7 +10,7 @@ db.getCollection('consumptionDeviceEntity').updateMany(consumptionDevicesFilter,
 const measurementDevicesFilter = {};
 const measurementDevicesUpdate = {
   $set: {
-    "deviceModel": "SUPLA_ROW01"
+    "deviceModel": "SUPLA_MEW01"
   }
 }
 
