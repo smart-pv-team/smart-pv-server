@@ -14,6 +14,30 @@ public interface Routing {
     String VALUE = "/api";
     String PATH = VALUE;
 
+    interface Admin {
+
+      String VALUE = "/admin";
+      String PATH = Api.PATH + VALUE;
+
+      interface Token {
+
+        String VALUE = "/token";
+        String PATH = Admin.PATH + VALUE;
+
+        interface TokenId {
+
+          String VALUE = "/" + TOKEN_PLACEHOLDER;
+          String PATH = Token.PATH + VALUE;
+
+          interface Pupils {
+
+            String VALUE = "/pupils";
+            String PATH = TokenId.PATH + VALUE;
+          }
+        }
+      }
+    }
+
     interface User {
 
       String VALUE = "/user";
@@ -45,6 +69,7 @@ public interface Routing {
     }
   }
 
+
   interface Management {
 
     String VALUE = "/management";
@@ -53,6 +78,12 @@ public interface Routing {
     interface DevicesModel {
 
       String VALUE = "/devicesModel";
+      String PATH = Management.PATH + VALUE;
+    }
+
+    interface ResponseOptions {
+
+      String VALUE = "/responseOptions";
       String PATH = Management.PATH + VALUE;
     }
 

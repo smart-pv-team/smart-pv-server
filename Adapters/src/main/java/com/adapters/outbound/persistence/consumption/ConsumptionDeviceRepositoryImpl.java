@@ -5,6 +5,7 @@ import com.domain.model.consumption.ControlParameters;
 import com.domain.model.farm.Farm;
 import com.domain.ports.consumption.ConsumptionDeviceRepository;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +17,30 @@ import org.springframework.stereotype.Repository;
 public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceRepository {
 
   private final ConsumptionDeviceMongoRepository consumptionDeviceMongoRepository;
+
+  @Override
+  public void save(ConsumptionDevice consumptionDevice) {
+    if (findById(consumptionDevice.getId()).isEmpty()) {
+      consumptionDevice.setCreationDate(new Date());
+      consumptionDeviceMongoRepository.save(
+          ConsumptionDeviceDocument.fromDomain(consumptionDevice.withWorkingHours(0L)));
+    }
+  }
+
+  @Override
+  public void update(ConsumptionDevice consumptionDevice) {
+    Optional<ConsumptionDeviceDocument> old = consumptionDeviceMongoRepository.findById(consumptionDevice.getId());
+    if (old.isPresent()) {
+      consumptionDevice.setCreationDate(old.get().getCreationDate());
+      consumptionDevice.setWorkingHours(old.get().getWorkingHours());
+      consumptionDeviceMongoRepository.save(ConsumptionDeviceDocument.fromDomain(consumptionDevice));
+    }
+  }
+
+  @Override
+  public void delete(String consumptionDeviceId) {
+    consumptionDeviceMongoRepository.deleteById(consumptionDeviceId);
+  }
 
   @Override
   public Optional<ConsumptionDevice> findById(String id) {

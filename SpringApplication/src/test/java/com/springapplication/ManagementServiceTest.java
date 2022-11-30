@@ -56,7 +56,7 @@ class ManagementServiceTest {
   static void loadData() {
     //List<String> DAYS = List.of("2022-08-28", "2022-08-29", "2022-09-18", "2022-09-29", "2022-09-30", "2022-10-11",
     //    "2022-10-14", "2022-10-17");
-    List<String> DAYS = List.of("2022-10-17");
+    List<String> DAYS = List.of("2022-11-22");
 
     ProcessBuilder processBuilder = new ProcessBuilder();
     String filePath = System.getProperty("user.dir").concat("/src/simulation/script/");

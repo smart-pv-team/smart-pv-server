@@ -2,21 +2,18 @@ package com.adapters.outbound.persistence.measurement;
 
 import com.domain.model.measurement.MeasurementDevice;
 import com.domain.ports.measurement.MeasurementDeviceRepository;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class MeasurementDeviceRepositoryImpl implements MeasurementDeviceRepository {
 
   private final MeasurementDeviceMongoRepository measurementDeviceMongoRepository;
-
-  public MeasurementDeviceRepositoryImpl(
-      MeasurementDeviceMongoRepository measurementDeviceMongoRepository) {
-    this.measurementDeviceMongoRepository = measurementDeviceMongoRepository;
-  }
-
 
   @Override
   public List<MeasurementDevice> findAll() {
@@ -37,7 +34,26 @@ public class MeasurementDeviceRepositoryImpl implements MeasurementDeviceReposit
 
   @Override
   public void save(MeasurementDevice measurementDevice) {
-    measurementDeviceMongoRepository.save(MeasurementDeviceDocument.fromDomain(measurementDevice));
+    if (getFirstById(measurementDevice.getId()).isEmpty()) {
+      measurementDevice.setCreationDate(new Date());
+      measurementDeviceMongoRepository.save(
+          MeasurementDeviceDocument.fromDomain(measurementDevice.withMeasuredEnergy(0L)));
+    }
+  }
+
+  @Override
+  public void update(MeasurementDevice measurementDevice) {
+    Optional<MeasurementDeviceDocument> old = measurementDeviceMongoRepository.findById(measurementDevice.getId());
+    if (old.isPresent()) {
+      measurementDevice.setCreationDate(old.get().getCreationDate());
+      measurementDevice.setMeasuredEnergy(old.get().getMeasuredEnergy());
+      measurementDeviceMongoRepository.save(MeasurementDeviceDocument.fromDomain(measurementDevice));
+    }
+  }
+
+  @Override
+  public void delete(String measurementDeviceId) {
+    measurementDeviceMongoRepository.deleteById(measurementDeviceId);
   }
 
   @Override

@@ -6,7 +6,7 @@ import com.domain.model.measurement.Measurement;
 import com.domain.ports.farm.Algorithm;
 import java.util.List;
 
-public class KnapsackAlgorithm implements Algorithm {
+public class PowerTimeAlgorithm implements Algorithm {
 
   @Override
   public List<ConsumptionDevice> updateDevicesStatus(Measurement measuredEnergy,
