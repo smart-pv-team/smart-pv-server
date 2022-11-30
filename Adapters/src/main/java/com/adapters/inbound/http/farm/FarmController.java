@@ -1,6 +1,8 @@
 package com.adapters.inbound.http.farm;
 
 import com.adapters.inbound.http.Routing;
+import com.adapters.outbound.http.devices.ResponseType;
+import com.domain.model.farm.DeviceModel;
 import com.domain.model.farm.Farm;
 import com.domain.ports.farm.FarmRepository;
 import java.util.List;
@@ -39,5 +41,16 @@ public class FarmController {
         .map(Farm::name)
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
+  }
+
+  @GetMapping(Routing.Management.DevicesModel.PATH)
+  List<DeviceModel> getDevicesModel() {
+    return List.of(DeviceModel.values());
+  }
+
+
+  @GetMapping(Routing.Management.ResponseOptions.PATH)
+  List<ResponseType> getResponseOptions() {
+    return List.of(ResponseType.values());
   }
 }

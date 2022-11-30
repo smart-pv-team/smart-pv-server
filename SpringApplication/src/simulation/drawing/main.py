@@ -58,7 +58,7 @@ if __name__ == "__main__":
     # datetime.datetime(2022, 9, 30),
     # datetime.datetime(2022, 10, 11),
     # datetime.datetime(2022, 10, 14),
-    datetime.datetime(2022, 10, 17),
+    datetime.datetime(2022, 11, 12),
   ]
   run_drawer_locally(days)
   run_drawer_prod(days)

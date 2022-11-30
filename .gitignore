@@ -13,3 +13,5 @@ src/simulation/drawing/__pycache__/
 /Domain/target/
 /Application/target/
 /Adapters/target/
+/Adapters.iml
+/Domain.iml

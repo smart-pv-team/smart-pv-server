@@ -14,5 +14,9 @@ public interface MeasurementDeviceRepository {
 
   void save(MeasurementDevice measurementDevice);
 
+  void update(MeasurementDevice measurementDevice);
+
+  void delete(String measurementDeviceId);
+
   void saveMeasurementStatistics(String measurementDeviceId, Long measured);
 }

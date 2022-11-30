@@ -1,7 +1,9 @@
 package com.domain.model.consumption;
 
 import com.domain.model.farm.Device;
+import com.domain.model.farm.DeviceModel;
 import com.domain.model.farm.HttpEndpointData;
+import java.util.Date;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +20,9 @@ public class ConsumptionDevice extends Device {
   @Builder
 
   public ConsumptionDevice(String id, String farmId, String name, String ipAddress,
-      List<HttpEndpointData> endpoints, Boolean isOn, ControlParameters controlParameters, Long workingHours) {
-    super(id, farmId, name, ipAddress, endpoints);
+      List<HttpEndpointData> endpoints, Boolean isOn, ControlParameters controlParameters, Long workingHours,
+      Date creationDate, DeviceModel deviceModel) {
+    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel);
     this.isOn = isOn;
     this.controlParameters = controlParameters;
     this.workingHours = workingHours;
@@ -27,7 +30,7 @@ public class ConsumptionDevice extends Device {
 
   public ConsumptionDevice withWorkingHours(Long workingHours) {
     return new ConsumptionDevice(getId(), getFarmId(), getName(), getIpAddress(), getEndpoints(), getIsOn(),
-        getControlParameters(), workingHours);
+        getControlParameters(), workingHours, getCreationDate(), getDeviceModel());
   }
 }
 

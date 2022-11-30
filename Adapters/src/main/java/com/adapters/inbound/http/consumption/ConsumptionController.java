@@ -15,7 +15,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +45,21 @@ class ConsumptionController {
         .stream()
         .map(Device::getId)
         .collect(Collectors.toList());
+  }
+
+  @PatchMapping(Routing.Consumption.Devices.PATH)
+  void updateDevice(@RequestBody ConsumptionDevice consumptionDevice) {
+    consumptionDeviceRepository.update(consumptionDevice);
+  }
+
+  @PostMapping(Routing.Consumption.Devices.PATH)
+  void saveDevice(@RequestBody ConsumptionDevice consumptionDevice) {
+    consumptionDeviceRepository.save(consumptionDevice);
+  }
+
+  @DeleteMapping(Routing.Consumption.Devices.DeviceId.PATH)
+  void deleteDevice(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
+    consumptionDeviceRepository.delete(deviceId);
   }
 
   @GetMapping(Routing.Consumption.Devices.DeviceId.PATH)

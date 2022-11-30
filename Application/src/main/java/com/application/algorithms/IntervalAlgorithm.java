@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class PowerHysteresisPriorityAlgorithm implements Algorithm {
+public class IntervalAlgorithm implements Algorithm {
 
   @Override
   public List<ConsumptionDevice> updateDevicesStatus(Measurement measuredEnergy,

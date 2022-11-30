@@ -10,9 +10,10 @@ public class StringToAlgorithm {
 
   public static Algorithm stringToAlgorithm(AlgorithmType algorithmType) {
     return switch (algorithmType) {
-      case POWER_PRIORITY_ALGORITHM -> new PowerPriorityAlgorithm();
-      case KNAPSACK_ALGORITHM -> new KnapsackAlgorithm();
-      case POWER_HYSTERESIS_PRIORITY_ALGORITHM -> new PowerHysteresisPriorityAlgorithm();
+      case POWER_PRIORITY -> new PowerPriorityAlgorithm();
+      case POWER_TIME_PRIORITY -> new PowerTimeAlgorithm();
+      case RANDOM -> new PowerRoundRobinAlgorithm();
+      case INTERVAL -> new IntervalAlgorithm();
     };
   }
 

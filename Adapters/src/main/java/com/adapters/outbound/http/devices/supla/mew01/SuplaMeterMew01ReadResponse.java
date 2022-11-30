@@ -6,9 +6,9 @@ import com.domain.model.measurement.MeasurementDevice;
 import java.util.Currency;
 import java.util.List;
 
-public record SuplaMeterMew01Response(boolean connected, Float support, Currency currency,
-                                      Float pricePerUnit, Float totalCost,
-                                      List<PhaseResponse> phases) implements MeasurementRead {
+public record SuplaMeterMew01ReadResponse(boolean connected, Float support, Currency currency,
+                                          Float pricePerUnit, Float totalCost,
+                                          List<PhaseResponse> phases) implements MeasurementRead {
 
   @Override
   public MeasurementReadAction toDomain(MeasurementDevice measurementDevice) {

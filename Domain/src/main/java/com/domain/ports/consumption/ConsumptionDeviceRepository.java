@@ -10,6 +10,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ConsumptionDeviceRepository {
 
+  void save(ConsumptionDevice consumptionDevice);
+
+  void update(ConsumptionDevice consumptionDevice);
+
+  void delete(String consumptionDeviceId);
+
   Optional<ConsumptionDevice> findById(String id);
 
   void saveAll(List<ConsumptionDevice> devices);

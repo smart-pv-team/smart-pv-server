@@ -1,8 +1,10 @@
 package com.adapters.outbound.persistence.consumption;
 
 import com.adapters.outbound.persistence.farm.DeviceEntity;
+import com.adapters.outbound.persistence.farm.DeviceModelEntity;
 import com.adapters.outbound.persistence.farm.HttpEndpointDataEntity;
 import com.domain.model.consumption.ConsumptionDevice;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
@@ -22,8 +24,8 @@ public class ConsumptionDeviceDocument extends DeviceEntity {
   @Builder
   public ConsumptionDeviceDocument(String id, String farmId, String name, String ipAddress,
       List<HttpEndpointDataEntity> endpoints, Boolean isOn, ControlParametersEntity controlParameters,
-      Long workingHours) {
-    super(id, farmId, name, ipAddress, endpoints);
+      Long workingHours, Date creationDate, DeviceModelEntity deviceModel) {
+    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel);
     this.isOn = isOn;
     this.controlParameters = controlParameters;
     this.workingHours = workingHours;
@@ -43,6 +45,8 @@ public class ConsumptionDeviceDocument extends DeviceEntity {
         .ipAddress(consumptionDevice.getIpAddress())
         .name(consumptionDevice.getName())
         .id(consumptionDevice.getId())
+        .creationDate(consumptionDevice.getCreationDate())
+        .deviceModel(DeviceModelEntity.fromDomain(consumptionDevice.getDeviceModel()))
         .build();
   }
 
@@ -61,6 +65,8 @@ public class ConsumptionDeviceDocument extends DeviceEntity {
         .ipAddress(consumptionDevice.getIpAddress())
         .id(consumptionDevice.getId())
         .name(consumptionDevice.getName())
+        .creationDate(consumptionDevice.getCreationDate())
+        .deviceModel(DeviceModelEntity.toDomain(consumptionDevice.getDeviceModel()))
         .build();
   }
 }
