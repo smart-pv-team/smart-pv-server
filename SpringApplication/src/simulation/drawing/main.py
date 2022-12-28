@@ -7,7 +7,7 @@ from active_devices_time import prepare_consumption_time_plot
 from measurement_active_devices_num import measurement_active_devices_num_plot
 
 LOCAL_DB_URL = "mongodb://localhost:27018/smartpv"
-PROD_DB_URL = "mongodb+srv://janicki:janicki@smartpv.dr74ruo.mongodb.net/smartpv?retryWrites=true&w=majority"
+PROD_DB_URL = "mongodb+srv://xxx:xxx@smartpv.dr74ruo.mongodb.net/smartpv?retryWrites=true&w=majority"
 ALGORITHM = "power-priority"
 
 

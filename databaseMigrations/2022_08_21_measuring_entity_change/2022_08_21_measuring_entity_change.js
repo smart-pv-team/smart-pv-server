@@ -17,7 +17,7 @@ const groupArrays = Object.keys(groups).map((date) => {
   };
 });
 
-const res =groupArrays.map(function (group) {
+const res = groupArrays.map(function (group) {
   const groupDate = group.date;
   const measurement = group.ids.map(function (id) {
     return id.measurement;

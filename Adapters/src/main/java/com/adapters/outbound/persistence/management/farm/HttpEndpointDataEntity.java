@@ -10,7 +10,7 @@ import org.springframework.http.HttpMethod;
 @Builder
 public record HttpEndpointDataEntity(String description, String action, String endpoint,
                                      HttpMethod httpMethod, HttpHeaders httpHeaders,
-                                     ResponseTypeAdapter responseClass) {
+                                     ResponseTypeAdapter responseClass, String body) {
 
   public static HttpEndpointDataEntity fromDomain(HttpEndpointData httpEndpointData) {
     return HttpEndpointDataEntity.builder()
@@ -20,6 +20,7 @@ public record HttpEndpointDataEntity(String description, String action, String e
         .httpHeaders(httpEndpointData.httpHeaders())
         .httpMethod(httpEndpointData.httpMethod())
         .responseClass(ResponseTypeAdapter.valueOf(httpEndpointData.responseClass().toString()))
+        .body(httpEndpointData.body())
         .build();
   }
 
@@ -31,6 +32,7 @@ public record HttpEndpointDataEntity(String description, String action, String e
         .httpHeaders(httpEndpointData.httpHeaders())
         .httpMethod(httpEndpointData.httpMethod())
         .responseClass(ResponseType.valueOf(httpEndpointData.responseClass().toString()))
+        .body(httpEndpointData.body())
         .build();
   }
 

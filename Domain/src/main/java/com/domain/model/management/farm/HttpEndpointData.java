@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod;
 @Builder
 public record HttpEndpointData(String description, String action, String endpoint,
                                HttpMethod httpMethod, HttpHeaders httpHeaders,
-                               ResponseType responseClass) {
+                               ResponseType responseClass, String body) {
 
 }
 
