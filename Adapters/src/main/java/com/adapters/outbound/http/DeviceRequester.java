@@ -58,6 +58,7 @@ public class DeviceRequester implements DeviceGateway {
         url,
         httpEndpointData.httpHeaders(),
         httpEndpointData.httpMethod(),
+        httpEndpointData.body(),
         ResponseTypeAdapter.stringToResponseClass(
             ResponseTypeAdapter.valueOf(httpEndpointData.responseClass().toString()))
     );
@@ -111,14 +112,15 @@ public class DeviceRequester implements DeviceGateway {
         url,
         httpEndpointData.httpHeaders(),
         httpEndpointData.httpMethod(),
+        httpEndpointData.body(),
         ResponseTypeAdapter.stringToResponseClass(ResponseTypeAdapter.fromDomain(httpEndpointData.responseClass()))
     ).getBody();
 
   }
 
   private ResponseEntity<Response> sendRequest(String url, HttpHeaders headers,
-      HttpMethod httpMethod, Class responseClass) {
-    HttpEntity request = new HttpEntity(headers);
+      HttpMethod httpMethod, String body, Class responseClass) {
+    HttpEntity<String> request = new HttpEntity<>(body, headers);
     return restTemplate.exchange(
         url,
         httpMethod,

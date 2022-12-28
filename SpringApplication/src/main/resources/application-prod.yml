@@ -1,9 +1,7 @@
-#TODO hide db conn credentials
-
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://janicki:janicki@smartpv.dr74ruo.mongodb.net/smartpv?retryWrites=true&w=majority
+      uri:
       database: smartpv
 
 system:

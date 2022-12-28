@@ -1,7 +1,7 @@
 const measurementDevicesFilter = {};
 const measurementDevicesUpdate = {
   $set: {
-    "isOn": "true",
+    "isOn": true,
   }
 }
 
@@ -10,7 +10,7 @@ db.getCollection('measurementDeviceEntity').updateMany(measurementDevicesFilter,
 const farmFilter = {};
 const farmUpdate = {
   $set: {
-    "running": "true",
+    "running": true,
   }
 }
 

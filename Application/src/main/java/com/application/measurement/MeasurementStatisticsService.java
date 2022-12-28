@@ -30,7 +30,7 @@ public class MeasurementStatisticsService {
 
     measurement.getMeasurements().forEach((deviceId, measurement1) -> {
       Map<Date, Double> measurements = Map.of(
-          recentMeasurement.getDate(), recentMeasurement.getMeasurements().get(deviceId).doubleValue(),
+          recentMeasurement.getDate(), recentMeasurement.getMeasurements().getOrDefault(deviceId, 0f).doubleValue(),
           measurement.getDate(), measurement1.doubleValue()
       );
       Double difference = counter.countSimpson(measurements);
