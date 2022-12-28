@@ -19,3 +19,5 @@ counter:
     simpson: simpson
     average: average
     duration: duration
+    simpson-period-sum: integral/period/sum
+    duration-period-sum: duration/period/sum

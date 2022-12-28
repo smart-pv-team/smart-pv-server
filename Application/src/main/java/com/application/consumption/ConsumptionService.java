@@ -2,11 +2,11 @@ package com.application.consumption;
 
 import com.domain.model.consumption.Consumption;
 import com.domain.model.consumption.ConsumptionDevice;
-import com.domain.model.farm.Device;
-import com.domain.model.farm.Farm;
+import com.domain.model.management.farm.Device;
+import com.domain.model.management.farm.Farm;
 import com.domain.ports.consumption.ConsumptionDeviceRepository;
 import com.domain.ports.consumption.ConsumptionRepository;
-import com.domain.ports.farm.DeviceGateway;
+import com.domain.ports.management.farm.DeviceGateway;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +28,17 @@ public class ConsumptionService {
     this.consumptionDeviceRepository = consumptionDeviceRepository;
     this.deviceGateway = deviceGateway;
     this.consumptionStatisticsService = consumptionStatisticsService;
+  }
+
+  public void sendUpdate(ConsumptionDevice consumptionDevice) {
+    if (consumptionDevice.getIsOn()) {
+      turnDeviceRequest(consumptionDevice, true);
+      if (consumptionDevice.getControlParameters().lastStatus() != null) {
+        deviceGateway.requestAction(consumptionDevice, consumptionDevice.getControlParameters().lastStatus());
+      }
+    } else {
+      turnDeviceRequest(consumptionDevice, false);
+    }
   }
 
   public void turnDeviceRequest(ConsumptionDevice consumptionDevice, Boolean status) {

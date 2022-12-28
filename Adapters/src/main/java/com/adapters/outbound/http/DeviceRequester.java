@@ -4,18 +4,17 @@ import com.adapters.outbound.http.devices.ConsumptionOnOff;
 import com.adapters.outbound.http.devices.ConsumptionRead;
 import com.adapters.outbound.http.devices.MeasurementRead;
 import com.adapters.outbound.http.devices.Response;
-import com.adapters.outbound.http.devices.ResponseType;
-import com.adapters.outbound.persistence.farm.DeviceEntity;
-import com.adapters.outbound.persistence.farm.FarmRepositoryImpl;
-import com.adapters.outbound.persistence.farm.HttpEndpointDataEntity;
+import com.adapters.outbound.http.devices.ResponseTypeAdapter;
+import com.adapters.outbound.persistence.management.farm.FarmRepositoryImpl;
 import com.domain.model.actions.Action;
 import com.domain.model.actions.ConsumptionOnOffAction;
 import com.domain.model.actions.ConsumptionReadAction;
 import com.domain.model.actions.MeasurementReadAction;
 import com.domain.model.consumption.ConsumptionDevice;
-import com.domain.model.farm.Device;
+import com.domain.model.management.farm.Device;
+import com.domain.model.management.farm.HttpEndpointData;
 import com.domain.model.measurement.MeasurementDevice;
-import com.domain.ports.farm.DeviceGateway;
+import com.domain.ports.management.farm.DeviceGateway;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -44,12 +43,12 @@ public class DeviceRequester implements DeviceGateway {
 
   @Override
   public void request(Device device, Action action) {
-    HttpEndpointDataEntity httpEndpointData = farmRepository
+    HttpEndpointData httpEndpointData = farmRepository
         .getDeviceById(device.getId())
-        .map(DeviceEntity::getEndpoints)
+        .map(Device::getEndpoints)
         .orElseThrow(NullPointerException::new)
         .stream()
-        .filter(endpoint -> endpoint.action().equals(action))
+        .filter(endpoint -> endpoint.action().equals(action.toString()))
         .findFirst()
         .orElseThrow(NullPointerException::new);
 
@@ -59,8 +58,8 @@ public class DeviceRequester implements DeviceGateway {
         url,
         httpEndpointData.httpHeaders(),
         httpEndpointData.httpMethod(),
-        ResponseType.stringToResponseClass(
-            ResponseType.valueOf(httpEndpointData.responseClass().toString()))
+        ResponseTypeAdapter.stringToResponseClass(
+            ResponseTypeAdapter.valueOf(httpEndpointData.responseClass().toString()))
     );
   }
 
@@ -68,7 +67,7 @@ public class DeviceRequester implements DeviceGateway {
   public ConsumptionReadAction requestDevicesStatus(ConsumptionDevice consumptionDevice) {
     ConsumptionRead consumptionRead = sendRequestToDevice(
         consumptionDevice,
-        Action.READ
+        Action.READ.toString()
     );
     return consumptionRead.toDomain(consumptionDevice);
   }
@@ -77,7 +76,7 @@ public class DeviceRequester implements DeviceGateway {
   public MeasurementReadAction requestMeasurement(MeasurementDevice measurementDevice) {
     MeasurementRead measurementRead = sendRequestToDevice(
         measurementDevice,
-        Action.READ
+        Action.READ.toString()
     );
     return measurementRead.toDomain(measurementDevice);
   }
@@ -86,15 +85,20 @@ public class DeviceRequester implements DeviceGateway {
   public ConsumptionOnOffAction requestOnOff(ConsumptionDevice consumptionDevice, Boolean turnOn) {
     ConsumptionOnOff consumptionOnOff = sendRequestToDevice(
         consumptionDevice,
-        turnOn ? Action.TURN_ON : Action.TURN_OFF
+        (turnOn ? Action.TURN_ON : Action.TURN_OFF).toString()
     );
     return consumptionOnOff.toDomain(consumptionDevice);
   }
 
-  private <T> T sendRequestToDevice(Device device, Action action) {
-    HttpEndpointDataEntity httpEndpointData = farmRepository
+  @Override
+  public void requestAction(ConsumptionDevice consumptionDevice, String action) {
+    sendRequestToDevice(consumptionDevice, action);
+  }
+
+  private <T> T sendRequestToDevice(Device device, String action) {
+    HttpEndpointData httpEndpointData = farmRepository
         .getDeviceById(device.getId())
-        .map(DeviceEntity::getEndpoints)
+        .map(Device::getEndpoints)
         .orElseThrow(NullPointerException::new)
         .stream()
         .filter(endpoint -> endpoint.action().equals(action))
@@ -107,7 +111,7 @@ public class DeviceRequester implements DeviceGateway {
         url,
         httpEndpointData.httpHeaders(),
         httpEndpointData.httpMethod(),
-        ResponseType.stringToResponseClass(httpEndpointData.responseClass())
+        ResponseTypeAdapter.stringToResponseClass(ResponseTypeAdapter.fromDomain(httpEndpointData.responseClass()))
     ).getBody();
 
   }

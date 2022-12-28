@@ -19,4 +19,6 @@ public interface MeasurementDeviceRepository {
   void delete(String measurementDeviceId);
 
   void saveMeasurementStatistics(String measurementDeviceId, Long measured);
+
+  void setIsOn(MeasurementDevice measurementDevice, Boolean isOn);
 }

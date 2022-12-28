@@ -1,8 +1,8 @@
 package com.domain.model.measurement;
 
-import com.domain.model.farm.Device;
-import com.domain.model.farm.DeviceModel;
-import com.domain.model.farm.HttpEndpointData;
+import com.domain.model.management.farm.Device;
+import com.domain.model.management.farm.DeviceModel;
+import com.domain.model.management.farm.HttpEndpointData;
 import java.util.Date;
 import java.util.List;
 import lombok.Builder;
@@ -17,13 +17,13 @@ public class MeasurementDevice extends Device {
 
   @Builder
   public MeasurementDevice(String id, String farmId, String name, String ipAddress,
-      List<HttpEndpointData> endpoints, Long measuredEnergy, Date creationDate, DeviceModel deviceModel) {
-    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel);
+      List<HttpEndpointData> endpoints, Long measuredEnergy, Date creationDate, DeviceModel deviceModel, Boolean isOn) {
+    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel, isOn);
     this.measuredEnergy = measuredEnergy;
   }
 
   public MeasurementDevice withMeasuredEnergy(Long measuredEnergy) {
     return new MeasurementDevice(getId(), getFarmId(), getName(), getIpAddress(), getEndpoints(), measuredEnergy,
-        getCreationDate(), getDeviceModel());
+        getCreationDate(), getDeviceModel(), getIsOn());
   }
 }

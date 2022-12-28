@@ -3,8 +3,10 @@ package com.application.farm;
 import com.application.consumption.ConsumptionService;
 import com.application.measurement.MeasurementService;
 import com.domain.model.consumption.Consumption;
+import com.domain.model.management.farm.AlgorithmType;
+import com.domain.model.management.farm.Farm;
 import com.domain.model.measurement.Measurement;
-import com.domain.ports.farm.FarmRepository;
+import com.domain.ports.management.farm.FarmRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +32,7 @@ public class FarmService {
 
   public String makeAllFarmsDevicesUpdate() {
     return farmRepository.findAll().stream()
+        .filter(Farm::running)
         .map(managementService::updateDevices)
         .flatMap(Collection::stream)
         .map((device) -> "(%s,%s)".formatted(device.getId(), device.getIsOn()))
@@ -51,5 +54,10 @@ public class FarmService {
             .map(Consumption::getActiveDevicesIds)
             .mapToLong(List::size)
             .sum());
+  }
+
+  public void changeAlgorithmType(String farmId, AlgorithmType algorithmType) {
+    farmRepository.setFarmAlgorithm(farmId, algorithmType);
+    farmRepository.setFarmRunning(farmId, false);
   }
 }

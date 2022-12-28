@@ -1,11 +1,9 @@
 package com.springapplication;
 
 import com.application.consumption.ConsumptionService;
-import com.domain.model.consumption.Consumption;
 import com.domain.ports.consumption.ConsumptionDeviceRepository;
-import com.domain.ports.farm.FarmRepository;
+import com.domain.ports.management.farm.FarmRepository;
 import com.domain.ports.measurement.MeasurementDeviceRepository;
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,11 +25,13 @@ public class BeforeStart {
   }
 
   public void updateConsumingDeviceStatusInDatabase() {
+  /*
     List<String> activeDevicesIds = farmRepository.findAll().stream()
         .map(consumptionService::collectDevicesStatus).map(
             Consumption::getActiveDevicesIds).flatMap(List::stream).toList();
     consumptionDeviceRepository.findAll()
         .forEach((device) -> device.setIsOn(activeDevicesIds.contains(device.getId())));
+  */
   }
 
   public void printLogs() {

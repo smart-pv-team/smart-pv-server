@@ -1,12 +1,18 @@
 package com.adapters.inbound.http;
 
+import com.adapters.inbound.http.Routing.Api.User.Farm;
+
 public interface Routing {
 
   String DEVICE_ID_VARIABLE = "deviceId";
   String TOKEN_VARIABLE = "token";
   String FARM_ID_VARIABLE = "farmId";
+  String INTERVAL_ID_VARIABLE = "intervalId";
+  String RULE_ID_VARIABLE = "ruleId";
   String DEVICE_ID_PLACEHOLDER = "{" + DEVICE_ID_VARIABLE + "}";
   String FARM_ID_PLACEHOLDER = "{" + FARM_ID_VARIABLE + "}";
+  String INTERVAL_ID_PLACEHOLDER = "{" + INTERVAL_ID_VARIABLE + "}";
+  String RULE_ID_PLACEHOLDER = "{" + RULE_ID_VARIABLE + "}";
   String TOKEN_PLACEHOLDER = "{" + TOKEN_VARIABLE + "}";
 
   interface Api {
@@ -28,6 +34,12 @@ public interface Routing {
 
           String VALUE = "/" + TOKEN_PLACEHOLDER;
           String PATH = Token.PATH + VALUE;
+
+          interface Farm {
+
+            String VALUE = "/farm";
+            String PATH = TokenId.PATH + VALUE;
+          }
 
           interface Pupils {
 
@@ -75,6 +87,42 @@ public interface Routing {
     String VALUE = "/management";
     String PATH = VALUE;
 
+    interface Algorithm {
+
+      String VALUE = "/algorithm";
+      String PATH = Management.PATH + VALUE;
+
+      interface Interval {
+
+        String VALUE = "/interval";
+        String PATH = Algorithm.PATH + VALUE;
+
+        interface IntervalId {
+
+          String VALUE = "/" + INTERVAL_ID_PLACEHOLDER;
+          String PATH = Interval.PATH + VALUE;
+
+          interface Rule {
+
+            String VALUE = "/rule";
+            String PATH = IntervalId.PATH + VALUE;
+          }
+        }
+      }
+
+      interface Rule {
+
+        String VALUE = "/rule";
+        String PATH = Algorithm.PATH + VALUE;
+
+        interface RuleId {
+
+          String VALUE = "/" + RULE_ID_PLACEHOLDER;
+          String PATH = Rule.PATH + VALUE;
+        }
+      }
+    }
+
     interface DevicesModel {
 
       String VALUE = "/devicesModel";
@@ -97,6 +145,43 @@ public interface Routing {
         String VALUE = "/" + FARM_ID_PLACEHOLDER;
         String PATH = Farms.PATH + VALUE;
 
+        interface Measurement {
+
+          String VALUE = "/measurement";
+          String PATH = FarmId.PATH + VALUE;
+
+          interface Devices {
+
+            String VALUE = "/devices";
+            String PATH = Measurement.PATH + VALUE;
+          }
+        }
+
+        interface Consumption {
+
+          String VALUE = "/consumption";
+          String PATH = FarmId.PATH + VALUE;
+
+          interface Devices {
+
+            String VALUE = "/devices";
+            String PATH = Consumption.PATH + VALUE;
+          }
+        }
+
+        interface Algorithm {
+
+          String VALUE = "/algorithm";
+          String PATH = Farm.FarmId.PATH + VALUE;
+
+          interface Interval {
+
+            String VALUE = "/interval";
+            String PATH = Algorithm.PATH + VALUE;
+
+          }
+        }
+
         interface Parameters {
 
           String VALUE = "/parameters";
@@ -105,6 +190,18 @@ public interface Routing {
           interface Name {
 
             String VALUE = "/name";
+            String PATH = Parameters.PATH + VALUE;
+          }
+
+          interface Algorithm {
+
+            String VALUE = "/algorithm";
+            String PATH = Parameters.PATH + VALUE;
+          }
+
+          interface Running {
+
+            String VALUE = "/running";
             String PATH = Parameters.PATH + VALUE;
           }
         }
@@ -131,6 +228,12 @@ public interface Routing {
 
           String VALUE = "/statistics";
           String PATH = FarmId.PATH + VALUE;
+
+          interface Period {
+
+            String VALUE = "/period";
+            String PATH = Statistics.PATH + VALUE;
+          }
 
           interface Sum {
 
@@ -215,6 +318,12 @@ public interface Routing {
             String VALUE = "/sum";
             String PATH = Statistics.PATH + VALUE;
           }
+
+          interface Period {
+
+            String VALUE = "/period";
+            String PATH = Statistics.PATH + VALUE;
+          }
         }
       }
     }
@@ -261,6 +370,20 @@ public interface Routing {
           interface IsOn {
 
             String VALUE = "/isOn";
+            String PATH = Parameters.PATH + VALUE;
+
+          }
+
+          interface Priority {
+
+            String VALUE = "/priority";
+            String PATH = Parameters.PATH + VALUE;
+
+          }
+
+          interface PowerConsumption {
+
+            String VALUE = "/powerConsumption";
             String PATH = Parameters.PATH + VALUE;
 
           }

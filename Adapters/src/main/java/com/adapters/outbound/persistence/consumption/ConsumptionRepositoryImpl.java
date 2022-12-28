@@ -10,7 +10,7 @@ import static com.mongodb.client.model.Sorts.descending;
 
 import com.adapters.outbound.persistence.MongoUtils;
 import com.domain.model.consumption.Consumption;
-import com.domain.model.farm.Device;
+import com.domain.model.management.farm.Device;
 import com.domain.ports.consumption.ConsumptionRepository;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -57,7 +57,7 @@ public class ConsumptionRepositoryImpl implements ConsumptionRepository {
     String farmId = consumptionDeviceMongoRepository
         .findById(deviceId)
         .map(ConsumptionDeviceDocument::toDomain)
-        .map(Device::getFarmId).get();
+        .map(Device::getFarmId).orElseThrow();
     return findRecentEntities(farmId, from, to);
   }
 

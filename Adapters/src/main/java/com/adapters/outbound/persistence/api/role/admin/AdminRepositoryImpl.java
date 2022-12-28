@@ -41,4 +41,11 @@ public class AdminRepositoryImpl implements AdminRepository {
     pupilsIds.forEach(userRepository::deleteUser);
     adminMongoRepository.deleteById(adminId);
   }
+
+  @Override
+  public void setFarmId(String adminId, String farmId) {
+    AdminDocument admin = adminMongoRepository.findById(adminId).orElseThrow();
+    admin.setFarmId(farmId);
+    adminMongoRepository.save(admin);
+  }
 }

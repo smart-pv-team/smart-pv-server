@@ -2,7 +2,7 @@ package com.domain.ports.consumption;
 
 import com.domain.model.consumption.ConsumptionDevice;
 import com.domain.model.consumption.ControlParameters;
-import com.domain.model.farm.Farm;
+import com.domain.model.management.farm.Farm;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
@@ -27,6 +27,10 @@ public interface ConsumptionDeviceRepository {
   Optional<Boolean> isDeviceOn(String id);
 
   void setDeviceOn(String id, boolean newStatus);
+
+  void setDevicePriority(String id, Integer priority);
+
+  void setDevicePowerConsumption(String id, Float powerConsumption);
 
   void setDeviceParameters(String id,
       ControlParameters controlParameters);

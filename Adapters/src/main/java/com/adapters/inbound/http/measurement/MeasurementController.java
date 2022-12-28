@@ -2,14 +2,15 @@ package com.adapters.inbound.http.measurement;
 
 import com.adapters.inbound.http.Routing;
 import com.adapters.outbound.persistence.measurement.MeasurementDocument;
-import com.domain.model.farm.Device;
+import com.application.measurement.MeasurementStatisticsService;
+import com.domain.model.management.farm.Device;
 import com.domain.model.measurement.MeasurementDevice;
 import com.domain.ports.measurement.MeasurementDeviceRepository;
 import com.domain.ports.measurement.MeasurementRepository;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,17 +23,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@AllArgsConstructor
 class MeasurementController {
 
   private final MeasurementRepository measurementRepository;
   private final MeasurementDeviceRepository measurementDeviceRepository;
-
-  @Autowired
-  MeasurementController(MeasurementRepository measurementRepository,
-      MeasurementDeviceRepository measurementDeviceRepository) {
-    this.measurementRepository = measurementRepository;
-    this.measurementDeviceRepository = measurementDeviceRepository;
-  }
+  private final MeasurementStatisticsService measurementStatisticsService;
 
   @GetMapping(Routing.Measurement.Devices.PATH)
   List<String> getDevices() {
@@ -114,4 +110,12 @@ class MeasurementController {
         .sum());
   }
 
+  @GetMapping(Routing.Measurement.Farms.FarmId.Statistics.Period.PATH)
+  ResponseEntity<Double> getFarmStatisticsPeriod(
+      @PathVariable(Routing.FARM_ID_VARIABLE) String farmId,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate
+  ) {
+    return ResponseEntity.ok(measurementStatisticsService.getPeriodFarmEnergyStatisticsSum(farmId, startDate, endDate));
+  }
 }

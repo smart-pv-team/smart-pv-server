@@ -15,4 +15,6 @@ public interface AdminRepository {
   void createAdmin(Admin admin);
 
   void deleteAdmin(String adminId);
+
+  void setFarmId(String adminId, String farmId);
 }

@@ -2,56 +2,76 @@ package com.application.algorithms;
 
 import com.application.DateTimeUtils;
 import com.domain.model.consumption.ConsumptionDevice;
-import com.domain.model.farm.Farm;
+import com.domain.model.management.algorithm.Interval;
+import com.domain.model.management.algorithm.Rule;
+import com.domain.model.management.farm.Device;
+import com.domain.model.management.farm.Farm;
 import com.domain.model.measurement.Measurement;
-import com.domain.ports.farm.Algorithm;
-import java.util.Comparator;
+import com.domain.ports.management.farm.algorithm.Algorithm;
+import com.domain.ports.management.farm.algorithm.IntervalRepository;
+import com.domain.ports.management.farm.algorithm.RuleRepository;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Stream;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.webjars.NotFoundException;
 
+@AllArgsConstructor
+@Component
 public class IntervalAlgorithm implements Algorithm {
+
+  private final IntervalRepository intervalRepository;
+  private final RuleRepository ruleRepository;
 
   @Override
   public List<ConsumptionDevice> updateDevicesStatus(Measurement measuredEnergy,
-      List<ConsumptionDevice> devices,
-      Farm farm) {
+      List<ConsumptionDevice> devices, Farm farm) {
+
+    List<Interval> intervals = intervalRepository.getFarmIntervals(farm.id());
+
     Float measurement = measuredEnergy.getMeasurement();
-    Optional<ConsumptionDevice> deviceToChange = devices.stream()
+    Interval interval = intervals.stream()
+        .filter((i) -> i.getLowerBound() < measurement && i.getUpperBound() > measurement)
+        .findFirst()
+        .orElseThrow(() -> new NotFoundException("Interval not found"));
+
+    List<Rule> rules = ruleRepository.getIntervalRules(interval.getId());
+
+    List<ConsumptionDevice> devicesNotInRules = devices.stream()
         .filter((device) -> !device.getControlParameters().lock().isLocked())
-        .filter((device) -> !device.getIsOn())
-        .sorted(Comparator.comparing((e) -> e.getControlParameters().priority()))
-        .max(Comparator.comparing((e) -> e.getControlParameters().minHysteresis()))
-        .filter((device) -> measurement < device.getControlParameters().minHysteresis())
-        .map((device) -> {
+        .filter(Device::getIsOn)
+        .filter((device) -> !rules.stream().map(Rule::getDeviceId).toList().contains(device.getId()))
+        .filter((device) -> device.getControlParameters().lastStatusChange()
+            .before(DateTimeUtils.subtractMinutes(measuredEnergy.getDate(), farm.minutesBetweenDeviceStatusSwitch())))
+        .peek((device) -> {
+          device.setControlParameters(device.getControlParameters().withLastStatusChange(measuredEnergy.getDate()));
           device.setIsOn(false);
-          device.setControlParameters(device.getControlParameters().withLastStatusChange(DateTimeUtils.getNow()));
-          return device;
-        });
+        }).toList();
+    List<ConsumptionDevice> devicesInRules = rules.stream().map((rule) -> {
+      ConsumptionDevice consumptionDevice = devices.stream()
+          .filter(d -> d.getId().equals(rule.getDeviceId()))
+          .findFirst().orElseThrow();
+      consumptionDevice.setIsOn(true);
+      consumptionDevice.setControlParameters(
+          consumptionDevice.getControlParameters().withLastStatusChange(measuredEnergy.getDate()));
+      consumptionDevice.setControlParameters(
+          consumptionDevice.getControlParameters().withStatusChange(rule.getAction()));
+      return consumptionDevice;
+    }).toList();
 
-    if (deviceToChange.isEmpty()) {
-      deviceToChange = devices.stream()
-          .filter((device) -> !device.getControlParameters().lock().isLocked())
-          .filter((device) -> !device.getIsOn())
-          .sorted(Comparator.comparing((e) -> -e.getControlParameters().priority()))
-          .min(Comparator.comparing((e) -> e.getControlParameters().maxHysteresis()))
-          .filter((device) -> measurement > device.getControlParameters().maxHysteresis())
-          .map((device) -> {
-            device.setIsOn(true);
-            device.setControlParameters(device.getControlParameters().withLastStatusChange(DateTimeUtils.getNow()));
-            return device;
-          });
-    }
-
-    deviceToChange.ifPresent(
-        (deviceToChangePresent) -> devices.set(
-            devices.stream()
-                .filter((device) -> device.getId().equals(deviceToChangePresent.getId()))
+    List<ConsumptionDevice> devicesToChange = Stream.concat(devicesNotInRules.stream(), devicesInRules.stream())
+        .toList();
+    devicesToChange.forEach(
+        (deviceToChange) -> devices.set(
+            devices
+                .stream()
+                .filter((device) -> device.getId().equals(deviceToChange.getId()))
                 .findFirst()
                 .map((devices::indexOf))
                 .orElse(0),
-            deviceToChangePresent
-        ));
-
+            deviceToChange
+        )
+    );
     return devices;
   }
 }

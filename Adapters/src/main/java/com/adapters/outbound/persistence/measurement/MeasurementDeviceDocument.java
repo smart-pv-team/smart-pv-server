@@ -1,8 +1,8 @@
 package com.adapters.outbound.persistence.measurement;
 
-import com.adapters.outbound.persistence.farm.DeviceEntity;
-import com.adapters.outbound.persistence.farm.DeviceModelEntity;
-import com.adapters.outbound.persistence.farm.HttpEndpointDataEntity;
+import com.adapters.outbound.persistence.management.farm.DeviceEntity;
+import com.adapters.outbound.persistence.management.farm.DeviceModelEntity;
+import com.adapters.outbound.persistence.management.farm.HttpEndpointDataEntity;
 import com.domain.model.measurement.MeasurementDevice;
 import java.util.Date;
 import java.util.List;
@@ -19,8 +19,9 @@ public class MeasurementDeviceDocument extends DeviceEntity {
 
   @Builder
   public MeasurementDeviceDocument(String id, String farmId, String name, String ipAddress,
-      List<HttpEndpointDataEntity> endpoints, Long measuredEnergy, Date creationDate, DeviceModelEntity deviceModel) {
-    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel);
+      List<HttpEndpointDataEntity> endpoints, Long measuredEnergy, Date creationDate, DeviceModelEntity deviceModel,
+      Boolean isOn) {
+    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel, isOn);
     this.measuredEnergy = measuredEnergy;
   }
 
@@ -35,6 +36,7 @@ public class MeasurementDeviceDocument extends DeviceEntity {
         .ipAddress(measurementDevice.getIpAddress())
         .creationDate(measurementDevice.getCreationDate())
         .deviceModel(DeviceModelEntity.fromDomain(measurementDevice.getDeviceModel()))
+        .isOn(measurementDevice.getIsOn())
         .build();
   }
 
@@ -49,6 +51,7 @@ public class MeasurementDeviceDocument extends DeviceEntity {
         .ipAddress(measurementDevice.getIpAddress())
         .creationDate(measurementDevice.getCreationDate())
         .deviceModel(DeviceModelEntity.toDomain(measurementDevice.getDeviceModel()))
+        .isOn(measurementDevice.getIsOn())
         .build();
   }
 

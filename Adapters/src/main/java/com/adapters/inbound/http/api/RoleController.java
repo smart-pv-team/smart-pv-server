@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,11 @@ public class RoleController {
   @PutMapping(Routing.Api.User.PATH)
   void createUser(@RequestBody User user) {
     userRepository.createUser(user);
+  }
+
+  @PatchMapping(Routing.Api.Admin.Token.TokenId.Farm.PATH)
+  void createUser(@RequestBody String farmId, @PathVariable(Routing.TOKEN_VARIABLE) String token) {
+    adminRepository.setFarmId(token, farmId);
   }
 
   @DeleteMapping(Routing.Api.User.Token.TokenId.PATH)

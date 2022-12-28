@@ -1,18 +1,18 @@
 package com.adapters.inbound.http.consumption;
 
 import com.adapters.inbound.http.Routing;
-import com.adapters.inbound.http.Routing.Consumption.Devices;
+import com.application.consumption.ConsumptionStatisticsService;
 import com.domain.model.consumption.Consumption;
 import com.domain.model.consumption.ConsumptionDevice;
 import com.domain.model.consumption.ControlParameters;
-import com.domain.model.farm.Device;
+import com.domain.model.management.farm.Device;
 import com.domain.ports.consumption.ConsumptionDeviceRepository;
 import com.domain.ports.consumption.ConsumptionRepository;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,19 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
+@AllArgsConstructor
 class ConsumptionController {
 
   private final ConsumptionDeviceRepository consumptionDeviceRepository;
   private final ConsumptionRepository consumptionRepository;
+  private final ConsumptionStatisticsService consumptionStatisticsService;
 
-  @Autowired
-  ConsumptionController(ConsumptionDeviceRepository consumptionDeviceRepository,
-      ConsumptionRepository consumptionRepository) {
-    this.consumptionDeviceRepository = consumptionDeviceRepository;
-    this.consumptionRepository = consumptionRepository;
-  }
-
-  @GetMapping(Devices.PATH)
+  @GetMapping(Routing.Consumption.Devices.PATH)
   List<String> getDevices() {
     return consumptionDeviceRepository
         .findAll()
@@ -63,8 +58,7 @@ class ConsumptionController {
   }
 
   @GetMapping(Routing.Consumption.Devices.DeviceId.PATH)
-  ResponseEntity<ConsumptionDevice> getDevice(
-      @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
+  ResponseEntity<ConsumptionDevice> getDevice(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
     return consumptionDeviceRepository
         .findById(deviceId)
         .map(ResponseEntity::ok)
@@ -72,8 +66,7 @@ class ConsumptionController {
   }
 
   @GetMapping(Routing.Consumption.Devices.DeviceId.Parameters.PATH)
-  ResponseEntity<ControlParameters> getDeviceParameters(
-      @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
+  ResponseEntity<ControlParameters> getDeviceParameters(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
     return consumptionDeviceRepository
         .getDeviceParameters(deviceId)
         .map(ResponseEntity::ok)
@@ -100,6 +93,20 @@ class ConsumptionController {
     consumptionDeviceRepository.setDeviceOn(deviceId, consumptionIsOnDto.isOn());
   }
 
+  @PatchMapping(Routing.Consumption.Devices.DeviceId.Parameters.Priority.PATH)
+  void postDeviceParametersPriority(
+      @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
+      @RequestBody Integer priority) {
+    consumptionDeviceRepository.setDevicePriority(deviceId, priority);
+  }
+
+  @PatchMapping(Routing.Consumption.Devices.DeviceId.Parameters.PowerConsumption.PATH)
+  void postDeviceParametersPowerConsumption(
+      @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
+      @RequestBody Float powerConsumption) {
+    consumptionDeviceRepository.setDevicePowerConsumption(deviceId, powerConsumption);
+  }
+
   @GetMapping(Routing.Consumption.Devices.DeviceId.Range.PATH)
   Map<Date, Boolean> getRangeDeviceActiveStatus(
       @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
@@ -118,7 +125,7 @@ class ConsumptionController {
   @GetMapping(Routing.Consumption.Devices.DeviceId.Last.PATH)
   ResponseEntity<Date> getLastDeviceActiveStatus(@PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId) {
     return consumptionRepository
-        .findLast(consumptionDeviceRepository.findById(deviceId).map(Device::getFarmId).get())
+        .findLast(consumptionDeviceRepository.findById(deviceId).map(Device::getFarmId).orElseThrow())
         .map(Consumption::getDate)
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
@@ -139,5 +146,15 @@ class ConsumptionController {
         .stream()
         .mapToLong(ConsumptionDevice::getWorkingHours)
         .sum());
+  }
+
+  @GetMapping(Routing.Consumption.Farms.FarmId.Statistics.Period.PATH)
+  ResponseEntity<Double> getFarmStatisticsPeriod(
+      @PathVariable(Routing.FARM_ID_VARIABLE) String farmId,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate
+  ) {
+    return ResponseEntity.ok(
+        consumptionStatisticsService.getPeriodFarmWorkingHoursStatisticsSum(farmId, startDate, endDate));
   }
 }

@@ -59,11 +59,17 @@ public class MeasurementDeviceRepositoryImpl implements MeasurementDeviceReposit
   @Override
   public void saveMeasurementStatistics(String measurementDeviceId, Long measured) {
     MeasurementDeviceDocument measurementDevice = measurementDeviceMongoRepository
-        .findById(measurementDeviceId).get();
+        .findById(measurementDeviceId).orElseThrow();
     Long energy = measured + measurementDevice.getMeasuredEnergy();
     MeasurementDevice measurementDeviceUpdated = MeasurementDeviceDocument
         .toDomain(measurementDevice)
         .withMeasuredEnergy(energy);
     measurementDeviceMongoRepository.save(MeasurementDeviceDocument.fromDomain(measurementDeviceUpdated));
+  }
+
+  @Override
+  public void setIsOn(MeasurementDevice measurementDevice, Boolean isOn) {
+    measurementDevice.setIsOn(isOn);
+    measurementDeviceMongoRepository.save(MeasurementDeviceDocument.fromDomain(measurementDevice));
   }
 }

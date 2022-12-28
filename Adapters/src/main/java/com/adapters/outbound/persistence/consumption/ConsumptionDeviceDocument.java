@@ -1,8 +1,8 @@
 package com.adapters.outbound.persistence.consumption;
 
-import com.adapters.outbound.persistence.farm.DeviceEntity;
-import com.adapters.outbound.persistence.farm.DeviceModelEntity;
-import com.adapters.outbound.persistence.farm.HttpEndpointDataEntity;
+import com.adapters.outbound.persistence.management.farm.DeviceEntity;
+import com.adapters.outbound.persistence.management.farm.DeviceModelEntity;
+import com.adapters.outbound.persistence.management.farm.HttpEndpointDataEntity;
 import com.domain.model.consumption.ConsumptionDevice;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +17,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "consumptionDeviceEntity")
 public class ConsumptionDeviceDocument extends DeviceEntity {
 
-  private Boolean isOn;
   private ControlParametersEntity controlParameters;
   private Long workingHours;
 
@@ -25,8 +24,7 @@ public class ConsumptionDeviceDocument extends DeviceEntity {
   public ConsumptionDeviceDocument(String id, String farmId, String name, String ipAddress,
       List<HttpEndpointDataEntity> endpoints, Boolean isOn, ControlParametersEntity controlParameters,
       Long workingHours, Date creationDate, DeviceModelEntity deviceModel) {
-    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel);
-    this.isOn = isOn;
+    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel, isOn);
     this.controlParameters = controlParameters;
     this.workingHours = workingHours;
   }
