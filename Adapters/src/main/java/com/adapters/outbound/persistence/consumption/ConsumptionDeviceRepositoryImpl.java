@@ -2,7 +2,8 @@ package com.adapters.outbound.persistence.consumption;
 
 import com.domain.model.consumption.ConsumptionDevice;
 import com.domain.model.consumption.ControlParameters;
-import com.domain.model.farm.Farm;
+import com.domain.model.consumption.ControlParameters.Lock;
+import com.domain.model.management.farm.Farm;
 import com.domain.ports.consumption.ConsumptionDeviceRepository;
 import java.util.Comparator;
 import java.util.Date;
@@ -20,21 +21,34 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
 
   @Override
   public void save(ConsumptionDevice consumptionDevice) {
-    if (findById(consumptionDevice.getId()).isEmpty()) {
-      consumptionDevice.setCreationDate(new Date());
-      consumptionDeviceMongoRepository.save(
-          ConsumptionDeviceDocument.fromDomain(consumptionDevice.withWorkingHours(0L)));
+    if (consumptionDevice.getId() == null || findById(consumptionDevice.getId()).isEmpty()) {
+      consumptionDevice = consumptionDevice
+          .withCreationDate(new Date())
+          .withIsOn(false)
+          .withControlParameters(
+              new ControlParameters(0,
+                  0f,
+                  new Lock(false, new Date()),
+                  null,
+                  null)
+          );
+      consumptionDeviceMongoRepository.save(ConsumptionDeviceDocument.fromDomain(consumptionDevice));
     }
   }
 
   @Override
   public void update(ConsumptionDevice consumptionDevice) {
-    Optional<ConsumptionDeviceDocument> old = consumptionDeviceMongoRepository.findById(consumptionDevice.getId());
-    if (old.isPresent()) {
-      consumptionDevice.setCreationDate(old.get().getCreationDate());
-      consumptionDevice.setWorkingHours(old.get().getWorkingHours());
-      consumptionDeviceMongoRepository.save(ConsumptionDeviceDocument.fromDomain(consumptionDevice));
+    if (consumptionDevice.getIsOn() == null) {
+      return;
     }
+    ConsumptionDeviceDocument old = consumptionDeviceMongoRepository
+        .findById(consumptionDevice.getId())
+        .orElseThrow();
+    consumptionDevice.setCreationDate(old.getCreationDate());
+    consumptionDevice.setWorkingHours(old.getWorkingHours());
+    consumptionDevice.setControlParameters(ControlParametersEntity.toDomain(old.getControlParameters()));
+    consumptionDevice.withIsOn(old.getIsOn());
+    consumptionDeviceMongoRepository.save(ConsumptionDeviceDocument.fromDomain(consumptionDevice));
   }
 
   @Override
@@ -85,10 +99,26 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
   }
 
   @Override
+  public void setDevicePriority(String id, Integer priority) {
+    ConsumptionDeviceDocument device = consumptionDeviceMongoRepository.findById(id).orElseThrow();
+    ControlParametersEntity controlParameters = device.getControlParameters().withPriority(priority);
+    device.setControlParameters(controlParameters);
+    consumptionDeviceMongoRepository.save(device);
+  }
+
+  @Override
+  public void setDevicePowerConsumption(String id, Float powerConsumption) {
+    ConsumptionDeviceDocument device = consumptionDeviceMongoRepository.findById(id).orElseThrow();
+    ControlParametersEntity controlParameters = device.getControlParameters().withPowerConsumption(powerConsumption);
+    device.setControlParameters(controlParameters);
+    consumptionDeviceMongoRepository.save(device);
+  }
+
+  @Override
   public void setDeviceParameters(String id, ControlParameters controlParameters) {
     ConsumptionDeviceDocument consumptionDevice = consumptionDeviceMongoRepository
         .findById(id)
-        .get();
+        .orElseThrow();
     consumptionDevice.setControlParameters(ControlParametersEntity.fromDomain(controlParameters));
     consumptionDeviceMongoRepository.save(consumptionDevice);
   }
@@ -99,7 +129,7 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
         ControlParametersEntity.toDomain(
             consumptionDeviceMongoRepository
                 .findById(id)
-                .get()
+                .orElseThrow()
                 .getControlParameters())
     );
   }
@@ -136,7 +166,7 @@ public class ConsumptionDeviceRepositoryImpl implements ConsumptionDeviceReposit
     ConsumptionDevice consumptionDevice = consumptionDeviceMongoRepository
         .findById(deviceId)
         .map(ConsumptionDeviceDocument::toDomain)
-        .get();
+        .orElseThrow();
     Long workingHours = duration + consumptionDevice.getWorkingHours();
     ConsumptionDevice consumptionDeviceUpdated = consumptionDevice.withWorkingHours(workingHours);
     consumptionDeviceMongoRepository.save(ConsumptionDeviceDocument.fromDomain(consumptionDeviceUpdated));

@@ -1,7 +1,7 @@
 package com.application.measurement;
 
 import com.domain.model.measurement.Measurement;
-import com.domain.ports.farm.CounterGateway;
+import com.domain.ports.management.farm.CounterGateway;
 import com.domain.ports.measurement.MeasurementDeviceRepository;
 import com.domain.ports.measurement.MeasurementRepository;
 import java.util.Date;
@@ -26,7 +26,7 @@ public class MeasurementStatisticsService {
 
   public void updateMeasurementStatistics(Measurement measurement) {
     Measurement recentMeasurement = measurementRepository
-        .findTopByDate().get();
+        .findTopByDate().orElseThrow();
 
     measurement.getMeasurements().forEach((deviceId, measurement1) -> {
       Map<Date, Double> measurements = Map.of(
@@ -36,5 +36,10 @@ public class MeasurementStatisticsService {
       Double difference = counter.countSimpson(measurements);
       measurementDeviceRepository.saveMeasurementStatistics(deviceId, difference.longValue());
     });
+  }
+
+
+  public Double getPeriodFarmEnergyStatisticsSum(String farmId, Date startDate, Date endDate) {
+    return counter.countPeriodFarmEnergyStatisticsSum(farmId, startDate, endDate);
   }
 }

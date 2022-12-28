@@ -43,15 +43,15 @@ def measurement_active_devices_num_plot(db, day: dt.datetime, is_production_data
 
   day_start_warsaw = (day_start).astimezone(tz.gettz("Europe/Warsaw"))
   day_end_warsaw = (day_end).astimezone(tz.gettz("Europe/Warsaw"))
-  ax1.set_xlabel('Odczyt z dni ' + str(day_start_warsaw) + " - " + str(day_end_warsaw), size=25)
-  ax1.set_ylabel('Odczyt produkcji kW', color='y', size=22)
-  ax2.set_ylabel('Ilość aktywnych urządzeń', color='g', size=22)
+  ax1.set_xlabel('Measurements dated ' + str(day_start_warsaw) + " - " + str(day_end_warsaw), size=25)
+  ax1.set_ylabel('Power [kW]', color='y', size=22)
+  ax2.set_ylabel('Number of active devices', color='g', size=22)
   for label in (ax1.get_xticklabels() + ax2.get_yticklabels() + ax1.get_yticklabels()):
     label.set_fontsize(18)
   ax2.set_ylim([0, 12])
   ax1.set_ylim([-10, 80])
   ax1.grid(True)
-  plt.title('Wykres zależności odczytu produkcji i aktywnych urządzeń od czasu', size=22)
+  plt.title('Graph of power and number of active devices versus time', size=22)
   return plt
 
 

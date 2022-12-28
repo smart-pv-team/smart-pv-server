@@ -52,13 +52,14 @@ def save_plt(plt: matplotlib.pyplot.plot, results_dir: str, file_name: str):
 if __name__ == "__main__":
   days = [
     # datetime.datetime(2022, 8, 28),
-    # datetime.datetime(2022, 8, 29),
-    # datetime.datetime(2022, 9, 18),
-    # datetime.datetime(2022, 9, 29),
+    datetime.datetime(2022, 8, 29),
     # datetime.datetime(2022, 9, 30),
-    # datetime.datetime(2022, 10, 11),
+    # datetime.datetime(2022, 10, 7),
+    # datetime.datetime(2022, 10, 12),
     # datetime.datetime(2022, 10, 14),
-    datetime.datetime(2022, 11, 12),
+    # datetime.datetime(2022, 10, 15),
+    # datetime.datetime(2022, 10, 17),
+    # datetime.datetime(2022, 11, 25),
   ]
   run_drawer_locally(days)
   run_drawer_prod(days)

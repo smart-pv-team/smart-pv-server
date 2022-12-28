@@ -1,60 +1,24 @@
 package com.application.algorithms;
 
-import com.application.DateTimeUtils;
 import com.domain.model.consumption.ConsumptionDevice;
-import com.domain.model.farm.Farm;
+import com.domain.model.management.farm.Farm;
 import com.domain.model.measurement.Measurement;
-import com.domain.ports.farm.Algorithm;
+import com.domain.ports.management.farm.algorithm.Algorithm;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import org.springframework.stereotype.Component;
 
-public class PowerPriorityAlgorithm implements Algorithm {
+@Component
+public class PowerPriorityAlgorithm extends ComparatorBasedAlgorithm implements Algorithm {
 
   @Override
   public List<ConsumptionDevice> updateDevicesStatus(Measurement measuredEnergy,
       List<ConsumptionDevice> devices, Farm farm) {
-    Optional<ConsumptionDevice> deviceToChange;
-
-    Float measurement = measuredEnergy.getMeasurement();
-    if (measurement > farm.energyLimit()) {
-      deviceToChange = devices.stream()
-          .filter((device) -> !device.getControlParameters().lock().isLocked())
-          .filter((device) -> !device.getIsOn())
-          .max(Comparator.comparing((e) -> e.getControlParameters().priority()))
-          .filter((device) -> device.getControlParameters().lastStatusChange()
-              .before(DateTimeUtils.subtractMinutes(measuredEnergy.getDate(), farm.minutesBetweenDeviceStatusSwitch())))
-          .map((device) -> {
-            if (measurement > farm.energyLimit() + device.getControlParameters().powerConsumption()) {
-              device.setControlParameters(device.getControlParameters().withLastStatusChange(measuredEnergy.getDate()));
-              device.setIsOn(true);
-            }
-            return device;
-          });
-    } else {
-      deviceToChange = devices.stream()
-          .filter((device) -> !device.getControlParameters().lock().isLocked())
-          .filter(ConsumptionDevice::getIsOn)
-          .min(Comparator.comparing((e) -> e.getControlParameters().priority()))
-          .filter((device) -> device.getControlParameters().lastStatusChange()
-              .before(DateTimeUtils.subtractMinutes(measuredEnergy.getDate(), farm.minutesBetweenDeviceStatusSwitch())))
-          .map((device) -> {
-            device.setIsOn(false);
-            device.setControlParameters(device.getControlParameters().withLastStatusChange(measuredEnergy.getDate()));
-            return device;
-          });
-    }
-    deviceToChange.ifPresent(
-        (deviceToChangePresent) -> devices.set(
-            devices
-                .stream()
-                .filter((device) -> device.getId().equals(deviceToChangePresent.getId()))
-                .findFirst()
-                .map((devices::indexOf))
-                .orElse(0),
-            deviceToChangePresent
-        )
+    return super.updateDevicesStatus(measuredEnergy,
+        devices,
+        farm,
+        Comparator.comparing((ConsumptionDevice e) -> e.getControlParameters().priority()).reversed(),
+        Comparator.comparing((ConsumptionDevice e) -> e.getControlParameters().priority())
     );
-    return devices;
   }
 }

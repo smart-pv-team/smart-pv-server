@@ -1,10 +1,10 @@
 package com.application.measurement;
 
 import com.domain.model.actions.MeasurementReadAction;
-import com.domain.model.farm.Farm;
+import com.domain.model.management.farm.Farm;
 import com.domain.model.measurement.Measurement;
 import com.domain.model.measurement.MeasurementDevice;
-import com.domain.ports.farm.DeviceGateway;
+import com.domain.ports.management.farm.DeviceGateway;
 import com.domain.ports.measurement.MeasurementDeviceRepository;
 import com.domain.ports.measurement.MeasurementRepository;
 import java.util.Date;
@@ -61,7 +61,13 @@ public class MeasurementService {
 
 
   private MeasurementReadAction requestMeasurement(MeasurementDevice measurementDevice) {
-    return deviceGateway.requestMeasurement(measurementDevice);
+    try {
+      MeasurementReadAction response = deviceGateway.requestMeasurement(measurementDevice);
+      measurementDeviceRepository.setIsOn(measurementDevice, true);
+      return response;
+    } catch (Exception e) {
+      measurementDeviceRepository.setIsOn(measurementDevice, false);
+    }
+    return null;
   }
-
 }

@@ -5,33 +5,28 @@ import com.application.algorithms.StringToAlgorithm;
 import com.application.consumption.ConsumptionService;
 import com.domain.model.consumption.Consumption;
 import com.domain.model.consumption.ConsumptionDevice;
-import com.domain.model.farm.Farm;
+import com.domain.model.management.farm.Farm;
 import com.domain.model.measurement.Measurement;
 import com.domain.ports.consumption.ConsumptionDeviceRepository;
-import com.domain.ports.farm.CounterGateway;
+import com.domain.ports.management.farm.CounterGateway;
 import com.domain.ports.measurement.MeasurementRepository;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class ManagementService {
 
   private final ConsumptionDeviceRepository consumptionDeviceRepository;
   private final ConsumptionService consumptionService;
   private final CounterGateway counter;
   private final MeasurementRepository measurementRepository;
+  private final StringToAlgorithm stringToAlgorithm;
 
-  @Autowired
-  public ManagementService(ConsumptionDeviceRepository consumptionDeviceRepository,
-      ConsumptionService consumptionService, CounterGateway counter, MeasurementRepository measurementRepository) {
-    this.consumptionDeviceRepository = consumptionDeviceRepository;
-    this.consumptionService = consumptionService;
-    this.counter = counter;
-    this.measurementRepository = measurementRepository;
-  }
 
   public List<ConsumptionDevice> updateDevices(Farm farm) {
     Consumption consumption = consumptionService.collectDevicesStatus(farm);
@@ -52,26 +47,24 @@ public class ManagementService {
         getAverageMeasurement(measurementEntitiesToAverage).floatValue(),
         Map.of(),
         consumption.getDate());
-    List<ConsumptionDevice> allDevicesWithUpdatedLockAndStatus = StringToAlgorithm.stringToAlgorithm(
+    List<ConsumptionDevice> allDevicesWithUpdatedLockAndStatus = stringToAlgorithm.stringToAlgorithm(
             farm.algorithmType())
-        .updateDevicesStatus(
-            measuredEnergy,
-            allDevicesWithUpdatedLock,
-            farm);
+        .updateDevicesStatus(measuredEnergy, allDevicesWithUpdatedLock, farm);
 
-    List<ConsumptionDevice> updatedDevices = allDevicesWithUpdatedLockAndStatus.stream()
-        .filter((device) -> {
-          boolean isActive = activeDevicesRequestResponse.stream()
-              .map(ConsumptionDevice::getId)
-              .toList()
-              .contains(device.getId());
-          return device.getIsOn() && !isActive
-              || !device.getIsOn() && isActive;
-        }).collect(Collectors.toList());
-    consumptionDeviceRepository.saveAll(allDevicesWithUpdatedLockAndStatus);
-    updatedDevices.forEach((device) -> consumptionService.turnDeviceRequest(device, device.getIsOn()));
+    List<ConsumptionDevice> devicesToChange = allDevicesWithUpdatedLock.stream().filter((device) -> {
+      ConsumptionDevice consumptionDevice = allDevicesWithUpdatedLockAndStatus.stream()
+          .filter((d) -> d.getId().equals(device.getId()))
+          .findFirst().orElseThrow();
+      return consumptionDevice.getIsOn() != device.getIsOn()
+          || (consumptionDevice.getIsOn() == device.getIsOn()
+          && !Objects.equals(consumptionDevice.getControlParameters().lastStatus(),
+          device.getControlParameters().lastStatus()));
+    }).toList();
 
-    return updatedDevices;
+    consumptionDeviceRepository.saveAll(devicesToChange);
+    devicesToChange.forEach(consumptionService::sendUpdate);
+
+    return devicesToChange;
   }
 
   private List<ConsumptionDevice> updateDevicesLock(List<ConsumptionDevice> activeDevices,

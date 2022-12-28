@@ -6,19 +6,18 @@ import java.util.Date;
 import lombok.Builder;
 
 @Builder
-public record ControlParametersEntity(Integer priority, Float powerConsumption, Integer minHysteresis,
-                                      Integer maxHysteresis, LockEntity lock, Date lastStatusChange) {
+public record ControlParametersEntity(Integer priority, Float powerConsumption, LockEntity lock, Date lastStatusChange,
+                                      String lastStatus) {
 
   public static ControlParametersEntity fromDomain(ControlParameters controlParameters) {
     return builder()
         .lastStatusChange(controlParameters.lastStatusChange())
+        .lastStatus(controlParameters.lastStatus())
         .lock(LockEntity
             .builder()
             .isLocked(controlParameters.lock().isLocked())
             .date(controlParameters.lock().date())
             .build())
-        .maxHysteresis(controlParameters.maxHysteresis())
-        .minHysteresis(controlParameters.minHysteresis())
         .powerConsumption(controlParameters.powerConsumption())
         .priority(controlParameters.priority())
         .build();
@@ -27,16 +26,23 @@ public record ControlParametersEntity(Integer priority, Float powerConsumption, 
   public static ControlParameters toDomain(ControlParametersEntity controlParameters) {
     return ControlParameters.builder()
         .lastStatusChange(controlParameters.lastStatusChange())
+        .lastStatus(controlParameters.lastStatus())
         .lock(Lock
             .builder()
             .isLocked(controlParameters.lock().isLocked())
             .date(controlParameters.lock().date())
             .build())
-        .maxHysteresis(controlParameters.maxHysteresis())
-        .minHysteresis(controlParameters.minHysteresis())
         .powerConsumption(controlParameters.powerConsumption())
         .priority(controlParameters.priority())
         .build();
+  }
+
+  public ControlParametersEntity withPriority(Integer priority) {
+    return new ControlParametersEntity(priority, powerConsumption, lock, lastStatusChange, lastStatus);
+  }
+
+  public ControlParametersEntity withPowerConsumption(Float powerConsumption) {
+    return new ControlParametersEntity(priority, powerConsumption, lock, lastStatusChange, lastStatus);
   }
 
   @Builder

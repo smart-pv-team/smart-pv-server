@@ -1,8 +1,8 @@
 package com.domain.model.consumption;
 
-import com.domain.model.farm.Device;
-import com.domain.model.farm.DeviceModel;
-import com.domain.model.farm.HttpEndpointData;
+import com.domain.model.management.farm.Device;
+import com.domain.model.management.farm.DeviceModel;
+import com.domain.model.management.farm.HttpEndpointData;
 import java.util.Date;
 import java.util.List;
 import lombok.Builder;
@@ -13,17 +13,14 @@ import lombok.Setter;
 @Setter
 public class ConsumptionDevice extends Device {
 
-  private Boolean isOn;
   private ControlParameters controlParameters;
   private Long workingHours;
 
   @Builder
-
   public ConsumptionDevice(String id, String farmId, String name, String ipAddress,
       List<HttpEndpointData> endpoints, Boolean isOn, ControlParameters controlParameters, Long workingHours,
       Date creationDate, DeviceModel deviceModel) {
-    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel);
-    this.isOn = isOn;
+    super(id, farmId, name, ipAddress, endpoints, creationDate, deviceModel, isOn);
     this.controlParameters = controlParameters;
     this.workingHours = workingHours;
   }
@@ -31,6 +28,21 @@ public class ConsumptionDevice extends Device {
   public ConsumptionDevice withWorkingHours(Long workingHours) {
     return new ConsumptionDevice(getId(), getFarmId(), getName(), getIpAddress(), getEndpoints(), getIsOn(),
         getControlParameters(), workingHours, getCreationDate(), getDeviceModel());
+  }
+
+  public ConsumptionDevice withIsOn(Boolean isOn) {
+    return new ConsumptionDevice(getId(), getFarmId(), getName(), getIpAddress(), getEndpoints(), isOn,
+        getControlParameters(), getWorkingHours(), getCreationDate(), getDeviceModel());
+  }
+
+  public ConsumptionDevice withControlParameters(ControlParameters controlParameters) {
+    return new ConsumptionDevice(getId(), getFarmId(), getName(), getIpAddress(), getEndpoints(), getIsOn(),
+        controlParameters, getWorkingHours(), getCreationDate(), getDeviceModel());
+  }
+
+  public ConsumptionDevice withCreationDate(Date date) {
+    return new ConsumptionDevice(getId(), getFarmId(), getName(), getIpAddress(), getEndpoints(), getIsOn(),
+        getControlParameters(), getWorkingHours(), date, getDeviceModel());
   }
 }
 

@@ -6,15 +6,16 @@ import static org.mockito.Mockito.when;
 
 import com.adapters.outbound.http.Counter;
 import com.application.DateTimeUtils;
+import com.application.algorithms.StringToAlgorithm;
 import com.application.consumption.ConsumptionService;
 import com.application.farm.ManagementService;
 import com.domain.model.consumption.Consumption;
 import com.domain.model.consumption.ConsumptionDevice;
-import com.domain.model.farm.Farm;
+import com.domain.model.management.farm.Farm;
 import com.domain.model.measurement.Measurement;
 import com.domain.ports.consumption.ConsumptionDeviceRepository;
 import com.domain.ports.consumption.ConsumptionRepository;
-import com.domain.ports.farm.FarmRepository;
+import com.domain.ports.management.farm.FarmRepository;
 import com.domain.ports.measurement.MeasurementRepository;
 import java.io.IOException;
 import java.util.Comparator;
@@ -48,6 +49,8 @@ class ManagementServiceTest {
   private ConsumptionService consumptionServiceMock;
   @Autowired
   private FarmRepository farmRepository;
+  @Autowired
+  private StringToAlgorithm stringToAlgorithm;
 
   @Autowired
   private Counter counter;
@@ -56,7 +59,7 @@ class ManagementServiceTest {
   static void loadData() {
     //List<String> DAYS = List.of("2022-08-28", "2022-08-29", "2022-09-18", "2022-09-29", "2022-09-30", "2022-10-11",
     //    "2022-10-14", "2022-10-17");
-    List<String> DAYS = List.of("2022-11-22");
+    List<String> DAYS = List.of("2022-08-29");
 
     ProcessBuilder processBuilder = new ProcessBuilder();
     String filePath = System.getProperty("user.dir").concat("/src/simulation/script/");
@@ -100,7 +103,7 @@ class ManagementServiceTest {
 
       var updatedMeasurementValue = consumption.getActiveDevicesNum() * 2.5f
           + measurement.getMeasurement() / 1000
-          - 2.5f * activeDevices.size();
+          - 10f * activeDevices.size();
       var updatedMeasurement = measurement.withMeasurement(updatedMeasurementValue);
       measurementRepository.save(updatedMeasurement);
 
@@ -111,7 +114,8 @@ class ManagementServiceTest {
             consumptionDeviceRepository,
             consumptionServiceMock,
             counter,
-            measurementRepository).updateDevices(farm);
+            measurementRepository,
+            stringToAlgorithm).updateDevices(farm);
         for (ConsumptionDevice device : currentlyChangedDevices) {
           if (activeDevices.contains(device.getId()) && !device.getIsOn()) {
             activeDevices.remove(device.getId());

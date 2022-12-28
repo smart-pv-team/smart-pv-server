@@ -39,9 +39,9 @@ def prepare_consumption_time_plot(db, day: dt.datetime):
   ax.bar(list(map(lambda item: item[0], name_with_time)), list(map(lambda item: item[1], name_with_time)))
   day_start_warsaw = (day_start).astimezone(tz.gettz("Europe/Warsaw"))
   day_end_warsaw = (day_end).astimezone(tz.gettz("Europe/Warsaw"))
-  ax.set_xlabel('Odczyt z dni ' + str(day_start_warsaw) + " - " + str(day_end_warsaw), size=25)
-  plt.title('Wykres czasu działania w zależności od urządzenia', size=25)
-  ax.set_ylabel('Czas działania w minutach', color='y', size=25)
+  ax.set_xlabel('Measurements dated ' + str(day_start_warsaw) + " - " + str(day_end_warsaw), size=25)
+  plt.title('Graph of working hours versus device', size=25)
+  ax.set_ylabel('Working hours [minutes]', color='y', size=25)
   ax.yaxis.grid()
   for label in (ax.get_xticklabels() + ax.get_yticklabels()):
     label.set_fontsize(16)

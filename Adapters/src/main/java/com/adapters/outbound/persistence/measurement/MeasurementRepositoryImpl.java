@@ -12,7 +12,7 @@ import static com.mongodb.client.model.Sorts.descending;
 
 import com.adapters.outbound.persistence.Fields;
 import com.adapters.outbound.persistence.MongoUtils;
-import com.domain.model.farm.Device;
+import com.domain.model.management.farm.Device;
 import com.domain.model.measurement.Measurement;
 import com.domain.ports.measurement.MeasurementRepository;
 import com.mongodb.client.MongoCollection;
@@ -59,7 +59,7 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
   public List<Measurement> findAllByDeviceIdAndDateIsBetween(String deviceId, Date from, Date to) {
     String farmId = measurementDeviceMongoRepository.findById(deviceId)
         .map(MeasurementDeviceDocument::toDomain)
-        .map(Device::getFarmId).get();
+        .map(Device::getFarmId).orElseThrow();
     return collection
         .find(and(eq(FARM_ID_FIELD, farmId), lt(DATE_FIELD, to), gt(DATE_FIELD, from)))
         .sort(descending(DATE_FIELD))
