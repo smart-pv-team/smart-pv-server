@@ -5,8 +5,8 @@ spring:
       database: smartPV
 
 system:
-  measure: false
-  collectDevicesStatus: false
+  measure: true
+  collectDevicesStatus: true
   manageDevices: false
   cron:
     measurement: "0 */1 * * * *"

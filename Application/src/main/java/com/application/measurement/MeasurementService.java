@@ -10,6 +10,7 @@ import com.domain.ports.measurement.MeasurementRepository;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,10 @@ public class MeasurementService {
     List<MeasurementReadAction> responses = measurementDeviceRepository
         .findAllByFarmId(farm.id())
         .stream()
-        .map(this::requestMeasurement).toList();
+        .map(this::requestMeasurement)
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .toList();
     Float measurementSum = responses.stream()
         .map(MeasurementReadAction::measuredEnergy)
         .reduce((float) 0, Float::sum);
@@ -60,14 +64,14 @@ public class MeasurementService {
   }
 
 
-  private MeasurementReadAction requestMeasurement(MeasurementDevice measurementDevice) {
+  private Optional<MeasurementReadAction> requestMeasurement(MeasurementDevice measurementDevice) {
     try {
       MeasurementReadAction response = deviceGateway.requestMeasurement(measurementDevice);
       measurementDeviceRepository.setIsOn(measurementDevice, true);
-      return response;
+      return Optional.ofNullable(response);
     } catch (Exception e) {
       measurementDeviceRepository.setIsOn(measurementDevice, false);
     }
-    return null;
+    return Optional.empty();
   }
 }

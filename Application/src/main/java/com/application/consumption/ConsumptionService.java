@@ -52,11 +52,19 @@ public class ConsumptionService {
     return consumption;
   }
 
+  public boolean collectDeviceStatus(ConsumptionDevice consumptionDevice) {
+    try {
+      return deviceGateway.requestDevicesStatus(consumptionDevice).isOn();
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   public Consumption collectDevicesStatus(Farm farm) {
     List<String> activeDevices = consumptionDeviceRepository
         .findAllByFarmId(farm.id())
         .stream()
-        .peek((device) -> device.setIsOn(deviceGateway.requestDevicesStatus(device).isOn()))
+        .peek((device) -> device.setIsOn(collectDeviceStatus(device)))
         .filter(ConsumptionDevice::getIsOn)
         .map(Device::getId)
         .collect(Collectors.toList());
