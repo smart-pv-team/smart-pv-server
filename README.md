@@ -26,4 +26,4 @@ You can either deploy run app locally with configured server url or use already 
 
 ## OpenApi
 
-[Server provides OpenApi UI](https://smart-pv.herokuapp.com/)
+[Server provides OpenApi UI](https://smart-pv.herokuapp.com/swagger-ui/index.html#/)
