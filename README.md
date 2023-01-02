@@ -19,10 +19,11 @@ Project is created with:
 
 ## Setup
 
-You can either deploy run app locally with configured server url or use already deployed one
+You can either deploy run app locally or use already deployed one
 
 * Heroku - [link](https://smart-pv.herokuapp.com/) - no start page provided
-* Local - No additional libraries required. Run as regular spring application.
+* Local - No additional libraries required. Run as regular spring application. You only need to set necessary
+  environmental variables.
 
 ## OpenApi
 
