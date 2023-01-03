@@ -34,4 +34,8 @@ public class ConsumptionStatisticsService {
   public Double getPeriodFarmWorkingHoursStatisticsSum(String farmId, Date startDate, Date endDate) {
     return counter.countPeriodFarmWorkingHoursStatisticsSum(farmId, startDate, endDate);
   }
+
+  public Double getPeriodDeviceWorkingHoursStatistics(String deviceId, Date startDate, Date endDate) {
+    return counter.countPeriodDeviceWorkingHoursStatistics(deviceId, startDate, endDate);
+  }
 }

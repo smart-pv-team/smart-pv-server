@@ -39,6 +39,14 @@ public class DateTimeUtils {
     return DateUtils.addMinutes(date, minutes);
   }
 
+  public static Date withoutSeconds(Date date) {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(date);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    return cal.getTime();
+  }
+
   public static boolean compareByMinutes(Date date1, Date date2) {
     Calendar calendar1 = Calendar.getInstance();
     calendar1.setTime(date1);

@@ -62,6 +62,14 @@ public class ConsumptionRepositoryImpl implements ConsumptionRepository {
   }
 
   @Override
+  public List<Consumption> findByFarmIdAndDateBetween(String farmId, Date from, Date to) {
+    return consumptionMongoRepository.findAllByFarmIdAndDateIsBetween(farmId, from, to)
+        .stream()
+        .map(ConsumptionDocument::toDomain)
+        .collect(Collectors.toList());
+  }
+
+  @Override
   public Optional<Consumption> findLast(String farmId) {
     return Optional.ofNullable(ConsumptionDocument.toDomain(collection.find().sort(descending(DATE_FIELD)).first()));
   }

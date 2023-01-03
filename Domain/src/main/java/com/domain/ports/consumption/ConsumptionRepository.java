@@ -17,5 +17,7 @@ public interface ConsumptionRepository {
 
   List<Consumption> findByDeviceIdAndDateBetween(String deviceId, Date from, Date to);
 
+  List<Consumption> findByFarmIdAndDateBetween(String farmId, Date from, Date to);
+
   Optional<Consumption> findLast(String farmId);
 }

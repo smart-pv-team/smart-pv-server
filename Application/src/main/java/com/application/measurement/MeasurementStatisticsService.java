@@ -42,4 +42,8 @@ public class MeasurementStatisticsService {
   public Double getPeriodFarmEnergyStatisticsSum(String farmId, Date startDate, Date endDate) {
     return counter.countPeriodFarmEnergyStatisticsSum(farmId, startDate, endDate);
   }
+
+  public Double getPeriodDeviceEnergyStatisticsSum(String deviceId, Date startDate, Date endDate) {
+    return counter.countPeriodDeviceEnergyStatistics(deviceId, startDate, endDate);
+  }
 }

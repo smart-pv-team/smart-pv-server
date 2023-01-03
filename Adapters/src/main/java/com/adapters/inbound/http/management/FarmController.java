@@ -1,8 +1,10 @@
 package com.adapters.inbound.http.management;
 
+import com.adapters.inbound.http.DateRangeDto;
 import com.adapters.inbound.http.Routing;
 import com.adapters.outbound.http.devices.ResponseTypeAdapter;
 import com.application.farm.FarmService;
+import com.application.farm.FarmStatisticsService;
 import com.domain.model.consumption.ConsumptionDevice;
 import com.domain.model.management.algorithm.Interval;
 import com.domain.model.management.algorithm.Rule;
@@ -13,7 +15,9 @@ import com.domain.model.measurement.MeasurementDevice;
 import com.domain.ports.management.farm.FarmRepository;
 import com.domain.ports.management.farm.algorithm.IntervalRepository;
 import com.domain.ports.management.farm.algorithm.RuleRepository;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +36,7 @@ public class FarmController {
   private final FarmService farmService;
   private final RuleRepository ruleRepository;
   private final IntervalRepository intervalRepository;
+  private final FarmStatisticsService farmStatisticsService;
 
 
   @GetMapping(Routing.Management.Farms.PATH)
@@ -125,4 +130,20 @@ public class FarmController {
     return List.of(ResponseTypeAdapter.values());
   }
 
+
+  @GetMapping(Routing.Management.Farms.FarmId.Measurement.Range.PATH)
+  Map<Date, Float> getFarmMeasurementRange(
+      @PathVariable(Routing.FARM_ID_VARIABLE) String farmId,
+      @RequestBody DateRangeDto dateRange
+  ) {
+    return farmStatisticsService.getFarmMeasurementRange(farmId, dateRange.startDate(), dateRange.endDate());
+  }
+
+  @GetMapping(Routing.Management.Farms.FarmId.Consumption.Range.PATH)
+  Map<Date, Integer> getFarmConsumptionRange(
+      @PathVariable(Routing.FARM_ID_VARIABLE) String farmId,
+      @RequestBody DateRangeDto dateRange
+  ) {
+    return farmStatisticsService.getFarmConsumptionRange(farmId, dateRange.startDate(), dateRange.endDate());
+  }
 }

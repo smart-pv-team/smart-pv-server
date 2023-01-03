@@ -29,7 +29,9 @@ public class Counter implements CounterGateway {
 
   private final String durationEndpoint;
   private final String durationPeriodSumEndpoint;
+  private final String durationPeriodEndpoint;
   private final String simpsonPeriodSumEndpoint;
+  private final String simpsonPeriodEndpoint;
 
   public Counter(
       @Value("${" + EnvNames.COUNTER_URL + "}") String counterUrl,
@@ -37,7 +39,9 @@ public class Counter implements CounterGateway {
       @Value("${" + EnvNames.COUNTER_AVERAGE_ENDPOINT + "}") String averageEndpoint,
       @Value("${" + EnvNames.COUNTER_DURATION_ENDPOINT + "}") String durationEndpoint,
       @Value("${" + EnvNames.DURATION_PERIOD_SUM_ENDPOINT + "}") String durationPeriodSumEndpoint,
-      @Value("${" + EnvNames.SIMPSON_PERIOD_SUM_ENDPOINT + "}") String simpsonPeriodSumEndpoint
+      @Value("${" + EnvNames.DURATION_PERIOD_ENDPOINT + "}") String durationPeriodEndpoint,
+      @Value("${" + EnvNames.SIMPSON_PERIOD_SUM_ENDPOINT + "}") String simpsonPeriodSumEndpoint,
+      @Value("${" + EnvNames.SIMPSON_PERIOD_ENDPOINT + "}") String simpsonPeriodEndpoint
   ) {
     HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
     this.restTemplate = new RestTemplate();
@@ -47,7 +51,9 @@ public class Counter implements CounterGateway {
     this.averageEndpoint = averageEndpoint;
     this.durationEndpoint = durationEndpoint;
     this.durationPeriodSumEndpoint = durationPeriodSumEndpoint;
+    this.durationPeriodEndpoint = durationPeriodEndpoint;
     this.simpsonPeriodSumEndpoint = simpsonPeriodSumEndpoint;
+    this.simpsonPeriodEndpoint = simpsonPeriodEndpoint;
   }
 
   public Double countAverage(List<Double> data) {
@@ -86,12 +92,34 @@ public class Counter implements CounterGateway {
     }
   }
 
+  @Override
+  public Double countPeriodDeviceWorkingHoursStatistics(String deviceId, Date startDate, Date endDate) {
+    try {
+      Map<String, Date> body = Map.of("start_date", startDate, "end_date", endDate);
+      return request(counterUrl.concat(durationPeriodEndpoint.replaceFirst("<deviceId>", deviceId)),
+          JsonUtils.getObjectMapper().writeValueAsString(body));
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
 
   @Override
   public Double countPeriodFarmEnergyStatisticsSum(String farmId, Date startDate, Date endDate) {
     try {
       Map<String, Date> body = Map.of("start_date", startDate, "end_date", endDate);
       return request(counterUrl.concat(simpsonPeriodSumEndpoint), JsonUtils.getObjectMapper().writeValueAsString(body));
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public Double countPeriodDeviceEnergyStatistics(String deviceId, Date startDate, Date endDate) {
+    try {
+      Map<String, Date> body = Map.of("start_date", startDate, "end_date", endDate);
+      return request(counterUrl.concat(simpsonPeriodEndpoint.replaceFirst("<deviceId>", deviceId)),
+          JsonUtils.getObjectMapper().writeValueAsString(body));
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }

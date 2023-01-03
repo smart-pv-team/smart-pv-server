@@ -150,6 +150,12 @@ public interface Routing {
           String VALUE = "/measurement";
           String PATH = FarmId.PATH + VALUE;
 
+          interface Range {
+
+            String VALUE = "/range";
+            String PATH = Measurement.PATH + VALUE;
+          }
+
           interface Devices {
 
             String VALUE = "/devices";
@@ -161,6 +167,12 @@ public interface Routing {
 
           String VALUE = "/consumption";
           String PATH = FarmId.PATH + VALUE;
+
+          interface Range {
+
+            String VALUE = "/range";
+            String PATH = Consumption.PATH + VALUE;
+          }
 
           interface Devices {
 
@@ -271,6 +283,12 @@ public interface Routing {
           String VALUE = "/statistics";
           String PATH = DeviceId.PATH + VALUE;
 
+          interface Period {
+
+            String VALUE = "/period";
+            String PATH = Statistics.PATH + VALUE;
+          }
+
           interface Sum {
 
             String VALUE = "/sum";
@@ -354,6 +372,12 @@ public interface Routing {
 
           String VALUE = "/statistics";
           String PATH = DeviceId.PATH + VALUE;
+
+          interface Period {
+
+            String VALUE = "/period";
+            String PATH = Statistics.PATH + VALUE;
+          }
 
           interface Sum {
 

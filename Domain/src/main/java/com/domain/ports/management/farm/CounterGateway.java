@@ -14,5 +14,9 @@ public interface CounterGateway {
 
   Double countPeriodFarmWorkingHoursStatisticsSum(String farmId, Date startDate, Date endDate);
 
+  Double countPeriodDeviceWorkingHoursStatistics(String deviceId, Date startDate, Date endDate);
+
   Double countPeriodFarmEnergyStatisticsSum(String farmId, Date startDate, Date endDate);
+
+  Double countPeriodDeviceEnergyStatistics(String deviceId, Date startDate, Date endDate);
 }
