@@ -1,6 +1,5 @@
 package com.adapters.inbound.http.measurement;
 
-import com.adapters.inbound.http.DateRangeDto;
 import com.adapters.inbound.http.Routing;
 import com.adapters.outbound.persistence.measurement.MeasurementDocument;
 import com.application.measurement.MeasurementStatisticsService;
@@ -123,10 +122,10 @@ class MeasurementController {
   @GetMapping(Routing.Measurement.Devices.DeviceId.Statistics.Period.PATH)
   ResponseEntity<Double> getDeviceStatisticsPeriod(
       @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
-      @RequestBody DateRangeDto dateRange
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate
   ) {
     return ResponseEntity.ok(
-        measurementStatisticsService.getPeriodDeviceEnergyStatisticsSum(deviceId, dateRange.startDate(),
-            dateRange.endDate()));
+        measurementStatisticsService.getPeriodDeviceEnergyStatisticsSum(deviceId, startDate, endDate));
   }
 }

@@ -1,6 +1,5 @@
 package com.adapters.inbound.http.consumption;
 
-import com.adapters.inbound.http.DateRangeDto;
 import com.adapters.inbound.http.Routing;
 import com.application.consumption.ConsumptionStatisticsService;
 import com.domain.model.consumption.Consumption;
@@ -162,10 +161,10 @@ class ConsumptionController {
   @GetMapping(Routing.Consumption.Devices.DeviceId.Statistics.Period.PATH)
   ResponseEntity<Double> getDeviceStatisticsPeriod(
       @PathVariable(Routing.DEVICE_ID_VARIABLE) String deviceId,
-      @RequestBody DateRangeDto dateRange
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate
   ) {
     return ResponseEntity.ok(
-        consumptionStatisticsService.getPeriodDeviceWorkingHoursStatistics(deviceId, dateRange.startDate(),
-            dateRange.endDate()));
+        consumptionStatisticsService.getPeriodDeviceWorkingHoursStatistics(deviceId, startDate, endDate));
   }
 }
